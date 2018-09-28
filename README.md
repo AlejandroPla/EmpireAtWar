@@ -16,9 +16,8 @@ Imperio en Guerra se juega por turnos entre dos jugadores. Cada jugador, en su t
 <br>
 <br>
  > Un buen general no sólo ve la manera de conseguir la victoria, 
- sabe también cuando ésta es imposible. - Polibio (Grecia. 200 a.C. - 118 a.C.)
- <br>
- <br>
- ---
-Alejandro Plázer Arnaz  
-Jesús Ramos Rodríguez
+ sabe también cuando ésta es imposible. - Polibio (Grecia. 200 a.C. - 118 a.C.)<br>
+ ---  
+ 
+ Alejandro Plázer Arnaz  <br>
+ Jesús Ramos Rodríguez
