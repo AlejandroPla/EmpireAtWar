@@ -1,61 +1,42 @@
-var BootScene = new Phaser.Class({
- 
-  Extends: Phaser.Scene,
+'use strict';
 
-  initialize:
+var PlayScene = require('./play_scene.js');
 
-  function BootScene ()
-  {
-      Phaser.Scene.call(this, { key: 'BootScene' });
+
+var BootScene = {
+  preload: function () {
+    // load here assets required for the loading screen
+    this.game.load.image('preloader_bar', 'images/preloader_bar.png');
   },
 
-  preload: function ()
-  {
-      // load the resources here
-  },
-
-  create: function ()
-  {
-      this.scene.start('WorldScene');
+  create: function () {
+    this.game.state.start('preloader');
   }
-});
-
-var WorldScene = new Phaser.Class({
-
-  Extends: Phaser.Scene,
-
-  initialize:
-
-  function WorldScene ()
-  {
-      Phaser.Scene.call(this, { key: 'WorldScene' });
-  },
-  preload: function ()
-  {
-      
-  },
-  create: function ()
-  {
-      // create your world here
-  }
-});
-
-var config = {
-  type: Phaser.AUTO,
-  parent: 'content',
-  width: 320,
-  height: 240,
-  zoom: 2,
-  pixelArt: true,
-  physics: {
-      default: 'arcade',
-      arcade: {
-          gravity: { y: 0 }
-      }
-  },
-  scene: [
-      BootScene,
-      WorldScene
-  ]
 };
-var game = new Phaser.Game(config);
+
+
+var PreloaderScene = {
+  preload: function () {
+    this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
+    this.loadingBar.anchor.setTo(0, 0.5);
+    this.load.setPreloadSprite(this.loadingBar);
+
+    // TODO: load here the assets for the game
+    this.game.load.image('logo', 'images/phaser.png');
+  },
+
+  create: function () {
+    this.game.state.start('play');
+  }
+};
+
+
+window.onload = function () {
+  var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
+
+  game.state.add('boot', BootScene);
+  game.state.add('preloader', PreloaderScene);
+  game.state.add('play', PlayScene);
+
+  game.state.start('boot');
+};
