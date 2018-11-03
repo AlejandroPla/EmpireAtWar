@@ -2,7 +2,6 @@
 
 var PlayScene = require('./play_scene.js');
 
-
 var BootScene = {
   preload: function () {
     // load here assets required for the loading screen
