@@ -8,7 +8,6 @@
     "browserify": "*",
     "browser-sync": "*",
     "del": "*",
-    "gulp": "*",
     "gulp-connect": "*",
     "gulp-gh-pages": "*",
     "gulp-util": "*",
@@ -16,5 +15,8 @@
     "phaser": "2.6.0",
     "vinyl-source-stream": "*",
     "watchify": "*"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.0"
   }
 }
