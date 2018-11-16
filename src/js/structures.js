@@ -33,13 +33,7 @@ class structure{
             this.life = 25;
             this.vector2D = vector2D;
         }
-        else if(type == 4) //arboles
-        {
-            this.price = 0;
-            this.income = 0;
-            this.life = 5;
-            this.vector2D = vector2D;
-        }
+
         else //ninguna
         {
 

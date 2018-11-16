@@ -22,6 +22,8 @@ var PreloaderScene = {
 
     // TODO: load here the assets for the game
     this.game.load.image('logo', 'images/phaser.png');
+    this.game.load.tilemap('level_01', 'resources/maps/level_01.Json', null, Phaser.Tilemap.TILED_JSON);
+    this.game.load.image('Tile-set', 'resources/sprites/Tile-set.png');
   },
 
   create: function () {

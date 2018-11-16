@@ -1,12 +1,16 @@
 'use strict';
 
+  var map = require("./map.js");
+
   var PlayScene = {
   create: function () {
-    var logo = this.game.add.sprite(
-      this.game.world.centerX, this.game.world.centerY, 'logo');
-    logo.anchor.setTo(0.5, 0.5);
-  }
+    map = new map(this.game);
+    map.StuffCounter();
+  },
 
+  update: function(){
+    map.UpdateTrees();
+  }
 };
 
 module.exports = PlayScene;
