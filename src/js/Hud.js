@@ -1,9 +1,24 @@
 'use strict';
-//var map = require("./map.js");
 
 var hud = function(game, map){
     this.game = game;
     this.map = map;
+    this.currentPlayer = false;
+
+    //Inventory images
+    this.inventoryBackground = game.add.image( this.game.width / 2, this.game.height *0.98, 'inventoryBackground');
+    this.inventoryBackground.height = this.inventoryBackground.height * 0.80;
+    this.inventoryBackground.anchor.setTo(0,1);
+    this.inventoryBackground.visible = false;
+
+    //Turn Text
+    this.turnText = game.add.text(this.game.width - this.game.width * 0.10, 0.01 * this.game.height, 'Turn: ')
+    this.turnText.anchor.setTo(1,0);
+    this.turnText.fontSize = 30;
+    this.currentTurn = this.map.turn;
+    this.currentTurnText = game.add.text((this.game.width - this.game.width * 0.10)+ 45, 0.01 * this.game.height, this.currentTurn);
+    this.currentTurnText.anchor.setTo(1,0);
+    this.currentTurnText.fontSize =  30;
 
     //nextTurnIcon
     this.nextTurnIcon = this.game.add.sprite(this.game.width, this.game.height, 'nextTurnIcon');
@@ -11,7 +26,7 @@ var hud = function(game, map){
     this.nextTurnIcon.anchor.setTo(1,1);
         //Input logic
         this.nextTurnIcon.inputEnabled = true;  
-        this.nextTurnIcon.events.onInputDown.add(listenerTurn, this);
+        this.nextTurnIcon.events.onInputDown.add(this.listenerTurn, this);
 
     //structureIcon
     this.structureIcon = this.game.add.sprite(this.game.width / 2 - (this.game.width * 0.05), this.game.height - this.game.height * 0.02, 'structureIcon');
@@ -19,7 +34,7 @@ var hud = function(game, map){
     this.structureIcon.scale.setTo(0.10);
         //Input logic
         this.structureIcon.inputEnabled = true;  
-        this.structureIcon.events.onInputDown.add(listenerStructure, this);
+        this.structureIcon.events.onInputDown.add(this.listenerStructure, this);
 
     //unitIcon
     this.unitIcon = this.game.add.sprite(this.game.width / 2 + (this.game.width * 0.05), this.game.height - this.game.height * 0.02, 'unitIcon');
@@ -27,20 +42,26 @@ var hud = function(game, map){
     this.unitIcon.scale.setTo(0.10);
         //Input logic
         this.unitIcon.inputEnabled = true;  
-        this.unitIcon.events.onInputDown.add(listenerUnit, this);
+        this.unitIcon.events.onInputDown.add(this.listenerUnit, this);
 }
 
-function listenerTurn (){
-    console.log("Next turn");
-    //this.map.UpdateMap();
+hud.prototype.listenerTurn = function(){    //Next Turn!
+    this.currentPlayer = !this.currentPlayer;
+    this.map.UpdateMap(this.currentPlayer);
+    this.currentTurnText.text = this.map.turn;
 }
 
-function listenerStructure(){
-    console.log("Structures inventory");
+hud.prototype.listenerStructure = function(){   //Structures inventory
+    
+
 }
 
-function listenerUnit(){
-    console.log("Units inventory");
+hud.prototype.listenerUnit = function(){    //Units inventory
+    this.inventoryBackground.visible = true;
+    this.unitIcon.visible = false;
+    if(this.currentPlayer){ //RED player
+            
+    }
 }
 
 module.exports = hud;

@@ -10,11 +10,15 @@ var map = function(game){
     //Scale
     this.BackgroundLayer.scale.set(1.8);
     this.ForegroundLayer.scale.set(1.8);
+
+    //AUX
+    this.turn = 0;
 };
 
-map.prototype.StuffCounter = function()
+map.prototype.StuffCounter = function(currentPlayer)
 {
-    console.log("CURRENT GAME STATUS INFO: ");
+    this.turn++;
+    console.log("CURRENT GAME STATUS INFO (" + this.turn + "): ");
 
       var treeCount = 0;
       var mountainCount = 0;
@@ -28,11 +32,15 @@ map.prototype.StuffCounter = function()
       }
       console.log("Árbol: " + treeCount);
       console.log("Montaña: " + mountainCount);
+    if(currentPlayer)
+        console.log("Current player = RED");
+    else
+    console.log("Current player = YELLOW");
 };
 
-map.prototype.UpdateMap = function() {
-    map.UpdateTrees();
-    map.StuffCounter();
+map.prototype.UpdateMap = function(currentPlayer) {
+    this.UpdateTrees();
+    this.StuffCounter(currentPlayer);
 };
 
 map.prototype.UpdateTrees = function(){
@@ -41,7 +49,7 @@ map.prototype.UpdateTrees = function(){
         for(var x = 0; x < this.map.width; x ++){
            if(this.map.getTile(x,y, this.ForegroundLayer,true).index == 5)  //Si es árbol
            {
-                if(Math.random() < 0.10)  //Probabilidad de que aparezca otro árbol
+                if(Math.random() < 0.15)  //Probabilidad de que aparezca otro árbol
                 {
                     var newTreePosX = 0;
                     var newTreePosY = 0;

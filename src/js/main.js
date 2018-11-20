@@ -27,6 +27,7 @@ var PreloaderScene = {
     this.game.load.image('nextTurnIcon', 'resources/sprites/Hud/nextTurnIcon.png');
     this.game.load.image('unitIcon', 'resources/sprites/Hud/unitIcon.png');
     this.game.load.image('structureIcon', 'resources/sprites/Hud/structureIcon.png');
+    this.game.load.image('inventoryBackground', 'resources/sprites/Hud/Inventory_Background.png');
   },
 
   create: function () {
