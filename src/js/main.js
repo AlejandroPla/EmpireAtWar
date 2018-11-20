@@ -28,6 +28,18 @@ var PreloaderScene = {
     this.game.load.image('unitIcon', 'resources/sprites/Hud/unitIcon.png');
     this.game.load.image('structureIcon', 'resources/sprites/Hud/structureIcon.png');
     this.game.load.image('inventoryBackground', 'resources/sprites/Hud/Inventory_Background.png');
+    this.game.load.image('empty', 'resources/sprites/Hud/Empty.png');
+    //UNITS
+    this.game.load.image('Red_Peasant', 'resources/sprites/Hud/Red_Peasant.png');
+    this.game.load.image('Red_Lancer', 'resources/sprites/Hud/Red_Lancer.png');
+    this.game.load.image('Red_Swordman', 'resources/sprites/Hud/Red_Swordman.png');
+    this.game.load.image('Red_Horseman', 'resources/sprites/Hud/Red_Horseman.png');
+    this.game.load.image('Yellow_Peasant', 'resources/sprites/Hud/Yellow_Peasant.png');
+    this.game.load.image('Yellow_Lancer', 'resources/sprites/Hud/Yellow_Lancer.png');
+    this.game.load.image('Yellow_Swordman', 'resources/sprites/Hud/Yellow_Swordman.png');
+    this.game.load.image('Yellow_Horseman', 'resources/sprites/Hud/Yellow_Horseman.png');
+
+
   },
 
   create: function () {
