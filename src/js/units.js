@@ -1,41 +1,53 @@
 'use strict';
 
-var units = function (type, x, y){
-
-        if (type == "peasant") //campesino
-        {
-            this.life = 10;
-            this.strenght = 5;
-            this.price = 10;
-            this.maintenance = 8;
-            this.vector2D = new vector2D(x,y);
-        }
-        else if (type == "lancer") //lancero
-        {
-            this.life = 15;
-            this.strenght = 10;
-            this.price = 15;
-            this.maintenance = 12;
-            this.vector2D = new vector2D(x,y);
-        }
-        else if (type == "knight") //caballero
-        {
-            this.life = 20;
-            this.strenght = 15;
-            this.price = 20;
-            this.maintenance = 15;
-            this.vector2D = new vector2D(x,y);
-        }
-        else if (type == "king") //rey
-        {
-            this.life = 25;
-            this.strenght = 20;
-            this.price = 25;
-            this.maintenance = 18;
-            this.vector2D = new vector2D(x,y);
-        }
-        else //ninguna
-        {
-            
-        }
+var unit = function(type){                              //RED = true
+    if(type == 255)                                     //YELLOW = false
+        this.Peasant(true);   
 }
+
+unit.prototype.Peasant = function(player){
+    this.life = 5;
+    this.strenght = 10;
+    this.price = 5;
+    this.maintenance = 5;
+    if (player == "RED")
+        this.player = true;
+    else
+        this.player = false;
+
+}
+
+unit.prototype.Lancer = function(player){
+    this.life = 10;
+    this.strenght = 15;
+    this.price = 10;
+    this.maintenance = 10;
+    if (player == "RED")
+        this.player = true;
+    else
+        this.player = false;
+}
+
+unit.prototype.Swordman = function(player){
+    this.life = 15;
+    this.strenght = 20;
+    this.price = 15;
+    this.maintenance = 15;
+    if (player == "RED")
+        this.player = true;
+    else
+        this.player = false;
+}
+
+unit.prototype.Horseman = function(player){
+    this.life = 20;
+    this.strenght = 25;
+    this.price = 20;
+    this.maintenance = 20;
+    if (player == "RED")
+        this.player = true;
+    else
+        this.player = false;
+}
+
+module.exports = unit;

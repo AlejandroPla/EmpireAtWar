@@ -1,18 +1,32 @@
 'use strict';
+var unit = require("./units.js");
 
 var map = function(game){
     this.game = game;
-    this.map = this.game.add.tilemap('level_01');
-    this.map.addTilesetImage('Tile-set');
+    this.map = this.game.add.tilemap('level_02');
+    this.map.addTilesetImage('Tile-set2x');
     this.BackgroundLayer = this.map.createLayer("Background");
     this.ForegroundLayer = this.map.createLayer("Foreground");
-
+    //Array de unidades
+    this.unitsArray = new Array(this.map.height);
+    this.createUnitsArray();
     //Scale
-    this.BackgroundLayer.scale.set(1.8);
-    this.ForegroundLayer.scale.set(1.8);
+    //this.BackgroundLayer.scale.set(1.8);
+    //this.ForegroundLayer.scale.set(1.8);
+
 
     //AUX
     this.turn = 0;
+};
+
+map.prototype.createUnitsArray = function(){
+    for (let index = 0; index < this.unitsArray.length; index++) {
+        this.unitsArray[index] = new Array(this.map.width);
+    }
+};
+
+map.prototype.creatUnit = function(x,y,unitType){
+    this.unitsArray[x][y] = new unit (unitType);
 };
 
 map.prototype.StuffCounter = function(currentPlayer)
@@ -81,6 +95,24 @@ map.prototype.UpdateTrees = function(){
            }
         }
     }
+}
+map.prototype.PlaceUnit = function(clickPoint, player, type){
+
+    this.placed = false;
+
+    if(this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 3 || this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 1){ //Es hierba
+        if(this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index == -1) //Nada ocupado
+        {
+            this.placed = true;
+            this.creatUnit(clickPoint.x,clickPoint.y,type);
+            this.map.putTile(type, clickPoint.x, clickPoint.y, this.ForegroundLayer);
+            console.log(this.unitsArray[clickPoint.x][clickPoint.y]); 
+        }
+            
+    }
+    else
+    ;
+    return this.placed;    
 }
 
 module.exports = map;

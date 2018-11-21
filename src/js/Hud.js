@@ -1,17 +1,23 @@
 'use strict';
 
+var price = require("./prices.js");
+
 var hud = function(game, map){
     this.game = game;
     this.map = map;
+    this.price = new price();
     this.currentPlayer = false;
+    this.money = 15;
+    this.selected = false;
+    this.selectedIndex = 0;
 
-    //Reset click
-    this.resetClickArea = game.add.sprite(0,0,'empty');
-    this.resetClickArea.height = this.game.height;
-    this.resetClickArea.width = this.game.width;
+    //Click area
+    this.clickArea = game.add.sprite(0,0,'empty');
+    this.clickArea.height = this.game.height;
+    this.clickArea.width = this.game.width;
         //Input logic
-        this.resetClickArea.inputEnabled = true;
-        this.resetClickArea.events.onInputDown.add(this.listenerReset, this);
+        this.clickArea.inputEnabled = true;
+        this.clickArea.events.onInputDown.add(this.listenerClick, this);
 
     //Inventory images
     this.inventoryBackground = game.add.image( this.game.width / 2, this.game.height *0.98, 'inventoryBackground');
@@ -64,21 +70,37 @@ var hud = function(game, map){
         this.Red_Peasant.anchor.setTo(0,1);
         this.Red_Peasant.scale.setTo(2);
         this.Red_Peasant.visible = false;
+        this.Red_Peasant.name = "Red_Peasant"
+            //Input logic
+            this.Red_Peasant.inputEnabled = true;
+            this.Red_Peasant.events.onInputDown.add(this.listenerUnitSelection, this);
 
         this.Red_Lancer = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle , this.game.height * 0.98 - this.heightPaddle, 'Red_Lancer');
         this.Red_Lancer.anchor.setTo(0,1);
         this.Red_Lancer.scale.setTo(2);
         this.Red_Lancer.visible = false;
+        this.Red_Lancer.name = "Red_Lancer"
+            //Input logic
+            this.Red_Lancer.inputEnabled = true;
+            this.Red_Lancer.events.onInputDown.add(this.listenerUnitSelection, this);
 
         this.Red_Swordman = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle*2 , this.game.height * 0.98 - this.heightPaddle, 'Red_Swordman');
         this.Red_Swordman.anchor.setTo(0,1);
         this.Red_Swordman.scale.setTo(2);
         this.Red_Swordman.visible = false;
+        this.Red_Swordman.name = "Red_Swordman"
+            //Input logic
+            this.Red_Swordman.inputEnabled = true;
+            this.Red_Swordman.events.onInputDown.add(this.listenerUnitSelection, this);
 
         this.Red_Horseman = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle*3 , this.game.height * 0.98 - this.heightPaddle, 'Red_Horseman');
         this.Red_Horseman.anchor.setTo(0,1);
         this.Red_Horseman.scale.setTo(2);
         this.Red_Horseman.visible = false;
+        this.Red_Horseman.name = "Red_Horseman"
+            //Input logic
+            this.Red_Horseman.inputEnabled = true;
+            this.Red_Horseman.events.onInputDown.add(this.listenerUnitSelection, this);
 
         //UNITS (YELLOW)
         this.Yellow_Peasant = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 , this.game.height * 0.98 - this.heightPaddle, 'Yellow_Peasant');
@@ -103,7 +125,6 @@ var hud = function(game, map){
 }
 
 hud.prototype.AllUnitsOn = function(player){
-    console.log("All units ON");
     if(player){
         this.Red_Peasant.visible = true;
         this.Red_Lancer.visible = true;
@@ -120,7 +141,6 @@ hud.prototype.AllUnitsOn = function(player){
 }
 
 hud.prototype.AllUnitsOff = function(){
-    console.log("All units OFF");
         this.Red_Peasant.visible = false;
         this.Red_Lancer.visible = false;
         this.Red_Swordman.visible = false;
@@ -135,15 +155,28 @@ hud.prototype.listenerTurn = function(){    //Next Turn!
     this.currentPlayer = !this.currentPlayer;
     this.map.UpdateMap(this.currentPlayer);
     this.currentTurnText.text = this.map.turn;
-    this.listenerReset();
+    this.listenerClick();
 }
 
-hud.prototype.listenerReset = function(){   //Reset status
+hud.prototype.listenerClick = function(){   //Reset status
     if(this.inventoryBackground.visible == true){
         this.inventoryBackground.visible = false;
         this.unitIcon.visible = true;
         this.structureIcon.visible = true;
         this.AllUnitsOff();
+    }
+    else{
+        if(this.selected){
+            this.clickPoint = this.game.input.position;
+            this.map.ForegroundLayer.getTileXY(this.clickPoint.x, this.clickPoint.y, this.clickPoint);
+            if(this.map.PlaceUnit(this.clickPoint, this.currentPlayer, this.selectedIndex))
+            {
+                this.money -= this.price.getPrice(this.selectedIndex) ;
+                this.selected = false;
+            }
+            
+        }
+        
     }
 }
 
@@ -162,6 +195,28 @@ hud.prototype.listenerUnit = function(){    //Units inventory
     this.structureIcon.visible = true;
 
     this.AllUnitsOn(this.currentPlayer);
+}
+
+hud.prototype.listenerUnitSelection = function (clicked){
+    if(clicked.name == "Red_Peasant")
+    {
+      if(this.money < 5){
+          console.log("No tienes suficiente dinero para comprar un " + clicked.name);
+      }
+      else{
+          console.log(clicked.name + " selecionado!");
+          this.selectedIndex = 255;
+          this.selected = true;
+          this.listenerClick();
+      }
+
+    }       
+    else if(clicked.name == "Red_Lancer")
+        console.log(clicked.name +" selected");
+    else if(clicked.name == "Red_Swordman")
+        console.log(clicked.name +" selected");
+    else if(clicked.name == "Red_Horseman")
+        console.log(clicked.name +" selected");
 }
 
 module.exports = hud;
