@@ -1,18 +1,21 @@
 'use strict';
 var unit = require("./units.js");
 
-var map = function(game){
+var map = function(game, stats){
     this.game = game;
-    this.map = this.game.add.tilemap('level_02');
-    this.map.addTilesetImage('Tile-set2x');
+    this.stats = stats;
+    this.map = this.game.add.tilemap('level_01');
+    this.map.addTilesetImage('Tile-set');
     this.BackgroundLayer = this.map.createLayer("Background");
     this.ForegroundLayer = this.map.createLayer("Foreground");
     //Array de unidades
     this.unitsArray = new Array(this.map.height);
     this.createUnitsArray();
     //Scale
-    //this.BackgroundLayer.scale.set(1.8);
-    //this.ForegroundLayer.scale.set(1.8);
+    this.BackgroundLayer.scale.set(1.8);
+    this.ForegroundLayer.scale.set(1.8);
+    this.BackgroundLayer.resizeWorld();
+    this.ForegroundLayer.resizeWorld();
 
 
     //AUX
@@ -26,7 +29,7 @@ map.prototype.createUnitsArray = function(){
 };
 
 map.prototype.creatUnit = function(x,y,unitType){
-    this.unitsArray[x][y] = new unit (unitType);
+    this.unitsArray[y][x] = new unit (unitType);
 };
 
 map.prototype.StuffCounter = function(currentPlayer)
@@ -96,17 +99,17 @@ map.prototype.UpdateTrees = function(){
         }
     }
 }
-map.prototype.PlaceUnit = function(clickPoint, player, type){
+map.prototype.PlaceUnit = function(clickPoint, type){
 
     this.placed = false;
 
     if(this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 3 || this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 1){ //Es hierba
-        if(this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index == -1) //Nada ocupado
-        {
+        if(this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index == -1){ //Nada ocupado
+        
             this.placed = true;
             this.creatUnit(clickPoint.x,clickPoint.y,type);
             this.map.putTile(type, clickPoint.x, clickPoint.y, this.ForegroundLayer);
-            console.log(this.unitsArray[clickPoint.x][clickPoint.y]); 
+            console.log(this.unitsArray[clickPoint.y][clickPoint.x].name + " placed at " + clickPoint.x + "/" + clickPoint.y);  //Console info
         }
             
     }
