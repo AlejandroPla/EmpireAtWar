@@ -7,9 +7,12 @@ var hud = function(game, map, stats){
     this.map = map;
     this.stats = stats;
     this.currentPlayer = false;
-    this.money = 15;
+    this.moneyR = 50;
+    this.moneyY = 60;
+    //Selection data
     this.selected = false;
     this.selectedIndex = 0;
+    this.selectedPrice = 0;
 
 //Click area
     this.clickArea = game.add.sprite(0,0,'empty');
@@ -18,6 +21,7 @@ var hud = function(game, map, stats){
     //Input logic
     this.clickArea.inputEnabled = true;
     this.clickArea.events.onInputDown.add(this.listenerClick, this);
+    
 
 //Inventory background / frame
     this.inventoryBackground = game.add.image( this.game.width / 2, this.game.height *0.98, 'inventoryBackground');
@@ -116,7 +120,7 @@ var hud = function(game, map, stats){
     this.Yellow_Peasant.scale.setTo(2);
     this.Yellow_Peasant.visible = false;
     this.Yellow_Peasant.index = this.stats.peasantIndexYellow;
-
+    this.Yellow_Peasant.price = this.stats.peasantPrice;
     //Input logic
     this.Yellow_Peasant.inputEnabled = true;
     this.Yellow_Peasant.events.onInputDown.add(this.listenerUnitSelection, this);
@@ -127,7 +131,7 @@ var hud = function(game, map, stats){
     this.Yellow_Lancer.scale.setTo(2);
     this.Yellow_Lancer.visible = false;
     this.Yellow_Lancer.index = this.stats.lancerIndexYellow;
-
+    this.Yellow_Lancer.price = this.stats.lancerPrice;
     //Input logic
     this.Yellow_Lancer.inputEnabled = true;
     this.Yellow_Lancer.events.onInputDown.add(this.listenerUnitSelection, this);
@@ -138,7 +142,7 @@ var hud = function(game, map, stats){
     this.Yellow_Swordman.scale.setTo(2);
     this.Yellow_Swordman.visible = false;
     this.Yellow_Swordman.index = this.stats.swordmanIndexYellow;
-
+    this.Yellow_Swordman.price = this.stats.swordmanPrice;
     //Input logic
     this.Yellow_Swordman.inputEnabled = true;
     this.Yellow_Swordman.events.onInputDown.add(this.listenerUnitSelection, this);
@@ -149,7 +153,7 @@ var hud = function(game, map, stats){
     this.Yellow_Horseman.scale.setTo(2);
     this.Yellow_Horseman.visible = false;
     this.Yellow_Horseman.index = this.stats.horsemanIndexYellow;
-
+    this.Yellow_Horseman.price = this.stats.horsemanPrice;
     //Input logic
     this.Yellow_Horseman.inputEnabled = true;
     this.Yellow_Horseman.events.onInputDown.add(this.listenerUnitSelection, this);
@@ -187,6 +191,8 @@ hud.prototype.listenerTurn = function(){    //NEXT TURN LOGIC
     this.map.UpdateMap(this.currentPlayer);     //Updates the map
     this.currentTurnText.text = this.map.turn;  //Updates the current turn text on the interface
     this.listenerClick();                       //Calls for the aproppiate click reaction
+    console.log("MoneyR: " + this.moneyR);
+    console.log("MoneyY: " + this.moneyY);
 }
 
 hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
@@ -202,16 +208,26 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
             this.map.ForegroundLayer.getTileXY(this.clickPoint.x/1.8, this.clickPoint.y/1.8, this.clickPoint);  //it is translated to the tile in that position
             if(this.map.PlaceUnit(this.clickPoint, this.selectedIndex))                                         //and tries to place the entity. If it succeeds,
             {
-               // this.money -=                                //decreases the aproppiate amount of money
-                this.selected = false;
+                console.log();
+                if(this.currentPlayer)                                                                          //decreases the aproppiate amount of money to the proper player
+                    this.moneyR = this.moneyR - this.selectedPrice;
+                else
+                    this.moneyY = this.moneyY - this.selectedPrice;
+                this.selectedReset();                   
             }
             
         }
         
     }
 }
+hud.prototype.selectedReset = function(){
+    this.selectedIndex = 0;
+    this.selectedPrice = 0;
+    this.selected = false;
+}
 
 hud.prototype.listenerStructure = function(){   //OPENS THE STRUCTURES INVENTORY
+    this.selectedReset();
     this.inventoryBackground.anchor.setTo(1,1);
     this.inventoryBackground.visible = true;
     this.structureIcon.visible = false;
@@ -220,6 +236,7 @@ hud.prototype.listenerStructure = function(){   //OPENS THE STRUCTURES INVENTORY
 }
 
 hud.prototype.listenerUnit = function(){    //OPENS THE UNITS INVENTORY
+    this.selectedReset();
     this.inventoryBackground.anchor.setTo(0,1);
     this.inventoryBackground.visible = true;
     this.unitIcon.visible = false;
@@ -229,19 +246,27 @@ hud.prototype.listenerUnit = function(){    //OPENS THE UNITS INVENTORY
 
 hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH UNIT WAS SELECTED AND VERIFIES IF THERE IS ENOUGH MONEY TO BUY IT
     
-    if(this.money < clicked.price){
-        console.log("Not enough money to buy..");
-    }
-    else{
-        console.log("Selected!");
-        this.selectedIndex = clicked.index;
-        this.selected = true;
-        this.listenerClick();
-    }         
+    if(this.currentPlayer)
+        if(this.moneyR >= clicked.price){
+            this.select(clicked);
+        }
+        else
+            console.log("Not enough money to buy..");
+
+    else
+        if(this.moneyY >= clicked.price){
+            this.select(clicked);
+        }
+        else
+            console.log("Not enough money to buy..");
 }
 
-hud.prototype.HasMoney = function(unitName){
-
+hud.prototype.select = function(clicked){
+    console.log("Selected!");
+    this.selectedIndex = clicked.index;
+    this.selected = true;
+    this.selectedPrice = clicked.price;
+    this.listenerClick();
 }
 
 module.exports = hud;

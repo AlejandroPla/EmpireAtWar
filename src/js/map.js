@@ -6,17 +6,21 @@ var map = function(game, stats){
     this.stats = stats;
     this.map = this.game.add.tilemap('level_01');
     this.map.addTilesetImage('Tile-set');
+    this.map.addTilesetImage('Colored_Tiles')
     this.BackgroundLayer = this.map.createLayer("Background");
+    this.GroundLayer = this.map.createLayer("Ground");
     this.ForegroundLayer = this.map.createLayer("Foreground");
     //Array de unidades
     this.unitsArray = new Array(this.map.height);
     this.createUnitsArray();
     //Scale
     this.BackgroundLayer.scale.set(1.8);
+    this.GroundLayer.scale.set(1.8);
     this.ForegroundLayer.scale.set(1.8);
+    
     this.BackgroundLayer.resizeWorld();
+    this.GroundLayer.resizeWorld();
     this.ForegroundLayer.resizeWorld();
-
 
     //AUX
     this.turn = 0;
@@ -66,7 +70,7 @@ map.prototype.UpdateTrees = function(){
         for(var x = 0; x < this.map.width; x ++){
            if(this.map.getTile(x,y, this.ForegroundLayer,true).index == 5)  //Si es árbol
            {
-                if(Math.random() < 0.15)  //Probabilidad de que aparezca otro árbol
+                if(Math.random() < this.stats.treeGrowRatio)  //Probabilidad de que aparezca otro árbol
                 {
                     var newTreePosX = 0;
                     var newTreePosY = 0;
