@@ -9,6 +9,7 @@ var hud = function(game, map, stats){
     this.currentPlayer = false;
     this.moneyR = 50;
     this.moneyY = 60;
+
     //Selection data
     this.selected = false;
     this.selectedIndex = 0;
@@ -30,14 +31,26 @@ var hud = function(game, map, stats){
     this.inventoryBackground.inputEnabled = true;
 
 //Turn Text (Top-right corner)
-    this.turnText = game.add.text(this.game.width - this.game.width * 0.10, 0.01 * this.game.height, 'Turn: ')
+    this.turnText = game.add.text(this.game.width - this.game.width * 0.10, 0.01 * this.game.height, 'Turn ')
     this.turnText.anchor.setTo(1,0);
-    this.turnText.fontSize = 30;
+    this.turnText.fontSize = this.stats.fontSize;
     this.currentTurn = this.map.turn;
     this.currentTurnText = game.add.text((this.game.width - this.game.width * 0.10)+ 45, 0.01 * this.game.height, this.currentTurn);
     this.currentTurnText.anchor.setTo(1,0);
-    this.currentTurnText.fontSize =  30;
-
+    this.currentTurnText.fontSize =  this.stats.fontSize;
+//Money text
+    this.moneyText = game.add.text(this.game.width * 0.05, 0.01 * this.game.height, 'Money ')
+    this.moneyText.anchor.setTo(0,0);
+    this.moneyText.fontSize = this.stats.fontSize;
+    this.moneyShown = this.moneyY;
+    this.moneyAmount = game.add.text((this.game.width * 0.05) + 130, 0.01 * this.game.height, this.moneyShown);
+    this.moneyAmount.anchor.setTo(1,0);
+    this.moneyAmount.fontSize = this.stats.fontSize;
+    this.coinIcon = game.add.sprite((this.game.width * 0.05) + 135, 0.018 * this.game.height, 'coinIcon');
+    this.coinIcon.scale.setTo(0.20);
+    this.coinIcon.anchor.setTo(0,0);
+    this.coinIcon.animations.add('spin',[0,1,2,3,4,5,6], 6, true);
+    this.coinIcon.animations.play('spin');
 //nextTurnIcon (Bottom-right corner, black arrow)
     this.nextTurnIcon = this.game.add.sprite(this.game.width, this.game.height, 'nextTurnIcon');
     this.nextTurnIcon.scale.setTo(0.15);
@@ -191,8 +204,7 @@ hud.prototype.listenerTurn = function(){    //NEXT TURN LOGIC
     this.map.UpdateMap(this.currentPlayer);     //Updates the map
     this.currentTurnText.text = this.map.turn;  //Updates the current turn text on the interface
     this.listenerClick();                       //Calls for the aproppiate click reaction
-    console.log("MoneyR: " + this.moneyR);
-    console.log("MoneyY: " + this.moneyY);
+    this.updateMoney();
 }
 
 hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
@@ -208,17 +220,26 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
             this.map.ForegroundLayer.getTileXY(this.clickPoint.x/1.8, this.clickPoint.y/1.8, this.clickPoint);  //it is translated to the tile in that position
             if(this.map.PlaceUnit(this.clickPoint, this.selectedIndex))                                         //and tries to place the entity. If it succeeds,
             {
-                console.log();
-                if(this.currentPlayer)                                                                          //decreases the aproppiate amount of money to the proper player
-                    this.moneyR = this.moneyR - this.selectedPrice;
-                else
+                if(this.currentPlayer)          {
+                    this.moneyR = this.moneyR - this.selectedPrice;                                             //decreases the aproppiate amount of money to the proper player
+                }                                                               
+
+                else{
                     this.moneyY = this.moneyY - this.selectedPrice;
-                this.selectedReset();                   
+                }
+                this.selectedReset();
+                this.updateMoney();             
             }
             
         }
         
     }
+}
+hud.prototype.updateMoney = function (){
+    if(this.currentPlayer)
+        this.moneyAmount.text = this.moneyR;
+    else
+        this.moneyAmount.text = this.moneyY;
 }
 hud.prototype.selectedReset = function(){
     this.selectedIndex = 0;

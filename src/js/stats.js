@@ -6,6 +6,7 @@ var stats = function(){
 
 //GAMEPLAY
 this.treeGrowRatio          = 0.15; // [0, 1] Probabilidad de que aparezca un nuevo árbol
+this.fontSize               = 25;
 
 //UNITS
     this.peasantLife        = 5;    //PEASANT

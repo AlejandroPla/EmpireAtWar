@@ -30,6 +30,7 @@ var PreloaderScene = {
     this.game.load.image('structureIcon', 'resources/sprites/Hud/structureIcon.png');
     this.game.load.image('inventoryBackground', 'resources/sprites/Hud/Inventory_Background.png');
     this.game.load.image('empty', 'resources/sprites/Hud/Empty.png');
+    this.game.load.spritesheet('coinIcon', 'resources/sprites/Hud/coin.png', 120, 96, 6);
     //UNITS
     this.game.load.image('Red_Peasant', 'resources/sprites/Hud/Red_Peasant.png');
     this.game.load.image('Red_Lancer', 'resources/sprites/Hud/Red_Lancer.png');
