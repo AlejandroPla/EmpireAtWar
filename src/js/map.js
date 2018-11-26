@@ -91,7 +91,7 @@ map.prototype.UpdateTrees = function(){
 
                     var nextPosElem = this.map.getTile(x + newTreePosX , y + newTreePosY, this.BackgroundLayer,true).index;
 
-                    if( nextPosElem == 3) //Es hierba sin nada encima
+                    if( nextPosElem == 3 || nextPosElem == 1) //Es hierba sin nada encima
                     {
                         if(this.map.getTile(x + newTreePosX , y + newTreePosY, this.ForegroundLayer,true).index == -1)
                         {
