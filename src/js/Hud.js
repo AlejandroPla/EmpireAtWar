@@ -29,6 +29,25 @@ var hud = function(game, map, stats){
     this.inventoryBackground.anchor.setTo(0,1);
     this.inventoryBackground.visible = false;
     this.inventoryBackground.inputEnabled = true;
+//Over background / frame
+    this.overBackground = game.add.image(this.game.width / 2, this.game.height * 0.98 - this.inventoryBackground.height - 10, 'statsBackground');
+    this.overBackground.anchor.setTo(0,1);
+    this.overBackground.scale.setTo(1,0.8);
+    this.overBackground.visible = false;
+    this.overBackground.inputEnabled = true;
+//Stats info
+    this.nameTxt = game.add.text(this.overBackground.width / 2, -this.overBackground.height -10,'Peasant');
+    this.nameTxt.anchor.setTo(0.5,0);
+    this.nameTxt.fontSize = 20;
+    this.overBackground.addChild(this.nameTxt);
+    this.priceTxt = game.add.text(10, - this.overBackground.height *0.80, 'Price: ');
+    this.priceTxt.fontSize = 18;
+    this.overBackground.addChild(this.priceTxt);
+    this.priceTxt.anchor.setTo(0,0);
+    this.strengthTxt =game.add.text(10, -10, 'Strength: ');
+    this.strengthTxt.anchor.setTo(0,1);
+    this.strengthTxt.fontSize = 18;
+    this.overBackground.addChild(this.strengthTxt);
 
 //Turn Text (Top-right corner)
     this.turnText = game.add.text(this.game.width - this.game.width * 0.10, 0.01 * this.game.height, 'Turn ')
@@ -87,44 +106,56 @@ var hud = function(game, map, stats){
     this.Red_Peasant.anchor.setTo(0,1);
     this.Red_Peasant.scale.setTo(2);
     this.Red_Peasant.visible = false;
-    this.Red_Peasant.index = this.stats.peasantIndexRed;
+    this.Red_Peasant.name = this.stats.peasantName;
     this.Red_Peasant.price = this.stats.peasantPrice;
+    this.Red_Peasant.strength = this.stats.peasantStrength;
     //Input logic
     this.Red_Peasant.inputEnabled = true;
     this.Red_Peasant.events.onInputDown.add(this.listenerUnitSelection, this);
+    this.Red_Peasant.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Peasant.events.onInputOut.add(this.listenerOut, this);
 
 //Lancer
     this.Red_Lancer = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle , this.game.height * 0.98 - this.heightPaddle, 'Red_Lancer');
     this.Red_Lancer.anchor.setTo(0,1);
     this.Red_Lancer.scale.setTo(2);
     this.Red_Lancer.visible = false;
-    this.Red_Lancer.index = this.stats.lancerIndexRed;
+    this.Red_Lancer.name = this.stats.lancerName;
     this.Red_Lancer.price = this.stats.lancerPrice;
+    this.Red_Lancer.strength = this.stats.lancerStrength;
     //Input logic
     this.Red_Lancer.inputEnabled = true;
     this.Red_Lancer.events.onInputDown.add(this.listenerUnitSelection, this);
+    this.Red_Lancer.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Lancer.events.onInputOut.add(this.listenerOut, this);
 
 //Swordman
     this.Red_Swordman = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle*2 , this.game.height * 0.98 - this.heightPaddle, 'Red_Swordman');
     this.Red_Swordman.anchor.setTo(0,1);
     this.Red_Swordman.scale.setTo(2);
     this.Red_Swordman.visible = false;
-    this.Red_Swordman.index = this.stats.swordmanIndexRed;
+    this.Red_Swordman.name = this.stats.swordmanName;
     this.Red_Swordman.price = this.stats.swordmanPrice;
+    this.Red_Swordman.strength = this.stats.swordmanStrength;
     //Input logic
     this.Red_Swordman.inputEnabled = true;
     this.Red_Swordman.events.onInputDown.add(this.listenerUnitSelection, this);
+    this.Red_Swordman.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Swordman.events.onInputOut.add(this.listenerOut, this);
 
 //Horseman
     this.Red_Horseman = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle*3 , this.game.height * 0.98 - this.heightPaddle, 'Red_Horseman');
     this.Red_Horseman.anchor.setTo(0,1);
     this.Red_Horseman.scale.setTo(2);
     this.Red_Horseman.visible = false;
-    this.Red_Horseman.index = this.stats.horsemanIndexRed;
+    this.Red_Horseman.name = this.stats.horsemanName;
     this.Red_Horseman.price = this.stats.horsemanPrice;
+    this.Red_Horseman.strength = this.stats.horsemanStrength;
     //Input logic
     this.Red_Horseman.inputEnabled = true;
     this.Red_Horseman.events.onInputDown.add(this.listenerUnitSelection, this);
+    this.Red_Horseman.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Horseman.events.onInputOut.add(this.listenerOut, this);
 
 //UNITS (YELLOW)
 //Peasant
@@ -132,44 +163,56 @@ var hud = function(game, map, stats){
     this.Yellow_Peasant.anchor.setTo(0,1);
     this.Yellow_Peasant.scale.setTo(2);
     this.Yellow_Peasant.visible = false;
-    this.Yellow_Peasant.index = this.stats.peasantIndexYellow;
+    this.Yellow_Peasant.name = this.stats.peasantName;
     this.Yellow_Peasant.price = this.stats.peasantPrice;
+    this.Yellow_Peasant.strength = this.stats.peasantStrength;
     //Input logic
     this.Yellow_Peasant.inputEnabled = true;
     this.Yellow_Peasant.events.onInputDown.add(this.listenerUnitSelection, this);
+    this.Yellow_Peasant.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Peasant.events.onInputOut.add(this.listenerOut, this);
 
 //Lancer
     this.Yellow_Lancer = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle , this.game.height * 0.98 - this.heightPaddle, 'Yellow_Lancer');
     this.Yellow_Lancer.anchor.setTo(0,1);
     this.Yellow_Lancer.scale.setTo(2);
     this.Yellow_Lancer.visible = false;
-    this.Yellow_Lancer.index = this.stats.lancerIndexYellow;
+    this.Yellow_Lancer.name = this.stats.lancerName;
     this.Yellow_Lancer.price = this.stats.lancerPrice;
+    this.Yellow_Lancer.strength = this.stats.lancerStrength;
     //Input logic
     this.Yellow_Lancer.inputEnabled = true;
     this.Yellow_Lancer.events.onInputDown.add(this.listenerUnitSelection, this);
+    this.Yellow_Lancer.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Lancer.events.onInputOut.add(this.listenerOut, this);
 
 //Swordman
     this.Yellow_Swordman = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle*2 , this.game.height * 0.98 - this.heightPaddle, 'Yellow_Swordman');
     this.Yellow_Swordman.anchor.setTo(0,1);
     this.Yellow_Swordman.scale.setTo(2);
     this.Yellow_Swordman.visible = false;
-    this.Yellow_Swordman.index = this.stats.swordmanIndexYellow;
+    this.Yellow_Swordman.name = this.stats.swordmanName;
     this.Yellow_Swordman.price = this.stats.swordmanPrice;
+    this.Yellow_Swordman.strength = this.stats.swordmanStrength;
     //Input logic
     this.Yellow_Swordman.inputEnabled = true;
     this.Yellow_Swordman.events.onInputDown.add(this.listenerUnitSelection, this);
+    this.Yellow_Swordman.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Swordman.events.onInputOut.add(this.listenerOut, this);
 
 //Horseman
     this.Yellow_Horseman = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle*3 , this.game.height * 0.98 - this.heightPaddle, 'Yellow_Horseman');
     this.Yellow_Horseman.anchor.setTo(0,1);
     this.Yellow_Horseman.scale.setTo(2);
     this.Yellow_Horseman.visible = false;
-    this.Yellow_Horseman.index = this.stats.horsemanIndexYellow;
+    this.Yellow_Horseman.name = this.stats.horsemanName;
     this.Yellow_Horseman.price = this.stats.horsemanPrice;
+    this.Yellow_Horseman.strength = this.stats.horsemanStrength;
     //Input logic
     this.Yellow_Horseman.inputEnabled = true;
     this.Yellow_Horseman.events.onInputDown.add(this.listenerUnitSelection, this);
+    this.Yellow_Horseman.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Horseman.events.onInputOut.add(this.listenerOut, this);
 }
 
 hud.prototype.AllUnitsOn = function(player){    //DEPENDING ON THE CURRENT PLAYER, MAKES VISIBLE THE APROPIATE UNITS INTERFACE ICONS
@@ -256,6 +299,16 @@ hud.prototype.listenerStructure = function(){   //OPENS THE STRUCTURES INVENTORY
     this.AllUnitsOff();
 }
 
+hud.prototype.listenerOver = function(Overed){
+    this.priceTxt.text = 'Price:       ' + Overed.price;
+    this.strengthTxt.text = 'Strength: ' + Overed.strength;
+    this.nameTxt.text = Overed.name;
+    this.overBackground.visible = true;
+}
+
+hud.prototype.listenerOut = function(){
+    this.overBackground.visible = false;
+}
 hud.prototype.listenerUnit = function(){    //OPENS THE UNITS INVENTORY
     this.selectedReset();
     this.inventoryBackground.anchor.setTo(0,1);
