@@ -225,8 +225,9 @@ var hud = function(game, map, stats){
 //Follower
     this.follower = game.add.image(100,100,'Red_Peasant');
     this.follower.scale.setTo(2);
-    this.follower.anchor.setTo(0.5, 0.5);
+    this.follower.anchor.setTo(0,0);
     this.follower.visible = false;
+
 }
 
 hud.prototype.AllUnitsOn = function(player){    //DEPENDING ON THE CURRENT PLAYER, MAKES VISIBLE THE APROPIATE UNITS INTERFACE ICONS
@@ -356,7 +357,7 @@ hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH 
 
 hud.prototype.UpdateFollower = function(){
     if(this.selected){
-        this.follower.position.set(this.game.input.mousePointer.worldX - this.game.input.mousePointer.worldX % 32, this.game.input.mousePointer.worldY - this.game.input.mousePointer.worldY % 32);
+        this.follower.position.set(this.game.input.worldX - this.game.input.worldX %28.8, this.game.input.worldY - this.game.input.worldY % 28.8);
     }
 }
 
