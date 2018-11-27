@@ -43,6 +43,39 @@ this.fontSize               = 25;
     this.horsemanIndexYellow = 130;
     this.horsemanName        = "Horseman";
 
+
+    // STRUCTURES
+
+    this.farmLife = 5;  //FARM
+    this.farmPrice = 5;
+    this.farmIncome = 5;
+    this.farmIndexRed = 43;  //NOTA: cambiar el color de la granja de verde a rojo
+    this.farmIndexYellow = 42;
+    this.farmName = "Farm";
+    
+
+    this.towerLife = 10;  //TOWER
+    this.towerPrice = 10;
+    this.towerDefence = 10;
+    this.towerIndexRed = 23;
+    this.towerIndexYellow = 26;
+    this.towerName = "Tower";
+
+
+    this.fortressLife = 15;  //FORTRESS
+    this.fortressPrice = 15;
+    this.fortressDefence = 15;
+    this.fortressIndexRed = 30;
+    this.fortressIndexYellow = 33;
+    this.fortressName = "Fortress";
+
+
+    this.baseLife = 20;  //BASE
+    this.baseIncome = 10;
+    this.baseIndexRed = 44;
+    this.baseIndexYellow = 47;
+    this.baseName = "Base";
+
 }
 
 module.exports = stats;
