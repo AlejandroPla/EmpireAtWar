@@ -14,6 +14,7 @@ var hud = function(game, map, stats){
     this.selected = false;
     this.selectedIndex = 0;
     this.selectedPrice = 0;
+    
 
 //Click area
     this.clickArea = game.add.sprite(0,0,'empty');
@@ -22,7 +23,6 @@ var hud = function(game, map, stats){
     //Input logic
     this.clickArea.inputEnabled = true;
     this.clickArea.events.onInputDown.add(this.listenerClick, this);
-    
 
 //Inventory background / frame
     this.inventoryBackground = game.add.image( this.game.width / 2, this.game.height *0.98, 'inventoryBackground');
@@ -106,6 +106,7 @@ var hud = function(game, map, stats){
     this.Red_Peasant.anchor.setTo(0,1);
     this.Red_Peasant.scale.setTo(2);
     this.Red_Peasant.visible = false;
+    this.Red_Peasant.index = this.stats.peasantIndexRed;
     this.Red_Peasant.name = this.stats.peasantName;
     this.Red_Peasant.price = this.stats.peasantPrice;
     this.Red_Peasant.strength = this.stats.peasantStrength;
@@ -120,6 +121,7 @@ var hud = function(game, map, stats){
     this.Red_Lancer.anchor.setTo(0,1);
     this.Red_Lancer.scale.setTo(2);
     this.Red_Lancer.visible = false;
+    this.Red_Lancer.index = this.stats.lancerIndexRed;
     this.Red_Lancer.name = this.stats.lancerName;
     this.Red_Lancer.price = this.stats.lancerPrice;
     this.Red_Lancer.strength = this.stats.lancerStrength;
@@ -134,6 +136,7 @@ var hud = function(game, map, stats){
     this.Red_Swordman.anchor.setTo(0,1);
     this.Red_Swordman.scale.setTo(2);
     this.Red_Swordman.visible = false;
+    this.Red_Swordman.index = this.stats.swordmanIndexRed;
     this.Red_Swordman.name = this.stats.swordmanName;
     this.Red_Swordman.price = this.stats.swordmanPrice;
     this.Red_Swordman.strength = this.stats.swordmanStrength;
@@ -148,6 +151,7 @@ var hud = function(game, map, stats){
     this.Red_Horseman.anchor.setTo(0,1);
     this.Red_Horseman.scale.setTo(2);
     this.Red_Horseman.visible = false;
+    this.Red_Horseman.index = this.stats.horsemanIndexRed;
     this.Red_Horseman.name = this.stats.horsemanName;
     this.Red_Horseman.price = this.stats.horsemanPrice;
     this.Red_Horseman.strength = this.stats.horsemanStrength;
@@ -163,6 +167,7 @@ var hud = function(game, map, stats){
     this.Yellow_Peasant.anchor.setTo(0,1);
     this.Yellow_Peasant.scale.setTo(2);
     this.Yellow_Peasant.visible = false;
+    this.Yellow_Peasant.index = this.stats.peasantIndexYellow;
     this.Yellow_Peasant.name = this.stats.peasantName;
     this.Yellow_Peasant.price = this.stats.peasantPrice;
     this.Yellow_Peasant.strength = this.stats.peasantStrength;
@@ -177,6 +182,7 @@ var hud = function(game, map, stats){
     this.Yellow_Lancer.anchor.setTo(0,1);
     this.Yellow_Lancer.scale.setTo(2);
     this.Yellow_Lancer.visible = false;
+    this.Yellow_Lancer.index = this.stats.lancerIndexYellow;
     this.Yellow_Lancer.name = this.stats.lancerName;
     this.Yellow_Lancer.price = this.stats.lancerPrice;
     this.Yellow_Lancer.strength = this.stats.lancerStrength;
@@ -191,6 +197,7 @@ var hud = function(game, map, stats){
     this.Yellow_Swordman.anchor.setTo(0,1);
     this.Yellow_Swordman.scale.setTo(2);
     this.Yellow_Swordman.visible = false;
+    this.Yellow_Swordman.index = this.stats.swordmanIndexYellow;
     this.Yellow_Swordman.name = this.stats.swordmanName;
     this.Yellow_Swordman.price = this.stats.swordmanPrice;
     this.Yellow_Swordman.strength = this.stats.swordmanStrength;
@@ -205,6 +212,7 @@ var hud = function(game, map, stats){
     this.Yellow_Horseman.anchor.setTo(0,1);
     this.Yellow_Horseman.scale.setTo(2);
     this.Yellow_Horseman.visible = false;
+    this.Yellow_Horseman.index = this.stats.horsemanIndexYellow;
     this.Yellow_Horseman.name = this.stats.horsemanName;
     this.Yellow_Horseman.price = this.stats.horsemanPrice;
     this.Yellow_Horseman.strength = this.stats.horsemanStrength;
@@ -213,6 +221,13 @@ var hud = function(game, map, stats){
     this.Yellow_Horseman.events.onInputDown.add(this.listenerUnitSelection, this);
     this.Yellow_Horseman.events.onInputOver.add(this.listenerOver, this);
     this.Yellow_Horseman.events.onInputOut.add(this.listenerOut, this);
+
+//Follower
+    this.follower = game.add.image(100,100,'Red_Peasant');
+    this.follower.scale.setTo(2);
+    this.follower.anchor.setTo(0,0);
+    this.follower.visible = false;
+
 }
 
 hud.prototype.AllUnitsOn = function(player){    //DEPENDING ON THE CURRENT PLAYER, MAKES VISIBLE THE APROPIATE UNITS INTERFACE ICONS
@@ -263,6 +278,7 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
             this.map.ForegroundLayer.getTileXY(this.clickPoint.x/1.8, this.clickPoint.y/1.8, this.clickPoint);  //it is translated to the tile in that position
             if(this.map.PlaceUnit(this.clickPoint, this.selectedIndex))                                         //and tries to place the entity. If it succeeds,
             {
+                this.follower.visible = false;                                                                  //Follower Visible off 
                 if(this.currentPlayer)          {
                     this.moneyR = this.moneyR - this.selectedPrice;                                             //decreases the aproppiate amount of money to the proper player
                 }                                                               
@@ -322,6 +338,8 @@ hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH 
     
     if(this.currentPlayer)
         if(this.moneyR >= clicked.price){
+            this.follower.loadTexture(clicked.texture);
+            this.follower.visible = true;
             this.select(clicked);
         }
         else
@@ -329,10 +347,18 @@ hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH 
 
     else
         if(this.moneyY >= clicked.price){
+            this.follower.loadTexture(clicked.texture);
+            this.follower.visible = true;
             this.select(clicked);
         }
         else
             console.log("Not enough money to buy..");
+}
+
+hud.prototype.UpdateFollower = function(){
+    if(this.selected){
+        this.follower.position.set(this.game.input.worldX - this.game.input.worldX %28.8, this.game.input.worldY - this.game.input.worldY % 28.8);
+    }
 }
 
 hud.prototype.select = function(clicked){

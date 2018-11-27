@@ -42,7 +42,6 @@ var PreloaderScene = {
     this.game.load.image('Yellow_Swordman', 'resources/sprites/Hud/Yellow_Swordman.png');
     this.game.load.image('Yellow_Horseman', 'resources/sprites/Hud/Yellow_Horseman.png');
 
-
   },
 
   create: function () {
