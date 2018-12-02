@@ -4,6 +4,10 @@
 
 var stats = function(){
 
+//Memory
+this.unitsInGame = [255,262,121,128,122,129,123,130];
+this.structuresInGame = [];
+
 //GAMEPLAY
 this.treeGrowRatio          = 0.15; // [0, 1] Probabilidad de que aparezca un nuevo árbol
 this.fontSize               = 25;
@@ -42,6 +46,18 @@ this.fontSize               = 25;
     this.horsemanIndexRed    = 123;
     this.horsemanIndexYellow = 130;
     this.horsemanName        = "Horseman";
+
+}
+
+stats.prototype.IsUnit = function(x){       //Returns if the index given is one of the units in-game
+    var i = 0;
+    while(i < this.unitsInGame.length && x != this.unitsInGame[i])
+        i++;
+
+    if(i == this.unitsInGame.length)
+        return false;
+    else
+        return true;
 
 }
 

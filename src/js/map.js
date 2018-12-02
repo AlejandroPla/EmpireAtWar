@@ -10,9 +10,11 @@ var map = function(game, stats){
     this.BackgroundLayer = this.map.createLayer("Background");
     this.GroundLayer = this.map.createLayer("Ground");
     this.ForegroundLayer = this.map.createLayer("Foreground");
-    //Array de unidades
+
+    //Units group
     this.unitsArray = new Array(this.map.height);
     this.createUnitsArray();
+
     //Scale
     this.BackgroundLayer.scale.set(1.8);
     this.GroundLayer.scale.set(1.8);
@@ -120,6 +122,35 @@ map.prototype.PlaceUnit = function(clickPoint, type){
     else
     ;
     return this.placed;    
+}
+
+map.prototype.FourPos = function (pos){ //Return an array with the entities on the four direction around a given position
+    var fourPos = [0,0,0,0];    //Top, right , down, left
+
+        fourPos [0] = this.WhatIsIt(pos.x, pos.y - 1);
+        fourPos [1] = this.WhatIsIt(pos.x + 1, pos.y);
+        fourPos [2] = this.WhatIsIt(pos.x, pos.y + 1);
+        fourPos [3] = this.WhatIsIt(pos.x - 1, pos.y);
+    return fourPos;
+}
+
+map.prototype.WhatIsIt = function (x,y){
+    var backElem = this.map.getTile(x, y, this.BackgroundLayer, true).index;
+    if(backElem != 3 && backElem != 1)  //Beach or water   (Out of game zone)
+        return 0;
+
+    else{                               //Inside game zone
+        var foreElem = this.map.getTile(x, y, this.ForegroundLayer, true).index;
+
+        if (foreElem == 5) //Tree
+            return 2;
+        else if (foreElem == -1)//Vacío
+            return 1;
+        else if(this.stats.IsUnit(foreElem))                    //Unit
+            return 3;
+        else
+            return 0;
+    }
 }
 
 module.exports = map;

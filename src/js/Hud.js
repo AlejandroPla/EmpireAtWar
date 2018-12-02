@@ -10,12 +10,12 @@ var hud = function(game, map, stats){
     this.moneyR = 50;
     this.moneyY = 60;
 
-    //Selection data
+//Selection data
     this.selected = false;
     this.selectedIndex = 0;
     this.selectedPrice = 0;
     
-
+//Interface
 //Click area
     this.clickArea = game.add.sprite(0,0,'empty');
     this.clickArea.height = this.game.height;
@@ -29,12 +29,14 @@ var hud = function(game, map, stats){
     this.inventoryBackground.anchor.setTo(0,1);
     this.inventoryBackground.visible = false;
     this.inventoryBackground.inputEnabled = true;
+
 //Over background / frame
     this.overBackground = game.add.image(this.game.width / 2, this.game.height * 0.98 - this.inventoryBackground.height - 10, 'statsBackground');
     this.overBackground.anchor.setTo(0,1);
     this.overBackground.scale.setTo(1,0.8);
     this.overBackground.visible = false;
     this.overBackground.inputEnabled = true;
+
 //Stats info
     this.nameTxt = game.add.text(this.overBackground.width / 2, -this.overBackground.height -10,'Peasant');
     this.nameTxt.anchor.setTo(0.5,0);
@@ -57,6 +59,7 @@ var hud = function(game, map, stats){
     this.currentTurnText = game.add.text((this.game.width - this.game.width * 0.10)+ 45, 0.01 * this.game.height, this.currentTurn);
     this.currentTurnText.anchor.setTo(1,0);
     this.currentTurnText.fontSize =  this.stats.fontSize;
+
 //Money text
     this.moneyText = game.add.text(this.game.width * 0.05, 0.01 * this.game.height, 'Money ')
     this.moneyText.anchor.setTo(0,0);
@@ -70,6 +73,7 @@ var hud = function(game, map, stats){
     this.coinIcon.anchor.setTo(0,0);
     this.coinIcon.animations.add('spin',[0,1,2,3,4,5,6], 6, true);
     this.coinIcon.animations.play('spin');
+
 //nextTurnIcon (Bottom-right corner, black arrow)
     this.nextTurnIcon = this.game.add.sprite(this.game.width, this.game.height, 'nextTurnIcon');
     this.nextTurnIcon.scale.setTo(0.15);
@@ -272,11 +276,13 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
         this.structureIcon.visible = true;
         this.AllUnitsOff();
     }
-    else{   //If not, it means that the player is trying to place some unit or structure
-        if(this.selected){                                                                                      //If the player made a selection of an unit / structure,
-            this.clickPoint = this.game.input.position;                                                         //the click position is get 
-            this.map.ForegroundLayer.getTileXY(this.clickPoint.x/1.8, this.clickPoint.y/1.8, this.clickPoint);  //it is translated to the tile in that position
-            if(this.map.PlaceUnit(this.clickPoint, this.selectedIndex))                                         //and tries to place the entity. If it succeeds,
+    else{   //If not, it means that the player is trying to place some unit or structure or selecting a territory, unit or structure
+
+        this.clickPoint = this.game.input.position;                                                         //the click position is get
+        this.map.ForegroundLayer.getTileXY(this.clickPoint.x/1.8, this.clickPoint.y/1.8, this.clickPoint);  //it is translated to the tile in that position
+
+        if(this.selected){                                                                                      //If the player bought an unit / structure,
+            if(this.map.PlaceUnit(this.clickPoint, this.selectedIndex))                                         //tries to place the entity. If it succeeds,
             {
                 this.follower.visible = false;                                                                  //Follower Visible off 
                 if(this.currentPlayer)          {
@@ -291,16 +297,26 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
             }
             
         }
+        else{   //If not it means he is selecting an unit, territory or structure
+            var fourPos = this.map.FourPos(this.clickPoint);
+            console.log(fourPos);
+
+            for (let index = 0; index < 4; index++) {
+                ;
+                
+            }
+        }
         
     }
 }
-hud.prototype.updateMoney = function (){
+hud.prototype.updateMoney = function (){    //Updates the money display
     if(this.currentPlayer)
         this.moneyAmount.text = this.moneyR;
     else
         this.moneyAmount.text = this.moneyY;
 }
-hud.prototype.selectedReset = function(){
+
+hud.prototype.selectedReset = function(){   //Resets the unit/structure selection to NOT selected
     this.selectedIndex = 0;
     this.selectedPrice = 0;
     this.selected = false;
@@ -315,16 +331,17 @@ hud.prototype.listenerStructure = function(){   //OPENS THE STRUCTURES INVENTORY
     this.AllUnitsOff();
 }
 
-hud.prototype.listenerOver = function(Overed){
+hud.prototype.listenerOver = function(Overed){  //Opens the unit stats display
     this.priceTxt.text = 'Price:       ' + Overed.price;
     this.strengthTxt.text = 'Strength: ' + Overed.strength;
     this.nameTxt.text = Overed.name;
     this.overBackground.visible = true;
 }
 
-hud.prototype.listenerOut = function(){
+hud.prototype.listenerOut = function(){ //Closes the unit stats display
     this.overBackground.visible = false;
 }
+
 hud.prototype.listenerUnit = function(){    //OPENS THE UNITS INVENTORY
     this.selectedReset();
     this.inventoryBackground.anchor.setTo(0,1);
@@ -355,13 +372,13 @@ hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH 
             console.log("Not enough money to buy..");
 }
 
-hud.prototype.UpdateFollower = function(){
+hud.prototype.UpdateFollower = function(){  //Updates the position of the cursor follower
     if(this.selected){
         this.follower.position.set(this.game.input.worldX - this.game.input.worldX %28.8, this.game.input.worldY - this.game.input.worldY % 28.8);
     }
 }
 
-hud.prototype.select = function(clicked){
+hud.prototype.select = function(clicked){   //Selects an unit/structure to buy
     console.log("Selected!");
     this.selectedIndex = clicked.index;
     this.selected = true;
