@@ -1,5 +1,6 @@
 'use strict';
 var unit = require("./units.js");
+var structure = require("./structures.js");
 
 var map = function(game, stats){
     this.game = game;
@@ -14,6 +15,10 @@ var map = function(game, stats){
     //Units group
     this.unitsArray = new Array(this.map.height);
     this.createUnitsArray();
+
+    //Structures group
+    this.structuresArray = new Array(this.map.height);
+    this.createStructuresArray();
 
     //Scale
     this.BackgroundLayer.scale.set(1.8);
@@ -37,6 +42,17 @@ map.prototype.createUnitsArray = function(){
 map.prototype.creatUnit = function(x,y,unitType){
     this.unitsArray[y][x] = new unit (unitType);
 };
+
+map.prototype.createStructuresArray = function(){
+    for (let index = 0; index < this.structuresArray.length; index++){
+        this.structuresArray[index] = new Array(this.map.width);
+    }
+;}
+
+map.prototype.createStructure = function(x, y, structureType){
+    this.structuresArray[y][x] = new structure (structureType);
+};
+
 
 map.prototype.StuffCounter = function(currentPlayer)
 {

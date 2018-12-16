@@ -226,6 +226,124 @@ var hud = function(game, map, stats){
     this.Yellow_Horseman.events.onInputOver.add(this.listenerOver, this);
     this.Yellow_Horseman.events.onInputOut.add(this.listenerOut, this);
 
+//STRUCTURES (RED)
+//Farm
+    this.Red_Farm = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1, this.game.height * 0.98 - this.heightPaddle, 'Red_Farm');
+    this.Red_Farm.anchor.setTo(10,1);
+    this.Red_Farm.scale.setTo(2);
+    this.Red_Farm.visible = false;
+    this.Red_Farm.index = this.stats.farmIndexRed;
+    this.Red_Farm.name = this.stats.farmName;
+    this.Red_Farm.price = this.stats.farmPrice;
+    this.Red_Farm.strength = this.stats.farmStrength;
+    //Input logic
+    this.Red_Farm.inputEnabled = true;
+    this.Red_Farm.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Red_Farm.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Farm.events.onInputOut.add(this.listenerOut, this);
+
+//Tower
+    this.Red_Tower = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle , this.game.height * 0.98 - this.heightPaddle, 'Red_Tower');
+    this.Red_Tower.anchor.setTo(10,1);
+    this.Red_Tower.scale.setTo(2);
+    this.Red_Tower.visible = false;
+    this.Red_Tower.index = this.stats.towerIndexRed;
+    this.Red_Tower.name = this.stats.towerName;
+    this.Red_Tower.price = this.stats.towerPrice;
+    this.Red_Tower.strength = this.stats.towerStrength;
+    //Input logic
+    this.Red_Tower.inputEnabled = true;
+    this.Red_Tower.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Red_Tower.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Tower.events.onInputOut.add(this.listenerOut, this);
+
+//Fortress
+    this.Red_Fortress = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle*2 , this.game.height * 0.98 - this.heightPaddle, 'Red_Fortress');
+    this.Red_Fortress.anchor.setTo(10,1);
+    this.Red_Fortress.scale.setTo(2);
+    this.Red_Fortress.visible = false;
+    this.Red_Fortress.index = this.stats.fortressIndexRed;
+    this.Red_Fortress.name = this.stats.fortressName;
+    this.Red_Fortress.price = this.stats.fortressPrice;
+    this.Red_Fortress.strength = this.stats.fortressStrength;
+    //Input logic
+    this.Red_Fortress.inputEnabled = true;
+    this.Red_Fortress.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Red_Fortress.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Fortress.events.onInputOut.add(this.listenerOut, this);
+
+//Base
+    this.Red_Base = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle*3 , this.game.height * 0.98 - this.heightPaddle, 'Red_Base');
+    this.Red_Base.anchor.setTo(1,1);
+    this.Red_Base.scale.setTo(2);
+    this.Red_Base.visible = false;
+    this.Red_Base.index = this.stats.baseIndexRed;
+    this.Red_Base.income = this.stats.baseIncome;
+    //Input logic
+    this.Red_Base.inputEnabled = true;
+    this.Red_Base.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Red_Base.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Base.events.onInputOut.add(this.listenerOut, this);
+
+//STRUCTURES (YELLOW)
+//Farm
+    this.Yellow_Farm = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 , this.game.height * 0.98 - this.heightPaddle, 'Yellow_Farm');
+    this.Yellow_Farm.anchor.setTo(1,1);
+    this.Yellow_Farm.scale.setTo(2);
+    this.Yellow_Farm.visible = false;
+    this.Yellow_Farm.index = this.stats.farmIndexYellow;
+    this.Yellow_Farm.name = this.stats.farmName;
+    this.Yellow_Farm.price = this.stats.farmPrice;
+    this.Yellow_Farm.income = this.stats.farmStrength;
+    //Input logic
+    this.Yellow_Farm.inputEnabled = true;
+    this.Yellow_Farm.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Yellow_Farm.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Farm.events.onInputOut.add(this.listenerOut, this);
+
+//Tower
+    this.Yellow_Tower = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle , this.game.height * 0.98 - this.heightPaddle, 'Yellow_Tower');
+    this.Yellow_Tower.anchor.setTo(1,1);
+    this.Yellow_Tower.scale.setTo(2);
+    this.Yellow_Tower.visible = false;
+    this.Yellow_Tower.index = this.stats.towerIndexYellow;
+    this.Yellow_Tower.name = this.stats.towerName;
+    this.Yellow_Tower.price = this.stats.towerPrice;
+    this.Yellow_Tower.strength = this.stats.towerStrength;
+    //Input logic
+    this.Yellow_Tower.inputEnabled = true;
+    this.Yellow_Tower.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Yellow_Tower.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Tower.events.onInputOut.add(this.listenerOut, this);
+
+//Fortress
+    this.Yellow_Fortress = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle*2 , this.game.height * 0.98 - this.heightPaddle, 'Yellow_Fortress');
+    this.Yellow_Fortress.anchor.setTo(3,1);
+    this.Yellow_Fortress.scale.setTo(2);
+    this.Yellow_Fortress.visible = false;
+    this.Yellow_Fortress.index = this.stats.fortressIndexYellow;
+    this.Yellow_Fortress.name = this.stats.fortressName;
+    this.Yellow_Fortress.price = this.stats.fortressPrice;
+    this.Yellow_Fortress.strength = this.stats.fortressStrength;
+    //Input logic
+    this.Yellow_Fortress.inputEnabled = true;
+    this.Yellow_Fortress.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Yellow_Fortress.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Fortress.events.onInputOut.add(this.listenerOut, this);
+
+//Base
+    this.Yellow_Base = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle*3 , this.game.height * 0.98 - this.heightPaddle, 'Yellow_Base');
+    this.Yellow_Base.anchor.setTo(1,1);
+    this.Yellow_Base.scale.setTo(2);
+    this.Yellow_Base.visible = false;
+    this.Yellow_Base.index = this.stats.baseIndexYellow;
+    this.Yellow_Base.income = this.stats.baseIncome;
+    //Input logic
+    this.Yellow_Base.inputEnabled = true;
+    this.Yellow_Base.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Yellow_Base.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Base.events.onInputOut.add(this.listenerOut, this);
+
 //Follower
     this.follower = game.add.image(100,100,'Red_Peasant');
     this.follower.scale.setTo(2);
@@ -261,6 +379,30 @@ hud.prototype.AllUnitsOff = function(){ //MAKES NOT VISIBLE ALL THE UNITS INTERF
         this.Yellow_Horseman.visible = false;
 }
 
+hud.prototype.AllStructuresOn = function(){ //MAKES VISIBLE ALL THE STRUCTURE INTERFACE ICONS
+    if (this.player = true)
+    {
+        this.Red_Farm.visible = true;
+        this.Red_Tower.visible = true;
+        this.Red_Fortress.visible = true;
+    }
+    else
+    {
+        this.Yellow_Farm.visible = true;
+        this.Yellow_Tower.visible = true;
+        this.Yellow_Fortress.visible = true;
+    }
+}
+
+hud.prototype.AllStructuresOff = function(){ //MAKES NOT VISIBLE ALL THE STRUCTURE INTERFACE ICONS
+    this.Red_Farm.visible = false;
+    this.Red_Tower.visible = false;
+    this.Red_Fortress.visible = false;
+    this.Yellow_Farm.visible = false;
+    this.Yellow_Tower.visible = false;
+    this.Yellow_Fortress.visible = false;
+}
+
 hud.prototype.listenerTurn = function(){    //NEXT TURN LOGIC
     this.currentPlayer = !this.currentPlayer;   //Swap players
     this.map.UpdateMap(this.currentPlayer);     //Updates the map
@@ -275,6 +417,7 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
         this.unitIcon.visible = true;
         this.structureIcon.visible = true;
         this.AllUnitsOff();
+        this.AllStructuresOff();
     }
     else{   //If not, it means that the player is trying to place some unit or structure or selecting a territory, unit or structure
 
@@ -295,6 +438,18 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
                 this.selectedReset();
                 this.updateMoney();             
             }
+            else if (this.map.PlaceStructure(this.clickPoint, this.selectedIndex))
+            {
+                if(this.currentPlayer)          {
+                    this.moneyR = this.moneyR - this.selectedPrice;                                             //decreases the aproppiate amount of money to the proper player
+                }                                                               
+
+                else{
+                    this.moneyY = this.moneyY - this.selectedPrice;
+                }
+                this.selectedReset();
+                this.updateMoney();  
+            }   
             
         }
         else{   //If not it means he is selecting an unit, territory or structure
@@ -329,6 +484,7 @@ hud.prototype.listenerStructure = function(){   //OPENS THE STRUCTURES INVENTORY
     this.structureIcon.visible = false;
     this.unitIcon.visible = true;
     this.AllUnitsOff();
+    this.AllStructuresOn(this.currentPlayer);
 }
 
 hud.prototype.listenerOver = function(Overed){  //Opens the unit stats display
@@ -348,10 +504,32 @@ hud.prototype.listenerUnit = function(){    //OPENS THE UNITS INVENTORY
     this.inventoryBackground.visible = true;
     this.unitIcon.visible = false;
     this.structureIcon.visible = true;
+    this.AllStructuresOff();
     this.AllUnitsOn(this.currentPlayer);
 }
 
 hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH UNIT WAS SELECTED AND VERIFIES IF THERE IS ENOUGH MONEY TO BUY IT
+    
+    if(this.currentPlayer)
+        if(this.moneyR >= clicked.price){
+            this.follower.loadTexture(clicked.texture);
+            this.follower.visible = true;
+            this.select(clicked);
+        }
+        else
+            console.log("Not enough money to buy..");
+
+    else
+        if(this.moneyY >= clicked.price){
+            this.follower.loadTexture(clicked.texture);
+            this.follower.visible = true;
+            this.select(clicked);
+        }
+        else
+            console.log("Not enough money to buy..");
+}
+//NUEVONUEVONUEVO
+hud.prototype.listenerStructureSelection = function (clicked){   //DETERMINATES WICH UNIT WAS SELECTED AND VERIFIES IF THERE IS ENOUGH MONEY TO BUY IT
     
     if(this.currentPlayer)
         if(this.moneyR >= clicked.price){
