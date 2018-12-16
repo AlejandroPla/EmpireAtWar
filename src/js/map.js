@@ -1,6 +1,6 @@
 'use strict';
 var unit = require("./units.js");
-var unit = require("./structures.js");
+var structure = require("./structures.js");
 
 var map = function(game, stats){
     this.game = game;
@@ -122,7 +122,6 @@ map.prototype.UpdateTrees = function(){
 }
 
 map.prototype.PlaceUnit = function(clickPoint, type){
-
     this.placed = false;
 
     if(this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 3 || this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 1){ //Es hierba
@@ -144,10 +143,45 @@ map.prototype.PlaceStructure = function(clickPoint, type){
     this.placed = false;
 
     if (this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer, true).index == 3 || this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 1){
-        this.placed = true;
-        this.createStructure(clickPoint.x, clickPoint.y, type);
-        this.map.putTile(type, clickPoint.x, clickPoint.y, this.ForegroundLayer);
-        console.log(this.unitsArray[clickPoint.y][clickPoint.x].name + " placed at " + clickPoint.x + "/" + clickPoint.y);
+        if (this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index == -1){
+            
+            this.placed = true;
+            this.createStructure(clickPoint.x, clickPoint.y, type);
+            this.map.putTile(type, clickPoint.x, clickPoint.y, this.ForegroundLayer);
+            console.log(this.structuresArray[clickPoint.y][clickPoint.x].name + " placed at " + clickPoint.x + "/" + clickPoint.y);
+        }
+    }
+    else
+    ;
+    return this.placed
+}
+
+map.prototype.FourPos = function (pos){ //Return an array with the entities on the four direction around a given position
+    var fourPos = [0,0,0,0];    //Top, right , down, left
+
+        fourPos [0] = this.WhatIsIt(pos.x, pos.y - 1);
+        fourPos [1] = this.WhatIsIt(pos.x + 1, pos.y);
+        fourPos [2] = this.WhatIsIt(pos.x, pos.y + 1);
+        fourPos [3] = this.WhatIsIt(pos.x - 1, pos.y);
+    return fourPos;
+}
+
+map.prototype.WhatIsIt = function (x,y){
+    var backElem = this.map.getTile(x, y, this.BackgroundLayer, true).index;
+    if(backElem != 3 && backElem != 1)  //Beach or water   (Out of game zone)
+        return 0;
+
+    else { //Inside game zone
+        var foreElem = this.map.getTile(x, y, this.ForegroundLayer, true).index;
+
+        if (foreElem == 5) //Tree
+            return 2;
+        else if (foreElem == -1) //Vacío
+            return 1;
+        else if(this.stats.IsUnit(foreElem)) //Unit
+            return 3;
+        else
+            return 0;
     }
 }
 

@@ -52,28 +52,37 @@ this.fontSize               = 25;
      this.farmIndexYellow = 42;
      this.farmName = "Farm";
      
- 
      this.towerLife = 10;  //TOWER
      this.towerPrice = 10;
-     this.towerDefence = 10;
+     this.towerStrength = 10;
      this.towerIndexRed = 23;
      this.towerIndexYellow = 26;
      this.towerName = "Tower";
  
- 
      this.fortressLife = 15;  //FORTRESS
      this.fortressPrice = 15;
-     this.fortressDefence = 15;
+     this.fortressStrength = 15;
      this.fortressIndexRed = 30;
      this.fortressIndexYellow = 33;
      this.fortressName = "Fortress";
- 
  
      this.baseLife = 20;  //BASE
      this.baseIncome = 10;
      this.baseIndexRed = 44;
      this.baseIndexYellow = 47;
      this.baseName = "Base";
+
+}
+
+stats.prototype.IsUnit = function(x){       //Returns if the index given is one of the units in-game
+    var i = 0;
+    while(i < this.unitsInGame.length && x != this.unitsInGame[i])
+        i++;
+
+    if(i == this.unitsInGame.length)
+        return false;
+    else
+        return true;
 
 }
 

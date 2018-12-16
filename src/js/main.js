@@ -31,6 +31,15 @@ var PreloaderScene = {
     this.game.load.image('inventoryBackground', 'resources/sprites/Hud/Inventory_Background.png');
     this.game.load.image('empty', 'resources/sprites/Hud/Empty.png');
     this.game.load.spritesheet('coinIcon', 'resources/sprites/Hud/coin.png', 120, 96, 6);
+    //STRUCTURES
+    this.game.load.image('Red_Farm', 'resources/sprites/Hud/Red_Farm.png')
+    this.game.load.image('Red_Tower', 'resources/sprites/Hud/Red_Tower.png');
+    this.game.load.image('Red_Fortress', 'resources/sprites/Hud/Red_Fortress.png');
+    this.game.load.image('Red_Base', 'resources/sprites/Hud/Red_Base.png');
+    this.game.load.image('Yellow_Farm', 'resources/sprites/Hud/Yellow_Farm.png');
+    this.game.load.image('Yellow_Tower', 'resources/sprites/Hud/Yellow_Tower.png');
+    this.game.load.image('Yellow_Fortress', 'resources/sprites/Hud/Yellow_Fortress.png');
+    this.game.load.image('Yellow_Base', 'resources/sprites/Hud/Yellow_Base.png');
     //UNITS
     this.game.load.image('Red_Peasant', 'resources/sprites/Hud/Red_Peasant.png');
     this.game.load.image('Red_Lancer', 'resources/sprites/Hud/Red_Lancer.png');
@@ -40,16 +49,11 @@ var PreloaderScene = {
     this.game.load.image('Yellow_Lancer', 'resources/sprites/Hud/Yellow_Lancer.png');
     this.game.load.image('Yellow_Swordman', 'resources/sprites/Hud/Yellow_Swordman.png');
     this.game.load.image('Yellow_Horseman', 'resources/sprites/Hud/Yellow_Horseman.png');
-    //STRUCTURES
-    this.game.load.image('Red_Farm', 'resources/sprites/Hud/Red_Farm.png');
-    this.game.load.image('Red_Tower', 'resources/sprites/Hud/Red_Tower.png');
-    this.game.load.image('Red_Fortress', 'resources/sprites/Hud/Red_Fortress.png');
-    this.game.load.image('Red_Base', 'resources/sprites/Hud/Red_Base.png');
-    this.game.load.image('Yellow_Farm', 'resources/sprites/Hud/Yellow_Farm.png');
-    this.game.load.image('Yellow_Tower', 'resources/sprites/Hud/Yellow_Tower.png');
-    this.game.load.image('Yellow_Fortress', 'resources/sprites/Hud/Yellow_Fortress.png');
-    this.game.load.image('Yellow_Base', 'resources/sprites/Hud/Yellow_Base.png');
-
+    
+    //INDICATORS
+    this.game.load.image('movement', 'resources/sprites/Movement_Indicator.png');
+    this.game.load.image('nope', 'resources/sprites/Nope_Indicator.png');
+    this.game.load.image('combat', 'resources/sprites/Combat_Indicator.png');
   },
 
   create: function () {
