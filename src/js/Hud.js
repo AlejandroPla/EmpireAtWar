@@ -16,6 +16,8 @@ var hud = function(game, map, stats){
     this.selectedPrice = 0;
     
 //Interface
+//Indicators
+this.indicators = new Array(4);
 //Click area
     this.clickArea = game.add.sprite(0,0,'empty');
     this.clickArea.height = this.game.height;
@@ -277,11 +279,12 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
         this.AllUnitsOff();
     }
     else{   //If not, it means that the player is trying to place some unit or structure or selecting a territory, unit or structure
-
-        this.clickPoint = this.game.input.position;                                                         //the click position is get
+        this.clickPointGlobal = this.game.input.position;  //the click position is get
+        this.clickPoint = new Phaser.Point(this.clickPointGlobal.x , this.clickPointGlobal.y);                                               
         this.map.ForegroundLayer.getTileXY(this.clickPoint.x/1.8, this.clickPoint.y/1.8, this.clickPoint);  //it is translated to the tile in that position
-
-        if(this.selected){                                                                                      //If the player bought an unit / structure,
+        console.log("tile: " + this.clickPoint);
+        console.log("global: " + this.clickPointGlobal);
+        if(this.selected){  //If the player bought an unit / structure,
             if(this.map.PlaceUnit(this.clickPoint, this.selectedIndex))                                         //tries to place the entity. If it succeeds,
             {
                 this.follower.visible = false;                                                                  //Follower Visible off 
@@ -298,17 +301,50 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
             
         }
         else{   //If not it means he is selecting an unit, territory or structure
+           if (this.map.WhatIsIt(this.clickPoint.x, this.clickPoint.y) == 3) {
             var fourPos = this.map.FourPos(this.clickPoint);
-            console.log(fourPos);
-
-            for (let index = 0; index < 4; index++) {
-                ;
-                
-            }
+            var point = new Phaser.Point();
+            this.tilex = this.map.getTile(this.clickPoint.x, this.clickPoint.y, this.BackgroundLayer).worldX;
+           console.log(this.tilex);
+            point.setTo(this.clickPointGlobal.x + 32 *  0, this.clickPointGlobal.y + 32 * 1 );
+            this.createIndicator(fourPos, 0, point);
+            point.setTo(this.clickPointGlobal.x + 32 *  1, this.clickPointGlobal.y + 32 * 0 );
+            this.createIndicator(fourPos, 1, point);
+            point.setTo(this.clickPointGlobal.x  + 32 *  -1, this.clickPointGlobal.y + 32 * 0 );
+            this.createIndicator(fourPos, 2, point);
+            point.setTo(this.clickPointGlobal.x  + 32 *  0, this.clickPointGlobal.y + 32 * -1 );
+            this.createIndicator(fourPos, 3, point);
+           }
         }
         
     }
 }
+
+hud.prototype.createIndicator = function(fourPos, index, pos){
+    switch (fourPos[index]) {
+        case 0: //Not moveable to position
+        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'nope')
+            break;
+
+        case 1: //Moveable to position
+        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'movement')
+            break;
+
+        case 2: //Destroyable tree
+        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'movement')
+            break;
+
+        case 3: //Unit in position
+        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'combat')
+            break;
+
+        default:    //Error
+        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'nope')
+            break;
+    }
+    this.indicators[index].anchor.setTo(0.5, 0.5);
+}
+
 hud.prototype.updateMoney = function (){    //Updates the money display
     if(this.currentPlayer)
         this.moneyAmount.text = this.moneyR;

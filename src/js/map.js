@@ -144,9 +144,9 @@ map.prototype.WhatIsIt = function (x,y){
 
         if (foreElem == 5) //Tree
             return 2;
-        else if (foreElem == -1)//Vacío
+        else if (foreElem == -1)                //Vacío
             return 1;
-        else if(this.stats.IsUnit(foreElem))                    //Unit
+        else if(this.stats.IsUnit(foreElem))    //Unit
             return 3;
         else
             return 0;
