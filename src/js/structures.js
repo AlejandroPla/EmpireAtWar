@@ -1,79 +1,42 @@
 'use strict';
 
-//"units" CREATES THE UNITS ENTITIES OF THE GAME BY USING THE STATS FROM "stats"
+var vector2D = require ('./vector2D.js');
 
-var stats = require("./stats.js");
+class structure{
+    constructor(type)
+    {
+        if (type == 0) //base
+        {
+            this.price = 20;
+            this.income = 25;
+            this.life = 20;
+            this.vector2D = vector2D;
+        }
+        else if(type == 1) //granja
+        {
+            this.price = 10;
+            this.income = 15;
+            this.life = 12;
+            this.vector2D = vector2D;
+        }
+        else if(type == 2) //torre
+        {
+            this.price = 12;
+            this.income = 0;
+            this.life = 20;
+            this.vector2D = vector2D;
+        }
+        else if(type == 3) //fortaleza
+        {
+            this.price = 18;
+            this.income = 0;
+            this.life = 25;
+            this.vector2D = vector2D;
+        }
 
-//Player logic color representation
-//RED = true - YELLOW = false
+        else //ninguna
+        {
 
-var structure = function(type){ 
-
-    this.stats = new stats();
-
-    if(type == this.stats.farmIndexRed)                                     
-        this.Farm(true);
-    else if(type == this.stats.farmIndexYellow)
-        this.Farm(false);
-    else if(type == this.stats.towerIndexRed)
-        this.Tower(true);
-    else if(type == this.stats.towerIndexYellow)
-        this.Tower(false);
-    else if(type == this.stats.fortressIndexRed)
-        this.Fortress(true);
-    else if(type == this.stats.fortressIndexYellow)
-        this.Fortress(false);
-    else if(type == this.stats.baseIndexRed)
-        this.Base(true);
-    else if(type == this.stats.baseIndexYellow)
-        this.Base(false);
+        }
+    }
 }
-
-structure.prototype.Farm = function(player){  //FARM
-    this.name = this.stats.farmName;
-    this.life = this.stats.farmLife;
-    this.income = this.stats.farmIncome;
-    this.price = this.stats.farmPrice;
-
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
-}
-
-structure.prototype.Tower = function(player){   //TOWER
-    this.name = this.stats.towerName;
-    this.life = this.stats.towerLife;
-    this.defence = this.stats.towerDefence;
-    this.price = this.stats.towerPrice;
-
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
-}
-
-structure.prototype.Fortress = function(player){ //FORTRESS
-    this.name = this.stats.fortressName;
-    this.life = this.stats.fortressLife;
-    this.defence = this.stats.fortressDefence;
-    this.price = this.stats.fortressPrice;
-
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
-}
-
-structure.prototype.Base = function(player){ //BASE
-    this.name = this.stats.baseName;
-    this.life = this.stats.baseLife;
-    this.income = this.stats.baseIncome;
-
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
-}
-
-module.exports = structure;

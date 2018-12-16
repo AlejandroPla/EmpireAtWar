@@ -44,14 +44,6 @@ var PreloaderScene = {
     this.game.load.image('Yellow_Horseman', 'resources/sprites/Hud/Yellow_Horseman.png');
 
     //STRUCTURES
-    this.game.load.image('Red_Farm', 'resources/sprites/Hud/Red_Farm.png')
-    this.game.load.image('Red_Tower', 'resources/sprites/Hud/Red_Tower.png');
-    this.game.load.image('Red_Fortress', 'resources/sprites/Hud/Red_Fortress.png');
-    this.game.load.image('Red_Base', 'resources/sprites/Hud/Red_Base.png');
-    this.game.load.image('Yellow_Farm', 'resources/sprites/Hud/Yellow_Farm.png');
-    this.game.load.image('Yellow_Tower', 'resources/sprites/Hud/Yellow_Tower.png');
-    this.game.load.image('Yellow_Fortress', 'resources/sprites/Hud/Yellow_Fortress.png');
-    this.game.load.image('Yellow_Base', 'resources/sprites/Hud/Yellow_Base.png');
 
     //INDICATORS
     this.game.load.image('movement', 'resources/sprites/Movement_Indicator.png');
