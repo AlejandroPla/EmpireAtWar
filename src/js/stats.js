@@ -4,6 +4,10 @@
 
 var stats = function(){
 
+//Memory
+this.unitsInGame = [255,262,121,128,122,129,123,130];
+this.structuresInGame = [];
+
 //GAMEPLAY
 this.treeGrowRatio          = 0.15; // [0, 1] Probabilidad de que aparezca un nuevo árbol
 this.fontSize               = 25;
@@ -43,34 +47,33 @@ this.fontSize               = 25;
     this.horsemanIndexYellow = 130;
     this.horsemanName        = "Horseman";
 
-     // STRUCTURES
+// STRUCTURES
+    this.farmLife = 5;  //FARM
+    this.farmPrice = 5;
+    this.farmStrength = 5;
+    this.farmIndexRed = 43;  //NOTA: cambiar el color de la granja de verde a rojo
+    this.farmIndexYellow = 42;
+    this.farmName = "Farm";
+    
+    this.towerLife = 10;  //TOWER
+    this.towerPrice = 10;
+    this.towerStrength = 10;
+    this.towerIndexRed = 23;
+    this.towerIndexYellow = 26;
+    this.towerName = "Tower";
 
-     this.farmLife = 5;  //FARM
-     this.farmPrice = 5;
-     this.farmIncome = 5;
-     this.farmIndexRed = 43;  //NOTA: cambiar el color de la granja de verde a rojo
-     this.farmIndexYellow = 42;
-     this.farmName = "Farm";
-     
-     this.towerLife = 10;  //TOWER
-     this.towerPrice = 10;
-     this.towerStrength = 10;
-     this.towerIndexRed = 23;
-     this.towerIndexYellow = 26;
-     this.towerName = "Tower";
- 
-     this.fortressLife = 15;  //FORTRESS
-     this.fortressPrice = 15;
-     this.fortressStrength = 15;
-     this.fortressIndexRed = 30;
-     this.fortressIndexYellow = 33;
-     this.fortressName = "Fortress";
- 
-     this.baseLife = 20;  //BASE
-     this.baseIncome = 10;
-     this.baseIndexRed = 44;
-     this.baseIndexYellow = 47;
-     this.baseName = "Base";
+    this.fortressLife = 15;  //FORTRESS
+    this.fortressPrice = 15;
+    this.fortressStrength = 15;
+    this.fortressIndexRed = 30;
+    this.fortressIndexYellow = 33;
+    this.fortressName = "Fortress";
+
+    this.baseLife = 20;  //BASE
+    this.baseIncome = 10;
+    this.baseIndexRed = 44;
+    this.baseIndexYellow = 47;
+    this.baseName = "Base";
 
 }
 

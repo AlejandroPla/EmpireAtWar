@@ -6,7 +6,6 @@ var hud = function(game, map, stats){
     this.game = game;
     this.map = map;
     this.stats = stats;
-    this.player = true;
     this.currentPlayer = false;
     this.moneyR = 50;
     this.moneyY = 60;
@@ -15,10 +14,7 @@ var hud = function(game, map, stats){
     this.selected = false;
     this.selectedIndex = 0;
     this.selectedPrice = 0;
-    this.selectedStrength = 0;
-    this.selectedName = 0;
-    this.selectedIncome = 0;
-
+    
 //Interface
 //Click area
     this.clickArea = game.add.sprite(0,0,'empty');
@@ -27,7 +23,6 @@ var hud = function(game, map, stats){
     //Input logic
     this.clickArea.inputEnabled = true;
     this.clickArea.events.onInputDown.add(this.listenerClick, this);
-    
 
 //Inventory background / frame
     this.inventoryBackground = game.add.image( this.game.width / 2, this.game.height *0.98, 'inventoryBackground');
@@ -43,9 +38,9 @@ var hud = function(game, map, stats){
     this.overBackground.inputEnabled = true;
 
 //Stats info
-    this.nameTxt = game.add.text(this.overBackground.width / 2, -this.overBackground.height -10,'Name: ');
-    this.nameTxt.anchor.setTo(-0.06,2);
-    this.nameTxt.fontSize = 19;
+    this.nameTxt = game.add.text(this.overBackground.width / 2, -this.overBackground.height -10,'Peasant');
+    this.nameTxt.anchor.setTo(0.5,0);
+    this.nameTxt.fontSize = 20;
     this.overBackground.addChild(this.nameTxt);
     this.priceTxt = game.add.text(10, - this.overBackground.height *0.80, 'Price: ');
     this.priceTxt.fontSize = 18;
@@ -116,9 +111,9 @@ var hud = function(game, map, stats){
     this.Red_Peasant.scale.setTo(2);
     this.Red_Peasant.visible = false;
     this.Red_Peasant.index = this.stats.peasantIndexRed;
+    this.Red_Peasant.name = this.stats.peasantName;
     this.Red_Peasant.price = this.stats.peasantPrice;
     this.Red_Peasant.strength = this.stats.peasantStrength;
-    this.Red_Peasant.name = this.stats.peasantName;
     //Input logic
     this.Red_Peasant.inputEnabled = true;
     this.Red_Peasant.events.onInputDown.add(this.listenerUnitSelection, this);
@@ -131,6 +126,7 @@ var hud = function(game, map, stats){
     this.Red_Lancer.scale.setTo(2);
     this.Red_Lancer.visible = false;
     this.Red_Lancer.index = this.stats.lancerIndexRed;
+    this.Red_Lancer.name = this.stats.lancerName;
     this.Red_Lancer.price = this.stats.lancerPrice;
     this.Red_Lancer.strength = this.stats.lancerStrength;
     //Input logic
@@ -145,13 +141,14 @@ var hud = function(game, map, stats){
     this.Red_Swordman.scale.setTo(2);
     this.Red_Swordman.visible = false;
     this.Red_Swordman.index = this.stats.swordmanIndexRed;
+    this.Red_Swordman.name = this.stats.swordmanName;
     this.Red_Swordman.price = this.stats.swordmanPrice;
     this.Red_Swordman.strength = this.stats.swordmanStrength;
     //Input logic
     this.Red_Swordman.inputEnabled = true;
     this.Red_Swordman.events.onInputDown.add(this.listenerUnitSelection, this);
     this.Red_Swordman.events.onInputOver.add(this.listenerOver, this);
-    this.Red_Swordman.events.onInputOut.add(this.listenerOut, this);    
+    this.Red_Swordman.events.onInputOut.add(this.listenerOut, this);
 
 //Horseman
     this.Red_Horseman = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle*3 , this.game.height * 0.98 - this.heightPaddle, 'Red_Horseman');
@@ -159,6 +156,7 @@ var hud = function(game, map, stats){
     this.Red_Horseman.scale.setTo(2);
     this.Red_Horseman.visible = false;
     this.Red_Horseman.index = this.stats.horsemanIndexRed;
+    this.Red_Horseman.name = this.stats.horsemanName;
     this.Red_Horseman.price = this.stats.horsemanPrice;
     this.Red_Horseman.strength = this.stats.horsemanStrength;
     //Input logic
@@ -174,9 +172,9 @@ var hud = function(game, map, stats){
     this.Yellow_Peasant.scale.setTo(2);
     this.Yellow_Peasant.visible = false;
     this.Yellow_Peasant.index = this.stats.peasantIndexYellow;
+    this.Yellow_Peasant.name = this.stats.peasantName;
     this.Yellow_Peasant.price = this.stats.peasantPrice;
     this.Yellow_Peasant.strength = this.stats.peasantStrength;
-
     //Input logic
     this.Yellow_Peasant.inputEnabled = true;
     this.Yellow_Peasant.events.onInputDown.add(this.listenerUnitSelection, this);
@@ -189,9 +187,9 @@ var hud = function(game, map, stats){
     this.Yellow_Lancer.scale.setTo(2);
     this.Yellow_Lancer.visible = false;
     this.Yellow_Lancer.index = this.stats.lancerIndexYellow;
+    this.Yellow_Lancer.name = this.stats.lancerName;
     this.Yellow_Lancer.price = this.stats.lancerPrice;
     this.Yellow_Lancer.strength = this.stats.lancerStrength;
-
     //Input logic
     this.Yellow_Lancer.inputEnabled = true;
     this.Yellow_Lancer.events.onInputDown.add(this.listenerUnitSelection, this);
@@ -204,9 +202,9 @@ var hud = function(game, map, stats){
     this.Yellow_Swordman.scale.setTo(2);
     this.Yellow_Swordman.visible = false;
     this.Yellow_Swordman.index = this.stats.swordmanIndexYellow;
+    this.Yellow_Swordman.name = this.stats.swordmanName;
     this.Yellow_Swordman.price = this.stats.swordmanPrice;
     this.Yellow_Swordman.strength = this.stats.swordmanStrength;
-
     //Input logic
     this.Yellow_Swordman.inputEnabled = true;
     this.Yellow_Swordman.events.onInputDown.add(this.listenerUnitSelection, this);
@@ -219,9 +217,9 @@ var hud = function(game, map, stats){
     this.Yellow_Horseman.scale.setTo(2);
     this.Yellow_Horseman.visible = false;
     this.Yellow_Horseman.index = this.stats.horsemanIndexYellow;
+    this.Yellow_Horseman.name = this.stats.horsemanName;
     this.Yellow_Horseman.price = this.stats.horsemanPrice;
     this.Yellow_Horseman.strength = this.stats.horsemanStrength;
-
     //Input logic
     this.Yellow_Horseman.inputEnabled = true;
     this.Yellow_Horseman.events.onInputDown.add(this.listenerUnitSelection, this);
@@ -235,8 +233,9 @@ var hud = function(game, map, stats){
     this.Red_Farm.scale.setTo(2);
     this.Red_Farm.visible = false;
     this.Red_Farm.index = this.stats.farmIndexRed;
+    this.Red_Farm.name = this.stats.farmName;
     this.Red_Farm.price = this.stats.farmPrice;
-    this.Red_Farm.income = this.stats.farmIncome;
+    this.Red_Farm.strength = this.stats.farmStrength;
     //Input logic
     this.Red_Farm.inputEnabled = true;
     this.Red_Farm.events.onInputDown.add(this.listenerStructureSelection, this);
@@ -249,6 +248,7 @@ var hud = function(game, map, stats){
     this.Red_Tower.scale.setTo(2);
     this.Red_Tower.visible = false;
     this.Red_Tower.index = this.stats.towerIndexRed;
+    this.Red_Tower.name = this.stats.towerName;
     this.Red_Tower.price = this.stats.towerPrice;
     this.Red_Tower.strength = this.stats.towerStrength;
     //Input logic
@@ -263,6 +263,7 @@ var hud = function(game, map, stats){
     this.Red_Fortress.scale.setTo(2);
     this.Red_Fortress.visible = false;
     this.Red_Fortress.index = this.stats.fortressIndexRed;
+    this.Red_Fortress.name = this.stats.fortressName;
     this.Red_Fortress.price = this.stats.fortressPrice;
     this.Red_Fortress.strength = this.stats.fortressStrength;
     //Input logic
@@ -291,8 +292,9 @@ var hud = function(game, map, stats){
     this.Yellow_Farm.scale.setTo(2);
     this.Yellow_Farm.visible = false;
     this.Yellow_Farm.index = this.stats.farmIndexYellow;
+    this.Yellow_Farm.name = this.stats.farmName;
     this.Yellow_Farm.price = this.stats.farmPrice;
-    this.Yellow_Farm.income = this.stats.farmIncome;
+    this.Yellow_Farm.income = this.stats.farmStrength;
     //Input logic
     this.Yellow_Farm.inputEnabled = true;
     this.Yellow_Farm.events.onInputDown.add(this.listenerStructureSelection, this);
@@ -305,6 +307,7 @@ var hud = function(game, map, stats){
     this.Yellow_Tower.scale.setTo(2);
     this.Yellow_Tower.visible = false;
     this.Yellow_Tower.index = this.stats.towerIndexYellow;
+    this.Yellow_Tower.name = this.stats.towerName;
     this.Yellow_Tower.price = this.stats.towerPrice;
     this.Yellow_Tower.strength = this.stats.towerStrength;
     //Input logic
@@ -319,6 +322,7 @@ var hud = function(game, map, stats){
     this.Yellow_Fortress.scale.setTo(2);
     this.Yellow_Fortress.visible = false;
     this.Yellow_Fortress.index = this.stats.fortressIndexYellow;
+    this.Yellow_Fortress.name = this.stats.fortressName;
     this.Yellow_Fortress.price = this.stats.fortressPrice;
     this.Yellow_Fortress.strength = this.stats.fortressStrength;
     //Input logic
@@ -344,11 +348,12 @@ var hud = function(game, map, stats){
     this.follower = game.add.image(100,100,'Red_Peasant');
     this.follower.scale.setTo(2);
     this.follower.anchor.setTo(0,0);
-    this.follower.visible = true;
+    this.follower.visible = false;
+
 }
 
 hud.prototype.AllUnitsOn = function(player){    //DEPENDING ON THE CURRENT PLAYER, MAKES VISIBLE THE APROPIATE UNITS INTERFACE ICONS
-    if(this.player = true){
+    if(player){
         this.Red_Peasant.visible = true;
         this.Red_Lancer.visible = true;
         this.Red_Swordman.visible = true;
@@ -414,66 +419,79 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
         this.AllUnitsOff();
         this.AllStructuresOff();
     }
-    else {   //If not, it means that the player is trying to place some unit or structure
-        
-        this.clickPoint = this.game.input.position;                                                         //the click position is get 
+    else{   //If not, it means that the player is trying to place some unit or structure or selecting a territory, unit or structure
+
+        this.clickPoint = this.game.input.position;                                                         //the click position is get
         this.map.ForegroundLayer.getTileXY(this.clickPoint.x/1.8, this.clickPoint.y/1.8, this.clickPoint);  //it is translated to the tile in that position
-        
-        if(this.selected) {                                                                                      //If the player made a selection of an unit / structure,
-            if(this.map.PlaceUnit(this.clickPoint, this.selectedIndex))                                         //and tries to place the entity. If it succeeds,
+
+        if(this.selected){                                                                                      //If the player bought an unit / structure,
+            if(this.map.PlaceUnit(this.clickPoint, this.selectedIndex))                                         //tries to place the entity. If it succeeds,
             {
-                this.follower.visible = false;
-                if(this.currentPlayer){
+                this.follower.visible = false;                                                                  //Follower Visible off 
+                if(this.currentPlayer)          {
                     this.moneyR = this.moneyR - this.selectedPrice;                                             //decreases the aproppiate amount of money to the proper player
                 }                                                               
 
-                else {
+                else{
                     this.moneyY = this.moneyY - this.selectedPrice;
                 }
                 this.selectedReset();
-                this.updateMoney();
+                this.updateMoney();             
             }
             else if (this.map.PlaceStructure(this.clickPoint, this.selectedIndex))
             {
-                this.follower.visible = false;
-                if (this.currentPlayer){
-                    this.moneyR = this.moneyR -  this.selectedPrice;
-                }
-                else {
+                if(this.currentPlayer)          {
+                    this.moneyR = this.moneyR - this.selectedPrice;                                             //decreases the aproppiate amount of money to the proper player
+                }                                                               
+
+                else{
                     this.moneyY = this.moneyY - this.selectedPrice;
                 }
                 this.selectedReset();
-                this.updateMoney();
-            }            
+                this.updateMoney();  
+            }   
+            
         }
-        else {
+        else{   //If not it means he is selecting an unit, territory or structure
             var fourPos = this.map.FourPos(this.clickPoint);
             console.log(fourPos);
-            for(let index = 0; index < 4; index++){
+
+            for (let index = 0; index < 4; index++) {
                 ;
+                
             }
-        }        
+        }
+        
     }
 }
-
-hud.prototype.updateMoney = function (){
+hud.prototype.updateMoney = function (){    //Updates the money display
     if(this.currentPlayer)
         this.moneyAmount.text = this.moneyR;
     else
         this.moneyAmount.text = this.moneyY;
 }
-hud.prototype.selectedReset = function(){
+
+hud.prototype.selectedReset = function(){   //Resets the unit/structure selection to NOT selected
     this.selectedIndex = 0;
     this.selectedPrice = 0;
     this.selected = false;
 }
 
-hud.prototype.listenerOver = function(Overed){  //Opens the unit stats display
+hud.prototype.listenerStructure = function(){   //OPENS THE STRUCTURES INVENTORY
+    this.selectedReset();
+    this.inventoryBackground.anchor.setTo(1,1);
+    this.inventoryBackground.visible = true;
+    this.structureIcon.visible = false;
+    this.unitIcon.visible = true;
+    this.AllUnitsOff();
+    this.AllStructuresOn(this.currentPlayer);
+}
 
-        this.nameTxt.text = 'Name: ' + Overed.name;       
-        this.priceTxt.text = 'Price: ' + Overed.price;
-        this.strengthTxt.text = 'Strength: ' + Overed.strength;
-        this.overBackground.visible = true;
+hud.prototype.listenerOver = function(Overed){  //Opens the unit stats display
+    this.priceTxt.text = 'Price:       ' + Overed.price;
+    this.strengthTxt.text = 'Strength: ' + Overed.strength;
+    this.nameTxt.text = Overed.name;
+    this.overBackground.visible = true;
 }
 
 hud.prototype.listenerOut = function(){ //Closes the unit stats display
@@ -486,22 +504,16 @@ hud.prototype.listenerUnit = function(){    //OPENS THE UNITS INVENTORY
     this.inventoryBackground.visible = true;
     this.unitIcon.visible = false;
     this.structureIcon.visible = true;
+    this.AllStructuresOff();
     this.AllUnitsOn(this.currentPlayer);
 }
 
-hud.prototype.listenerStructure = function(){ //OPENS THE STRUCTURES INVENTORY
-    this.selectedReset();
-    this.inventoryBackground.anchor.setTo(1,1);
-    this.inventoryBackground.visible = true;
-    this.structureIcon.visible = false;
-    this.unitIcon.visible = true;
-    this.AllStructuresOn(this.currentPlayer);
-}
-
-hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WHICH UNIT WAS SELECTED AND VERIFIES IF THERE IS ENOUGH MONEY TO BUY IT
+hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH UNIT WAS SELECTED AND VERIFIES IF THERE IS ENOUGH MONEY TO BUY IT
     
     if(this.currentPlayer)
         if(this.moneyR >= clicked.price){
+            this.follower.loadTexture(clicked.texture);
+            this.follower.visible = true;
             this.select(clicked);
         }
         else
@@ -509,16 +521,20 @@ hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WHICH
 
     else
         if(this.moneyY >= clicked.price){
+            this.follower.loadTexture(clicked.texture);
+            this.follower.visible = true;
             this.select(clicked);
         }
         else
             console.log("Not enough money to buy..");
 }
-
-hud.prototype.listenerStructureSelection = function (clicked){   //DETERMINATES WHICH STRUCTURE WAS SELECTED AND VERIFIES IF THERE IS ENOUGH MONEY TO BUY IT
+//NUEVONUEVONUEVO
+hud.prototype.listenerStructureSelection = function (clicked){   //DETERMINATES WICH UNIT WAS SELECTED AND VERIFIES IF THERE IS ENOUGH MONEY TO BUY IT
     
     if(this.currentPlayer)
         if(this.moneyR >= clicked.price){
+            this.follower.loadTexture(clicked.texture);
+            this.follower.visible = true;
             this.select(clicked);
         }
         else
@@ -526,26 +542,25 @@ hud.prototype.listenerStructureSelection = function (clicked){   //DETERMINATES 
 
     else
         if(this.moneyY >= clicked.price){
+            this.follower.loadTexture(clicked.texture);
+            this.follower.visible = true;
             this.select(clicked);
         }
         else
             console.log("Not enough money to buy..");
 }
 
-hud.prototype.UpdateFollower = function(){
+hud.prototype.UpdateFollower = function(){  //Updates the position of the cursor follower
     if(this.selected){
         this.follower.position.set(this.game.input.worldX - this.game.input.worldX %28.8, this.game.input.worldY - this.game.input.worldY % 28.8);
     }
 }
 
-hud.prototype.select = function(clicked){
+hud.prototype.select = function(clicked){   //Selects an unit/structure to buy
     console.log("Selected!");
     this.selectedIndex = clicked.index;
     this.selected = true;
-    this.selectedName = clicked.name;
     this.selectedPrice = clicked.price;
-    this.selectedStrength = clicked.strength;
-    this.selectedIncome = clicked.income;
     this.listenerClick();
 }
 

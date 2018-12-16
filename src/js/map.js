@@ -11,12 +11,15 @@ var map = function(game, stats){
     this.BackgroundLayer = this.map.createLayer("Background");
     this.GroundLayer = this.map.createLayer("Ground");
     this.ForegroundLayer = this.map.createLayer("Foreground");
-    //Array de unidades
+
+    //Units group
     this.unitsArray = new Array(this.map.height);
     this.createUnitsArray();
-    //Array de estructuras
+
+    //Structures group
     this.structuresArray = new Array(this.map.height);
     this.createStructuresArray();
+
     //Scale
     this.BackgroundLayer.scale.set(1.8);
     this.GroundLayer.scale.set(1.8);
@@ -30,7 +33,6 @@ var map = function(game, stats){
     this.turn = 0;
 };
 
-// UNITS
 map.prototype.createUnitsArray = function(){
     for (let index = 0; index < this.unitsArray.length; index++) {
         this.unitsArray[index] = new Array(this.map.width);
@@ -41,7 +43,6 @@ map.prototype.creatUnit = function(x,y,unitType){
     this.unitsArray[y][x] = new unit (unitType);
 };
 
-// STRUCTURES
 map.prototype.createStructuresArray = function(){
     for (let index = 0; index < this.structuresArray.length; index++){
         this.structuresArray[index] = new Array(this.map.width);
@@ -52,7 +53,7 @@ map.prototype.createStructure = function(x, y, structureType){
     this.structuresArray[y][x] = new structure (structureType);
 };
 
-// StuffCounter
+
 map.prototype.StuffCounter = function(currentPlayer)
 {
     this.turn++;
@@ -73,7 +74,7 @@ map.prototype.StuffCounter = function(currentPlayer)
     if(currentPlayer)
         console.log("Current player = RED");
     else
-        console.log("Current player = YELLOW");
+    console.log("Current player = YELLOW");
 };
 
 map.prototype.UpdateMap = function(currentPlayer) {
@@ -108,7 +109,7 @@ map.prototype.UpdateTrees = function(){
 
                     var nextPosElem = this.map.getTile(x + newTreePosX , y + newTreePosY, this.BackgroundLayer,true).index;
 
-                    if( nextPosElem == 3) //Es hierba sin nada encima
+                    if( nextPosElem == 3 || nextPosElem == 1) //Es hierba sin nada encima
                     {
                         if(this.map.getTile(x + newTreePosX , y + newTreePosY, this.ForegroundLayer,true).index == -1)
                         {
@@ -120,8 +121,8 @@ map.prototype.UpdateTrees = function(){
         }
     }
 }
-
 map.prototype.PlaceUnit = function(clickPoint, type){
+
     this.placed = false;
 
     if(this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 3 || this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 1){ //Es hierba
@@ -139,23 +140,6 @@ map.prototype.PlaceUnit = function(clickPoint, type){
     return this.placed;    
 }
 
-map.prototype.PlaceStructure = function(clickPoint, type){
-    this.placed = false;
-
-    if (this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer, true).index == 3 || this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 1){
-        if (this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index == -1){
-            
-            this.placed = true;
-            this.createStructure(clickPoint.x, clickPoint.y, type);
-            this.map.putTile(type, clickPoint.x, clickPoint.y, this.ForegroundLayer);
-            console.log(this.structuresArray[clickPoint.y][clickPoint.x].name + " placed at " + clickPoint.x + "/" + clickPoint.y);
-        }
-    }
-    else
-    ;
-    return this.placed
-}
-
 map.prototype.FourPos = function (pos){ //Return an array with the entities on the four direction around a given position
     var fourPos = [0,0,0,0];    //Top, right , down, left
 
@@ -171,14 +155,14 @@ map.prototype.WhatIsIt = function (x,y){
     if(backElem != 3 && backElem != 1)  //Beach or water   (Out of game zone)
         return 0;
 
-    else { //Inside game zone
+    else{                               //Inside game zone
         var foreElem = this.map.getTile(x, y, this.ForegroundLayer, true).index;
 
         if (foreElem == 5) //Tree
             return 2;
-        else if (foreElem == -1) //Vacío
+        else if (foreElem == -1)//Vacío
             return 1;
-        else if(this.stats.IsUnit(foreElem)) //Unit
+        else if(this.stats.IsUnit(foreElem))                    //Unit
             return 3;
         else
             return 0;
