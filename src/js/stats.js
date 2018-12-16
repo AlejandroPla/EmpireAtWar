@@ -51,28 +51,28 @@ this.fontSize               = 25;
     this.farmLife = 5;  //FARM
     this.farmPrice = 5;
     this.farmStrength = 5;
-    this.farmIndexRed = 43;  //NOTA: cambiar el color de la granja de verde a rojo
-    this.farmIndexYellow = 42;
+    this.farmIndexRed = 17;  //NOTA: cambiar el color de la granja de verde a rojo
+    this.farmIndexYellow = 43;
     this.farmName = "Farm";
     
     this.towerLife = 10;  //TOWER
     this.towerPrice = 10;
     this.towerStrength = 10;
-    this.towerIndexRed = 23;
-    this.towerIndexYellow = 26;
+    this.towerIndexRed = 24;
+    this.towerIndexYellow = 27;
     this.towerName = "Tower";
 
     this.fortressLife = 15;  //FORTRESS
     this.fortressPrice = 15;
     this.fortressStrength = 15;
-    this.fortressIndexRed = 30;
-    this.fortressIndexYellow = 33;
+    this.fortressIndexRed = 31;
+    this.fortressIndexYellow = 34;
     this.fortressName = "Fortress";
 
     this.baseLife = 20;  //BASE
     this.baseIncome = 10;
-    this.baseIndexRed = 44;
-    this.baseIndexYellow = 47;
+    this.baseIndexRed = 45;
+    this.baseIndexYellow = 48;
     this.baseName = "Base";
 
 }

@@ -288,13 +288,13 @@ var hud = function(game, map, stats){
 //STRUCTURES (YELLOW)
 //Farm
     this.Yellow_Farm = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 , this.game.height * 0.98 - this.heightPaddle, 'Yellow_Farm');
-    this.Yellow_Farm.anchor.setTo(1,1);
+    this.Yellow_Farm.anchor.setTo(10,1);
     this.Yellow_Farm.scale.setTo(2);
     this.Yellow_Farm.visible = false;
     this.Yellow_Farm.index = this.stats.farmIndexYellow;
     this.Yellow_Farm.name = this.stats.farmName;
     this.Yellow_Farm.price = this.stats.farmPrice;
-    this.Yellow_Farm.income = this.stats.farmStrength;
+    this.Yellow_Farm.strength = this.stats.farmStrength;
     //Input logic
     this.Yellow_Farm.inputEnabled = true;
     this.Yellow_Farm.events.onInputDown.add(this.listenerStructureSelection, this);
@@ -303,7 +303,7 @@ var hud = function(game, map, stats){
 
 //Tower
     this.Yellow_Tower = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle , this.game.height * 0.98 - this.heightPaddle, 'Yellow_Tower');
-    this.Yellow_Tower.anchor.setTo(1,1);
+    this.Yellow_Tower.anchor.setTo(14,1);
     this.Yellow_Tower.scale.setTo(2);
     this.Yellow_Tower.visible = false;
     this.Yellow_Tower.index = this.stats.towerIndexYellow;
@@ -318,7 +318,7 @@ var hud = function(game, map, stats){
 
 //Fortress
     this.Yellow_Fortress = this.game.add.sprite(this.game.width / 2 + this.widthPaddle1 + this.widthPaddle*2 , this.game.height * 0.98 - this.heightPaddle, 'Yellow_Fortress');
-    this.Yellow_Fortress.anchor.setTo(3,1);
+    this.Yellow_Fortress.anchor.setTo(10,1);
     this.Yellow_Fortress.scale.setTo(2);
     this.Yellow_Fortress.visible = false;
     this.Yellow_Fortress.index = this.stats.fortressIndexYellow;
@@ -379,8 +379,8 @@ hud.prototype.AllUnitsOff = function(){ //MAKES NOT VISIBLE ALL THE UNITS INTERF
         this.Yellow_Horseman.visible = false;
 }
 
-hud.prototype.AllStructuresOn = function(){ //MAKES VISIBLE ALL THE STRUCTURE INTERFACE ICONS
-    if (this.player = true)
+hud.prototype.AllStructuresOn = function(player){ //MAKES VISIBLE ALL THE STRUCTURE INTERFACE ICONS
+    if (player)
     {
         this.Red_Farm.visible = true;
         this.Red_Tower.visible = true;
