@@ -53,30 +53,6 @@ map.prototype.createStructure = function(x, y, structureType){
     this.structuresArray[y][x] = new structure (structureType);
 };
 
-
-map.prototype.StuffCounter = function(currentPlayer)
-{
-    this.turn++;
-    console.log("CURRENT GAME STATUS INFO (" + this.turn + "): ");
-
-      var treeCount = 0;
-      var mountainCount = 0;
-      for(var y = 0; y < this.map.height; y ++){
-        for(var x = 0; x < this.map.width; x ++){
-           if(this.map.getTile(x,y, this.ForegroundLayer,true).index == 5)
-           treeCount++;
-           else if(this.map.getTile(x,y, this.ForegroundLayer,true).index == 11)
-           mountainCount++;
-        }
-      }
-      console.log("Árbol: " + treeCount);
-      console.log("Montaña: " + mountainCount);
-    if(currentPlayer)
-        console.log("Current player = RED");
-    else
-    console.log("Current player = YELLOW");
-};
-
 map.prototype.AmountOfTiles = function (index){
     var count = 0;
     console.log(this.map.getTile(5,6,this.GroundLayer,true).index)
@@ -91,7 +67,6 @@ map.prototype.AmountOfTiles = function (index){
 }
 map.prototype.UpdateMap = function(currentPlayer) {
     this.UpdateTrees();
-    this.StuffCounter(currentPlayer);
 };
 
 map.prototype.UpdateTrees = function(){
@@ -133,13 +108,20 @@ map.prototype.UpdateTrees = function(){
         }
     }
 }
-map.prototype.PlaceUnit = function(clickPoint, type){
+
+map.prototype.PlaceUnit = function(clickPoint, type, currentPlayer){
 
     this.placed = false;
-
+  
     if(this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 3 || this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 1){ //Es hierba
-        if(this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index == -1){ //Nada ocupado
+        if(this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index == -1 || this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index == 5){ //Nada ocupado
+            
+            if (currentPlayer) 
+            this.map.putTile(365,clickPoint.x,clickPoint.y,this.GroundLayer);
         
+            else
+            this.map.putTile(366,clickPoint.x,clickPoint.y,this.GroundLayer);
+    
             this.placed = true;
             this.creatUnit(clickPoint.x,clickPoint.y,type);
             this.map.putTile(type, clickPoint.x, clickPoint.y, this.ForegroundLayer);
@@ -147,9 +129,18 @@ map.prototype.PlaceUnit = function(clickPoint, type){
         }
             
     }
-    else
-    ;
+    
     return this.placed;    
+}
+
+map.prototype.moveUnit = function(clickPoint, destination, currentPlayer){
+    this.map.putTile(this.map.getTile(clickPoint.x,clickPoint.y,this.ForegroundLayer,true).index,clickPoint.x + destination.x, clickPoint.y + destination.y, this.ForegroundLayer);
+    this.map.removeTile(clickPoint.x,clickPoint.y,this.ForegroundLayer);
+    if (currentPlayer) 
+    this.map.putTile(365,clickPoint.x + destination.x,clickPoint.y + destination.y,this.GroundLayer);
+
+    else
+    this.map.putTile(366,clickPoint.x + destination.x,clickPoint.y + destination.y,this.GroundLayer);
 }
 
 map.prototype.FourPos = function (pos){ //Return an array with the entities on the four direction around a given position
@@ -179,6 +170,9 @@ map.prototype.WhatIsIt = function (x,y){
         else
             return 0;
     }
+}
+map.prototype.TileIndexGround = function(point){
+    return this.map.getTile(point.x, point.y, this.GroundLayer, true).index;
 }
 map.prototype.TileCenterPos = function(point){
     var pointCenter = new Phaser.Point();

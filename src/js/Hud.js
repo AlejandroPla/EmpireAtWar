@@ -14,11 +14,17 @@ var hud = function(game, map, stats){
     this.selected = false;
     this.selectedIndex = 0;
     this.selectedPrice = 0;
-    
+    this.selectedForAction = new Phaser.Point();
 //Interface
 //Indicators
 this.indicators = new Array(4);
 this.indicating = false;
+this.indKey = new Array(4);
+this.indKey[0] = new Phaser.Point(0,-1);
+this.indKey[1] = new Phaser.Point(1,0);
+this.indKey[2] = new Phaser.Point(0,1);
+this.indKey[3] = new Phaser.Point(-1,0);
+
 //Click area
     this.clickArea = game.add.sprite(0,0,'empty');
     this.clickArea.height = this.game.height;
@@ -411,7 +417,7 @@ hud.prototype.listenerTurn = function(){    //NEXT TURN LOGIC
     this.map.UpdateMap(this.currentPlayer);     //Updates the map
     this.currentTurnText.text = this.map.turn;  //Updates the current turn text on the interface
     this.listenerClick();                       //Calls for the aproppiate click reaction
-    this.updateMoney();
+    this.updateMoney(true);
 }
 
 hud.prototype.IndicatorsOff = function(){
@@ -438,7 +444,7 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
         console.log("tile: " + this.clickPoint);
         console.log("global: " + this.clickPointGlobal);
         if(this.selected){  //If the player bought an unit / structure,
-            if(this.map.PlaceUnit(this.clickPoint, this.selectedIndex))                                         //tries to place the entity. If it succeeds,
+            if(this.map.PlaceUnit(this.clickPoint, this.selectedIndex, this.currentPlayer))                                         //tries to place the entity. If it succeeds,
             {
                 this.follower.visible = false;                                                                  //Follower Visible off 
                 if(this.currentPlayer)          {
@@ -449,75 +455,75 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
                     this.moneyY = this.moneyY - this.selectedPrice;
                 }
                 this.selectedReset();
-                this.updateMoney();             
-            }
-            else if (this.map.PlaceStructure(this.clickPoint, this.selectedIndex))
-            {
-                if(this.currentPlayer)          {
-                    this.moneyR = this.moneyR - this.selectedPrice;                                             //decreases the aproppiate amount of money to the proper player
-                }                                                               
-
-                else{
-                    this.moneyY = this.moneyY - this.selectedPrice;
-                }
-                this.selectedReset();
-                this.updateMoney();  
-            }   
-            
+                this.updateMoney(false);             
+            }                 
         }
         else if (!this.indicating){   //If not it means he is selecting an unit, territory or structure
-           if (this.map.WhatIsIt(this.clickPoint.x, this.clickPoint.y) == 3) {
-            var point = new Phaser.Point();
-            var fourPos = this.map.FourPos(this.clickPoint);           
-            point =  this.map.TileCenterPos(this.clickPoint);
-            var result = this.map.TileCenterPos(this.clickPoint);
-            result.setTo(point.x + 32 *  0, point.y + 32 * -1 );
-            this.createIndicator(fourPos, 0, result);
-            result.setTo(point.x + 32 *  1, point.y + 32 * 0 );
-            this.createIndicator(fourPos, 1, result);
-            result.setTo(point.x  + 32 * 0, point.y + 32 * 1 );
-            this.createIndicator(fourPos, 2, result);
-            result.setTo(point.x  + 32 *  -1, point.y + 32 * 0 );
-            this.createIndicator(fourPos, 3, result);
-            this.indicating = true;
+           if(this.currentPlayer){
+               if (this.map.TileIndexGround(this.clickPoint) == 365)
+                    this.indicate(this.clickPoint);                               
            }
+           else
+           if (this.map.TileIndexGround(this.clickPoint) == 366)
+           this.indicate(this.clickPoint);
+           this.selectedForAction = this.clickPoint;
         }
         
     }
 }
-
+hud.prototype.indicate = function(clickPoint){
+    if (this.map.WhatIsIt(this.clickPoint.x, this.clickPoint.y) == 3) {
+        var point = new Phaser.Point();
+        var fourPos = this.map.FourPos(this.clickPoint);           
+        point =  this.map.TileCenterPos(this.clickPoint);
+        var result = this.map.TileCenterPos(this.clickPoint);
+        result.setTo(point.x + 32 *  0, point.y + 32 * -1 );
+        this.createIndicator(fourPos, 0, result);
+        result.setTo(point.x + 32 *  1, point.y + 32 * 0 );
+        this.createIndicator(fourPos, 1, result);
+        result.setTo(point.x  + 32 * 0, point.y + 32 * 1 );
+        this.createIndicator(fourPos, 2, result);
+        result.setTo(point.x  + 32 *  -1, point.y + 32 * 0 );
+        this.createIndicator(fourPos, 3, result);
+        this.indicating = true;
+   }
+}
 hud.prototype.createIndicator = function(fourPos, index, pos){
     switch (fourPos[index]) {
         case 0: //Not moveable to position
-        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'nope')
+        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'nope');
             break;
 
         case 1: //Moveable to position
-        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'movement')
+        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'movement');
             break;
 
         case 2: //Destroyable tree
-        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'movement')
+        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'movement');
             break;
 
         case 3: //Unit in position
-        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'combat')
+        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'combat');
             break;
 
         default:    //Error
-        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'nope')
+        this.indicators[index] = this.game.add.image(pos.x, pos.y, 'nope');
             break;
     }
+
+    this.indicators[index].inputEnabled = true;
+    this.indicators[index].events.onInputDown.add(this.listenerAction, this);
 }
 
-hud.prototype.updateMoney = function (){    //Updates the money display and amount
+hud.prototype.updateMoney = function (turnEnd){    //Updates the money display and amount
     if(this.currentPlayer){
-        this.moneyR += this.map.AmountOfTiles(365);
+        if(turnEnd)
+            this.moneyR += this.map.AmountOfTiles(365);
         this.moneyAmount.text = this.moneyR;
     }
     else{
-        this.moneyY += this.map.AmountOfTiles(366);
-        console.log("Yellow territories : " + this.map.AmountOfTiles(366));
+        if(turnEnd)
+            this.moneyY += this.map.AmountOfTiles(366);
         this.moneyAmount.text = this.moneyY;
     }
 }
@@ -526,6 +532,13 @@ hud.prototype.selectedReset = function(){   //Resets the unit/structure selectio
     this.selectedIndex = 0;
     this.selectedPrice = 0;
     this.selected = false;
+}
+
+hud.prototype.listenerAction = function(selected){
+    if(selected.key == 'movement'){
+        this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
+        this.IndicatorsOff();
+    }
 }
 
 hud.prototype.listenerStructure = function(){   //OPENS THE STRUCTURES INVENTORY
