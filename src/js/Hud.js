@@ -18,6 +18,7 @@ var hud = function(game, map, stats){
 //Interface
 //Indicators
 this.indicators = new Array(4);
+this.indicating = false;
 //Click area
     this.clickArea = game.add.sprite(0,0,'empty');
     this.clickArea.height = this.game.height;
@@ -413,13 +414,22 @@ hud.prototype.listenerTurn = function(){    //NEXT TURN LOGIC
     this.updateMoney();
 }
 
+hud.prototype.IndicatorsOff = function(){
+    for (let index = 0; index < 4; index++) {
+        this.indicators[index].destroy();
+    }
+}
 hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
-    if(this.inventoryBackground.visible == true){   //If the inventory menus are opened it closes them
+    if(this.inventoryBackground.visible == true || this.indicating){   //If the inventory menus or the indicators are visible it makes them invisible
         this.inventoryBackground.visible = false;
         this.unitIcon.visible = true;
         this.structureIcon.visible = true;
         this.AllUnitsOff();
         this.AllStructuresOff();
+        if(this.indicating){
+            this.IndicatorsOff();
+            this.indicating = false;
+        }   
     }
     else{   //If not, it means that the player is trying to place some unit or structure or selecting a territory, unit or structure
         this.clickPointGlobal = this.game.input.position;  //the click position is get
@@ -455,7 +465,7 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
             }   
             
         }
-        else{   //If not it means he is selecting an unit, territory or structure
+        else if (!this.indicating){   //If not it means he is selecting an unit, territory or structure
            if (this.map.WhatIsIt(this.clickPoint.x, this.clickPoint.y) == 3) {
             var point = new Phaser.Point();
             var fourPos = this.map.FourPos(this.clickPoint);           
@@ -469,6 +479,7 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
             this.createIndicator(fourPos, 2, result);
             result.setTo(point.x  + 32 *  -1, point.y + 32 * 0 );
             this.createIndicator(fourPos, 3, result);
+            this.indicating = true;
            }
         }
         
@@ -499,11 +510,16 @@ hud.prototype.createIndicator = function(fourPos, index, pos){
     }
 }
 
-hud.prototype.updateMoney = function (){    //Updates the money display
-    if(this.currentPlayer)
+hud.prototype.updateMoney = function (){    //Updates the money display and amount
+    if(this.currentPlayer){
+        this.moneyR += this.map.AmountOfTiles(365);
         this.moneyAmount.text = this.moneyR;
-    else
+    }
+    else{
+        this.moneyY += this.map.AmountOfTiles(366);
+        console.log("Yellow territories : " + this.map.AmountOfTiles(366));
         this.moneyAmount.text = this.moneyY;
+    }
 }
 
 hud.prototype.selectedReset = function(){   //Resets the unit/structure selection to NOT selected

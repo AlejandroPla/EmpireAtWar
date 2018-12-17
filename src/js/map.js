@@ -77,6 +77,18 @@ map.prototype.StuffCounter = function(currentPlayer)
     console.log("Current player = YELLOW");
 };
 
+map.prototype.AmountOfTiles = function (index){
+    var count = 0;
+    console.log(this.map.getTile(5,6,this.GroundLayer,true).index)
+    for (let indexw = 0; indexw < this.map.width; indexw++) {
+        for (let indexh = 0; indexh < this.map.height; indexh++) { 
+            if (this.map.getTile(indexw,indexh,this.GroundLayer, true).index == index) {
+                count ++;
+            }
+        }        
+    }
+    return count;
+}
 map.prototype.UpdateMap = function(currentPlayer) {
     this.UpdateTrees();
     this.StuffCounter(currentPlayer);
