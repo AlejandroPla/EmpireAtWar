@@ -302,18 +302,18 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
         }
         else{   //If not it means he is selecting an unit, territory or structure
            if (this.map.WhatIsIt(this.clickPoint.x, this.clickPoint.y) == 3) {
-            var fourPos = this.map.FourPos(this.clickPoint);
             var point = new Phaser.Point();
-            this.tilex = this.map.getTile(this.clickPoint.x, this.clickPoint.y, this.BackgroundLayer).worldX;
-           console.log(this.tilex);
-            point.setTo(this.clickPointGlobal.x + 32 *  0, this.clickPointGlobal.y + 32 * 1 );
-            this.createIndicator(fourPos, 0, point);
-            point.setTo(this.clickPointGlobal.x + 32 *  1, this.clickPointGlobal.y + 32 * 0 );
-            this.createIndicator(fourPos, 1, point);
-            point.setTo(this.clickPointGlobal.x  + 32 *  -1, this.clickPointGlobal.y + 32 * 0 );
-            this.createIndicator(fourPos, 2, point);
-            point.setTo(this.clickPointGlobal.x  + 32 *  0, this.clickPointGlobal.y + 32 * -1 );
-            this.createIndicator(fourPos, 3, point);
+            var fourPos = this.map.FourPos(this.clickPoint);           
+            point =  this.map.TileCenterPos(this.clickPoint);
+            var result = this.map.TileCenterPos(this.clickPoint);
+            result.setTo(point.x + 32 *  0, point.y + 32 * -1 );
+            this.createIndicator(fourPos, 0, result);
+            result.setTo(point.x + 32 *  1, point.y + 32 * 0 );
+            this.createIndicator(fourPos, 1, result);
+            result.setTo(point.x  + 32 * 0, point.y + 32 * 1 );
+            this.createIndicator(fourPos, 2, result);
+            result.setTo(point.x  + 32 *  -1, point.y + 32 * 0 );
+            this.createIndicator(fourPos, 3, result);
            }
         }
         
@@ -342,7 +342,6 @@ hud.prototype.createIndicator = function(fourPos, index, pos){
         this.indicators[index] = this.game.add.image(pos.x, pos.y, 'nope')
             break;
     }
-    this.indicators[index].anchor.setTo(0.5, 0.5);
 }
 
 hud.prototype.updateMoney = function (){    //Updates the money display

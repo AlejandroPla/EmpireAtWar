@@ -152,5 +152,13 @@ map.prototype.WhatIsIt = function (x,y){
             return 0;
     }
 }
+map.prototype.TileCenterPos = function(point){
+    var pointCenter = new Phaser.Point();
+    var tile =  this.map.getTile(point.x, point.y, this.BackgroundLayer);
+    pointCenter.x = tile.worldX * 1.8;
+    pointCenter.y = tile.worldY * 1.8;
+    console.log(pointCenter);
+    return pointCenter;
+}
 
 module.exports = map;
