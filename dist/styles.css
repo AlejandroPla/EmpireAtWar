@@ -8,8 +8,8 @@ body {
   margin: 0;
   font-family: Times, 'Times New Roman', serif;
   font-size: 1.6rem;
-  background: #5fa822;
-  color: #000;
+  background: none;
+  background-color: #cccccc;
 }
 
 a {
