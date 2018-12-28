@@ -247,7 +247,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     this.Red_Farm.strength = this.stats.farmStrength;
     //Input logic
     this.Red_Farm.inputEnabled = true;
-    this.Red_Farm.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Red_Farm.events.onInputDown.add(this.listenerUnitSelection, this);
     this.Red_Farm.events.onInputOver.add(this.listenerOver, this);
     this.Red_Farm.events.onInputOut.add(this.listenerOut, this);
 
@@ -262,7 +262,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     this.Red_Tower.strength = this.stats.towerStrength;
     //Input logic
     this.Red_Tower.inputEnabled = true;
-    this.Red_Tower.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Red_Tower.events.onInputDown.add(this.listenerUnitSelection, this);
     this.Red_Tower.events.onInputOver.add(this.listenerOver, this);
     this.Red_Tower.events.onInputOut.add(this.listenerOut, this);
 
@@ -277,7 +277,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     this.Red_Fortress.strength = this.stats.fortressStrength;
     //Input logic
     this.Red_Fortress.inputEnabled = true;
-    this.Red_Fortress.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Red_Fortress.events.onInputDown.add(this.listenerUnitSelection, this);
     this.Red_Fortress.events.onInputOver.add(this.listenerOver, this);
     this.Red_Fortress.events.onInputOut.add(this.listenerOut, this);
 
@@ -290,7 +290,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     this.Red_Base.income = this.stats.baseIncome;
     //Input logic
     this.Red_Base.inputEnabled = true;
-    this.Red_Base.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Red_Base.events.onInputDown.add(this.listenerUnitSelection, this);
     this.Red_Base.events.onInputOver.add(this.listenerOver, this);
     this.Red_Base.events.onInputOut.add(this.listenerOut, this);
 
@@ -306,7 +306,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     this.Yellow_Farm.strength = this.stats.farmStrength;
     //Input logic
     this.Yellow_Farm.inputEnabled = true;
-    this.Yellow_Farm.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Yellow_Farm.events.onInputDown.add(this.listenerUnitSelection, this);
     this.Yellow_Farm.events.onInputOver.add(this.listenerOver, this);
     this.Yellow_Farm.events.onInputOut.add(this.listenerOut, this);
 
@@ -321,7 +321,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     this.Yellow_Tower.strength = this.stats.towerStrength;
     //Input logic
     this.Yellow_Tower.inputEnabled = true;
-    this.Yellow_Tower.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Yellow_Tower.events.onInputDown.add(this.listenerUnitSelection, this);
     this.Yellow_Tower.events.onInputOver.add(this.listenerOver, this);
     this.Yellow_Tower.events.onInputOut.add(this.listenerOut, this);
 
@@ -336,7 +336,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     this.Yellow_Fortress.strength = this.stats.fortressStrength;
     //Input logic
     this.Yellow_Fortress.inputEnabled = true;
-    this.Yellow_Fortress.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Yellow_Fortress.events.onInputDown.add(this.listenerUnitSelection, this);
     this.Yellow_Fortress.events.onInputOver.add(this.listenerOver, this);
     this.Yellow_Fortress.events.onInputOut.add(this.listenerOut, this);
 
@@ -349,7 +349,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     this.Yellow_Base.income = this.stats.baseIncome;
     //Input logic
     this.Yellow_Base.inputEnabled = true;
-    this.Yellow_Base.events.onInputDown.add(this.listenerStructureSelection, this);
+    this.Yellow_Base.events.onInputDown.add(this.listenerUnitSelection, this);
     this.Yellow_Base.events.onInputOver.add(this.listenerOver, this);
     this.Yellow_Base.events.onInputOut.add(this.listenerOut, this);
 
@@ -413,6 +413,7 @@ hud.prototype.AllStructuresOff = function(){ //MAKES NOT VISIBLE ALL THE STRUCTU
 }
 
 hud.prototype.listenerTurn = function(){    //NEXT TURN LOGIC
+    
     this.currentPlayer = !this.currentPlayer;   //Swap players
     this.map.UpdateMap(this.currentPlayer);     //Updates the map
     this.currentTurnText.text = this.map.turn;  //Updates the current turn text on the interface
@@ -441,8 +442,6 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
         this.clickPointGlobal = this.game.input.position;  //the click position is get
         this.clickPoint = new Phaser.Point(this.clickPointGlobal.x , this.clickPointGlobal.y);                                               
         this.map.ForegroundLayer.getTileXY(this.clickPoint.x/1.8, this.clickPoint.y/1.8, this.clickPoint);  //it is translated to the tile in that position
-        console.log("tile: " + this.clickPoint);
-        console.log("global: " + this.clickPointGlobal);
         if(this.selected){  //If the player bought an unit / structure,
             if(this.map.PlaceUnit(this.clickPoint, this.selectedIndex, this.currentPlayer))                                         //tries to place the entity. If it succeeds,
             {
@@ -460,18 +459,20 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
         }
         else if (!this.indicating){   //If not it means he is selecting an unit, territory or structure
            if(this.currentPlayer){
-               if (this.map.TileIndexGround(this.clickPoint) == 365)
-                    this.indicate(this.clickPoint);                               
+                if (this.map.TileIndexGround(this.clickPoint) == 365)
+                    if(!this.map.isMoved(this.clickPoint))
+                        this.indicate(this.clickPoint);                               
            }
            else
            if (this.map.TileIndexGround(this.clickPoint) == 366)
-           this.indicate(this.clickPoint);
+                if(!this.map.isMoved(this.clickPoint))
+                    this.indicate(this.clickPoint);
            this.selectedForAction = this.clickPoint;
         }
         
     }
 }
-hud.prototype.indicate = function(clickPoint){
+hud.prototype.indicate = function(clickPoint){  //Creates the actions indicators of a selected unit
     if (this.map.WhatIsIt(this.clickPoint.x, this.clickPoint.y) == 3) {
         var point = new Phaser.Point();
         var fourPos = this.map.FourPos(this.clickPoint);           
@@ -534,10 +535,13 @@ hud.prototype.selectedReset = function(){   //Resets the unit/structure selectio
     this.selected = false;
 }
 
-hud.prototype.listenerAction = function(selected){
+hud.prototype.listenerAction = function(selected){  //Process the actions of a selected unit
     if(selected.key == 'movement'){
-        this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
-        this.IndicatorsOff();
+        if(!this.map.isMoved(this.selectedForAction)){
+            this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
+            this.IndicatorsOff();
+        }
+        
     }
 }
 
@@ -572,28 +576,7 @@ hud.prototype.listenerUnit = function(){    //OPENS THE UNITS INVENTORY
     this.AllUnitsOn(this.currentPlayer);
 }
 
-hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH UNIT WAS SELECTED AND VERIFIES IF THERE IS ENOUGH MONEY TO BUY IT
-    
-    if(this.currentPlayer)
-        if(this.moneyR >= clicked.price){
-            this.follower.loadTexture(clicked.texture);
-            this.follower.visible = true;
-            this.select(clicked);
-        }
-        else
-            console.log("Not enough money to buy..");
-
-    else
-        if(this.moneyY >= clicked.price){
-            this.follower.loadTexture(clicked.texture);
-            this.follower.visible = true;
-            this.select(clicked);
-        }
-        else
-            console.log("Not enough money to buy..");
-}
-//NUEVONUEVONUEVO
-hud.prototype.listenerStructureSelection = function (clicked){   //DETERMINATES WICH UNIT WAS SELECTED AND VERIFIES IF THERE IS ENOUGH MONEY TO BUY IT
+hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH UNIT WAS SELECTED AND VERIFIES IF THERE IS ENOUGH MONEY TO BUY IT (BUY)
     
     if(this.currentPlayer)
         if(this.moneyR >= clicked.price){
@@ -621,7 +604,6 @@ hud.prototype.UpdateFollower = function(){  //Updates the position of the cursor
 }
 
 hud.prototype.select = function(clicked){   //Selects an unit/structure to buy
-    console.log("Selected!");
     this.selectedIndex = clicked.index;
     this.selected = true;
     this.selectedPrice = clicked.price;

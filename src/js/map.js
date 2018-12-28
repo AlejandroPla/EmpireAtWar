@@ -16,10 +16,6 @@ var map = function(game, stats){
     this.unitsArray = new Array(this.map.height);
     this.createUnitsArray();
 
-    //Structures group
-    this.structuresArray = new Array(this.map.height);
-    this.createStructuresArray();
-
     //Scale
     this.BackgroundLayer.scale.set(1.8);
     this.GroundLayer.scale.set(1.8);
@@ -37,25 +33,18 @@ map.prototype.createUnitsArray = function(){
     for (let index = 0; index < this.unitsArray.length; index++) {
         this.unitsArray[index] = new Array(this.map.width);
     }
+
+    for (let index1 = 0; index1 < this.map.height; index1++)
+        for (let index2 = 0; index2 < this.map.width; index2++) 
+            this.unitsArray[index1][index2] = -1;
 };
 
-map.prototype.creatUnit = function(x,y,unitType){
+map.prototype.createUnit = function(x,y,unitType){
     this.unitsArray[y][x] = new unit (unitType);
-};
-
-map.prototype.createStructuresArray = function(){
-    for (let index = 0; index < this.structuresArray.length; index++){
-        this.structuresArray[index] = new Array(this.map.width);
-    }
-;}
-
-map.prototype.createStructure = function(x, y, structureType){
-    this.structuresArray[y][x] = new structure (structureType);
 };
 
 map.prototype.AmountOfTiles = function (index){
     var count = 0;
-    console.log(this.map.getTile(5,6,this.GroundLayer,true).index)
     for (let indexw = 0; indexw < this.map.width; indexw++) {
         for (let indexh = 0; indexh < this.map.height; indexh++) { 
             if (this.map.getTile(indexw,indexh,this.GroundLayer, true).index == index) {
@@ -67,6 +56,7 @@ map.prototype.AmountOfTiles = function (index){
 }
 map.prototype.UpdateMap = function(currentPlayer) {
     this.UpdateTrees();
+    this.resetUnits();
 };
 
 map.prototype.UpdateTrees = function(){
@@ -123,7 +113,7 @@ map.prototype.PlaceUnit = function(clickPoint, type, currentPlayer){
             this.map.putTile(366,clickPoint.x,clickPoint.y,this.GroundLayer);
     
             this.placed = true;
-            this.creatUnit(clickPoint.x,clickPoint.y,type);
+            this.createUnit(clickPoint.x,clickPoint.y,type);
             this.map.putTile(type, clickPoint.x, clickPoint.y, this.ForegroundLayer);
             console.log(this.unitsArray[clickPoint.y][clickPoint.x].name + " placed at " + clickPoint.x + "/" + clickPoint.y);  //Console info
         }
@@ -133,14 +123,34 @@ map.prototype.PlaceUnit = function(clickPoint, type, currentPlayer){
     return this.placed;    
 }
 
+map.prototype.isMoved = function (point){
+    if (this.unitsArray[point.y][point.x].moved)
+        return true
+    else
+        return false;        
+}
+
+map.prototype.resetUnits = function (){
+    for (let index1 = 0; index1 < this.map.height; index1++)
+        for (let index2 = 0; index2 < this.map.width; index2++) 
+            if(this.unitsArray[index1][index2] != -1)
+                this.unitsArray[index1][index2].moved = false;
+}
+
 map.prototype.moveUnit = function(clickPoint, destination, currentPlayer){
     this.map.putTile(this.map.getTile(clickPoint.x,clickPoint.y,this.ForegroundLayer,true).index,clickPoint.x + destination.x, clickPoint.y + destination.y, this.ForegroundLayer);
     this.map.removeTile(clickPoint.x,clickPoint.y,this.ForegroundLayer);
-    if (currentPlayer) 
-    this.map.putTile(365,clickPoint.x + destination.x,clickPoint.y + destination.y,this.GroundLayer);
+    if (currentPlayer){
+        this.map.putTile(365,clickPoint.x + destination.x,clickPoint.y + destination.y,this.GroundLayer);
+    }
 
-    else
-    this.map.putTile(366,clickPoint.x + destination.x,clickPoint.y + destination.y,this.GroundLayer);
+    else{
+        this.map.putTile(366,clickPoint.x + destination.x,clickPoint.y + destination.y,this.GroundLayer);
+    }
+
+    this.unitsArray[clickPoint.y + destination.y][clickPoint.x + destination.x] = this.unitsArray[clickPoint.y][clickPoint.x];
+    this.unitsArray[clickPoint.y][clickPoint.x] = -1;
+    this.unitsArray[clickPoint.y + destination.y][clickPoint.x + destination.x].moved = true;
 }
 
 map.prototype.FourPos = function (pos){ //Return an array with the entities on the four direction around a given position
@@ -179,7 +189,6 @@ map.prototype.TileCenterPos = function(point){
     var tile =  this.map.getTile(point.x, point.y, this.BackgroundLayer);
     pointCenter.x = tile.worldX * 1.8;
     pointCenter.y = tile.worldY * 1.8;
-    console.log(pointCenter);
     return pointCenter;
 }
 
