@@ -413,7 +413,7 @@ hud.prototype.AllStructuresOff = function(){ //MAKES NOT VISIBLE ALL THE STRUCTU
 }
 
 hud.prototype.listenerTurn = function(){    //NEXT TURN LOGIC
-    
+    this.follower.visible = false;              //Follower Visible off 
     this.currentPlayer = !this.currentPlayer;   //Swap players
     this.map.UpdateMap(this.currentPlayer);     //Updates the map
     this.currentTurnText.text = this.map.turn;  //Updates the current turn text on the interface
@@ -553,6 +553,7 @@ hud.prototype.listenerAction = function(selected){  //Process the actions of a s
 
 hud.prototype.listenerStructure = function(){   //OPENS THE STRUCTURES INVENTORY
     this.selectedReset();
+    this.follower.visible = false;              //Follower Visible off 
     this.inventoryBackground.anchor.setTo(1,1);
     this.inventoryBackground.visible = true;
     this.structureIcon.visible = false;
@@ -587,6 +588,7 @@ hud.prototype.listenerOut = function(){ //Closes the unit stats display
 
 hud.prototype.listenerUnit = function(){    //OPENS THE UNITS INVENTORY
     this.selectedReset();
+    this.follower.visible = false;              //Follower Visible off 
     this.inventoryBackground.anchor.setTo(0,1);
     this.inventoryBackground.visible = true;
     this.unitIcon.visible = false;
