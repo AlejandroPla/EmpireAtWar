@@ -126,7 +126,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Red_Peasant.inputEnabled = true;
     this.Red_Peasant.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Red_Peasant.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Peasant.events.onInputOver.add(this.listenerOverUnit, this);
     this.Red_Peasant.events.onInputOut.add(this.listenerOut, this);
 
 //Lancer
@@ -141,7 +141,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Red_Lancer.inputEnabled = true;
     this.Red_Lancer.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Red_Lancer.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Lancer.events.onInputOver.add(this.listenerOverUnit, this);
     this.Red_Lancer.events.onInputOut.add(this.listenerOut, this);
 
 //Swordman
@@ -156,7 +156,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Red_Swordman.inputEnabled = true;
     this.Red_Swordman.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Red_Swordman.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Swordman.events.onInputOver.add(this.listenerOverUnit, this);
     this.Red_Swordman.events.onInputOut.add(this.listenerOut, this);
 
 //Horseman
@@ -171,7 +171,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Red_Horseman.inputEnabled = true;
     this.Red_Horseman.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Red_Horseman.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Horseman.events.onInputOver.add(this.listenerOverUnit, this);
     this.Red_Horseman.events.onInputOut.add(this.listenerOut, this);
 
 //UNITS (YELLOW)
@@ -187,7 +187,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Yellow_Peasant.inputEnabled = true;
     this.Yellow_Peasant.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Yellow_Peasant.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Peasant.events.onInputOver.add(this.listenerOverUnit, this);
     this.Yellow_Peasant.events.onInputOut.add(this.listenerOut, this);
 
 //Lancer
@@ -202,7 +202,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Yellow_Lancer.inputEnabled = true;
     this.Yellow_Lancer.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Yellow_Lancer.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Lancer.events.onInputOver.add(this.listenerOverUnit, this);
     this.Yellow_Lancer.events.onInputOut.add(this.listenerOut, this);
 
 //Swordman
@@ -217,7 +217,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Yellow_Swordman.inputEnabled = true;
     this.Yellow_Swordman.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Yellow_Swordman.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Swordman.events.onInputOver.add(this.listenerOverUnit, this);
     this.Yellow_Swordman.events.onInputOut.add(this.listenerOut, this);
 
 //Horseman
@@ -232,7 +232,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Yellow_Horseman.inputEnabled = true;
     this.Yellow_Horseman.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Yellow_Horseman.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Horseman.events.onInputOver.add(this.listenerOverUnit, this);
     this.Yellow_Horseman.events.onInputOut.add(this.listenerOut, this);
 
 //STRUCTURES (RED)
@@ -248,7 +248,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Red_Farm.inputEnabled = true;
     this.Red_Farm.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Red_Farm.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Farm.events.onInputOver.add(this.listenerOverStructure, this);
     this.Red_Farm.events.onInputOut.add(this.listenerOut, this);
 
 //Tower
@@ -263,7 +263,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Red_Tower.inputEnabled = true;
     this.Red_Tower.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Red_Tower.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Tower.events.onInputOver.add(this.listenerOverStructure, this);
     this.Red_Tower.events.onInputOut.add(this.listenerOut, this);
 
 //Fortress
@@ -278,7 +278,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Red_Fortress.inputEnabled = true;
     this.Red_Fortress.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Red_Fortress.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Fortress.events.onInputOver.add(this.listenerOverStructure, this);
     this.Red_Fortress.events.onInputOut.add(this.listenerOut, this);
 
 //Base
@@ -291,7 +291,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Red_Base.inputEnabled = true;
     this.Red_Base.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Red_Base.events.onInputOver.add(this.listenerOver, this);
+    this.Red_Base.events.onInputOver.add(this.listenerOverStructure, this);
     this.Red_Base.events.onInputOut.add(this.listenerOut, this);
 
 //STRUCTURES (YELLOW)
@@ -307,7 +307,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Yellow_Farm.inputEnabled = true;
     this.Yellow_Farm.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Yellow_Farm.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Farm.events.onInputOver.add(this.listenerOverStructure, this);
     this.Yellow_Farm.events.onInputOut.add(this.listenerOut, this);
 
 //Tower
@@ -322,7 +322,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Yellow_Tower.inputEnabled = true;
     this.Yellow_Tower.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Yellow_Tower.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Tower.events.onInputOver.add(this.listenerOverStructure, this);
     this.Yellow_Tower.events.onInputOut.add(this.listenerOut, this);
 
 //Fortress
@@ -337,7 +337,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Yellow_Fortress.inputEnabled = true;
     this.Yellow_Fortress.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Yellow_Fortress.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Fortress.events.onInputOver.add(this.listenerOverStructure, this);
     this.Yellow_Fortress.events.onInputOut.add(this.listenerOut, this);
 
 //Base
@@ -350,7 +350,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     //Input logic
     this.Yellow_Base.inputEnabled = true;
     this.Yellow_Base.events.onInputDown.add(this.listenerUnitSelection, this);
-    this.Yellow_Base.events.onInputOver.add(this.listenerOver, this);
+    this.Yellow_Base.events.onInputOver.add(this.listenerOverStructure, this);
     this.Yellow_Base.events.onInputOut.add(this.listenerOut, this);
 
 //Follower
@@ -555,10 +555,23 @@ hud.prototype.listenerStructure = function(){   //OPENS THE STRUCTURES INVENTORY
     this.AllStructuresOn(this.currentPlayer);
 }
 
-hud.prototype.listenerOver = function(Overed){  //Opens the unit stats display
+hud.prototype.listenerOverUnit = function(Overed, unit){  //Opens the unit stats display
+    
     this.priceTxt.text = 'Price:       ' + Overed.price;
     this.strengthTxt.text = 'Strength: ' + Overed.strength;
     this.nameTxt.text = Overed.name;
+
+    this.overBackground.x = this.game.width / 2;
+    this.overBackground.visible = true;
+}
+
+hud.prototype.listenerOverStructure = function(Overed, unit){  //Opens the unit stats display
+   
+    this.priceTxt.text = 'Price:       ' + Overed.price;
+    this.strengthTxt.text = 'Strength: ' + Overed.strength;
+    this.nameTxt.text = Overed.name;
+
+    this.overBackground.x = (this.game.width / 2) - 160;
     this.overBackground.visible = true;
 }
 
