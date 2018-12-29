@@ -34,7 +34,7 @@ this.indKey[3] = new Phaser.Point(-1,0);
     this.clickArea.events.onInputDown.add(this.listenerClick, this);
 
 //Inventory background / frame
-    this.inventoryBackground = game.add.image( this.game.width / 2, this.game.height *0.98, 'inventoryBackground');
+    this.inventoryBackground = game.add.image( this.game.width / 2, this.game.height * 0.98, 'inventoryBackground');
     this.inventoryBackground.anchor.setTo(0,1);
     this.inventoryBackground.visible = false;
     this.inventoryBackground.inputEnabled = true;

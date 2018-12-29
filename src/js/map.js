@@ -99,29 +99,84 @@ map.prototype.UpdateTrees = function(){
     }
 }
 
+map.prototype.nearAlliedTerritory = function(point, currentPlayer) {    //Check if near the given point are there any allied tiles
+    if(currentPlayer){  //Red player
+        if(this.map.getTile(point.x -1, point.y, this.GroundLayer,true).index == 365)
+            return true;
+        if(this.map.getTile(point.x , point.y -1, this.GroundLayer,true).index == 365)
+            return true;
+        if(this.map.getTile(point.x , point.y +1, this.GroundLayer,true).index == 365)
+            return true;
+        if(this.map.getTile(point.x +1, point.y, this.GroundLayer,true).index == 365)
+            return true;
+        return false;
+    }
+    else{   //Yellow player
+        if(this.map.getTile(point.x -1, point.y, this.GroundLayer,true).index == 366)
+            return true;
+        if(this.map.getTile(point.x , point.y -1, this.GroundLayer,true).index == 366)
+            return true;
+        if(this.map.getTile(point.x , point.y +1, this.GroundLayer,true).index == 366)
+            return true;
+        if(this.map.getTile(point.x +1, point.y, this.GroundLayer,true).index == 366)
+            return true;
+        return false;
+    }
+    
+}
+
 map.prototype.PlaceUnit = function(clickPoint, type, currentPlayer){
 
     this.placed = false;
-  
-    if(this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 3 || this.map.getTile(clickPoint.x, clickPoint.y, this.BackgroundLayer,true).index == 1){ //Es hierba
-        if(this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index == -1 || this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index == 5){ //Nada ocupado
-            
+    this.teamTile = this.map.getTile(clickPoint.x, clickPoint.y, this.GroundLayer,true).index;      //Coloured tile under entity
+    this.entity = this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index;     //Entity selected
+    this.terrain = this.map.getTile(clickPoint.x, clickPoint.y,this.BackgroundLayer,true).index;    //Terrain
+   
+    if(!this.stats.IsUnit(type))  //If it is an structure
+    {
+        if(currentPlayer)               //If red player
+        {
+            if(this.teamTile == 365)    //If it is a red territory
+            {
+                this.placed = this.freeThenPlace(clickPoint, type, currentPlayer);    //Place?
+            }  
+        }    
+        else                            //If yellow player
+         {
+            if(this.teamTile == 366)    //If it is a yellow territory
+            {
+                this.placed = this.freeThenPlace(clickPoint, type, currentPlayer);    //Place?
+            }
+         }
+        
+    }
+    else{
+        if(this.nearAlliedTerritory(clickPoint, currentPlayer)) //If near to allied territory
+        {
+            this.placed = this.freeThenPlace(clickPoint, type, currentPlayer);
+            if(this.placed)
+                this.unitsArray[clickPoint.y][clickPoint.x].moved = true;
+        }
+    }
+    return this.placed;    
+}
+
+map.prototype.freeThenPlace = function(clickPoint, type, currentPlayer){
+    if(this.terrain == 3 || this.terrain == 1) //Es hierba
+        if(this.entity == -1 || this.entity == 5){ //Nada ocupado o árbol
             if (currentPlayer) 
             this.map.putTile(365,clickPoint.x,clickPoint.y,this.GroundLayer);
         
             else
             this.map.putTile(366,clickPoint.x,clickPoint.y,this.GroundLayer);
     
-            this.placed = true;
             this.createUnit(clickPoint.x,clickPoint.y,type);
             this.map.putTile(type, clickPoint.x, clickPoint.y, this.ForegroundLayer);
             console.log(this.unitsArray[clickPoint.y][clickPoint.x].name + " placed at " + clickPoint.x + "/" + clickPoint.y);  //Console info
+            return true;
         }
-            
+        return false;
     }
-    
-    return this.placed;    
-}
 
 map.prototype.isMoved = function (point){
     if (this.unitsArray[point.y][point.x].moved)
