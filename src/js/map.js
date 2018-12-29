@@ -13,6 +13,8 @@ var map = function(game, stats){
     this.ForegroundLayer = this.map.createLayer("Foreground");
 
     //Units group
+    this.rFarms = 0;
+    this.yFarms = 0;
     this.unitsArray = new Array(this.map.height);
     this.createUnitsArray();
 
@@ -148,7 +150,13 @@ map.prototype.PlaceUnit = function(clickPoint, type, currentPlayer){
                 this.placed = this.freeThenPlace(clickPoint, type, currentPlayer);    //Place?
             }
          }
-        
+        if(this.placed) //If the structure was placed and it is a farm, it is added to the farms count
+        {
+            if(type == this.stats.farmIndexRed)
+                this.rFarms ++;
+            else if(type == this.stats.farmIndexYellow)
+                this.yFarms ++;
+        }
     }
     else{
         if(this.nearAlliedTerritory(clickPoint, currentPlayer)) //If near to allied territory

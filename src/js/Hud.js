@@ -518,13 +518,19 @@ hud.prototype.createIndicator = function(fourPos, index, pos){
 
 hud.prototype.updateMoney = function (turnEnd){    //Updates the money display and amount
     if(this.currentPlayer){
-        if(turnEnd)
-            this.moneyR += this.map.AmountOfTiles(365);
+        if(turnEnd){
+            this.moneyR += Math.trunc(this.map.AmountOfTiles(365) / 2);
+            this.moneyR += 2;
+            this.moneyR += this.map.rFarms * this.stats.farmsIncome;
+        }
         this.moneyAmount.text = this.moneyR;
     }
     else{
-        if(turnEnd)
-            this.moneyY += this.map.AmountOfTiles(366);
+        if(turnEnd){
+            this.moneyY += Math.trunc(this.map.AmountOfTiles(366) / 2);
+            this.moneyY += 2;
+            this.moneyY += this.map.yFarms * this.stats.farmsIncome;
+        }
         this.moneyAmount.text = this.moneyY;
     }
 }
