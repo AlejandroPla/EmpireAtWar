@@ -1,0 +1,32 @@
+html {
+  font-size: 10px;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  src: url(https://fonts.googleapis.com/css?family=Merriweather" rel="stylesheet);
+  font-family: 'Merriweather', serif;
+  font-size: 1.6rem;
+  background: none;
+
+  background-color: #cccccc;
+}
+
+a {
+  color: #c39;
+}
+
+main {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+#game {
+  border: 1px solid #333;
+}
+
+footer {
+  text-align: center;
+}
