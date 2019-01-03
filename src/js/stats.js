@@ -51,6 +51,7 @@ this.fontSize               = 25;
     this.farmLife = 5;  //FARM
     this.farmPrice = 5;
     this.farmStrength = 5;
+    this.farmsIncome = 10;
     this.farmIndexRed = 17;  //NOTA: cambiar el color de la granja de verde a rojo
     this.farmIndexYellow = 43;
     this.farmName = "Farm";

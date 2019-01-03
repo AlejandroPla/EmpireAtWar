@@ -10,7 +10,8 @@ var stats = require("./stats.js");
 var unit = function(type){ 
 
     this.stats = new stats();
-
+    this.moved = false;
+    
     if(type == this.stats.peasantIndexRed)                                     
         this.Peasant(true);
     else if(type == this.stats.peasantIndexYellow)
@@ -28,21 +29,10 @@ var unit = function(type){
     else if(type == this.stats.horsemanIndexYellow)
         this.Horseman(false);
 }
-/*var Peasant = function(player) {
-
-    unit.call(this, this.stats.peasantLife, this.stats.peasantStrength, this.stats.peasantPrice, this.stats.peasantMantenance);
-
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
-}
-Peasant.prototype = Object.create(unit.prototype);
-Peasant.prototype.constructor = Peasant;
 
 unit.prototype.HasMoney = function(money){
     return money >= this.price;
-}*/
+}
 
 unit.prototype.Peasant = function(player){  //PEASANT
     this.name = this.stats.peasantName;
