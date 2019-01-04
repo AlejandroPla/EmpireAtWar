@@ -22,9 +22,9 @@ var PreloaderScene = {
 
     this.game.load.image('logo', 'images/phaser.png');  
 
-    this.game.load.image('playButton', 'resources/sprites/playButton.png');
-    this.game.load.image('ruleButton', 'resources/sprites/rulesButton.png');
-    this.game.load.image('background', 'resources/sprites/backgroundImage.png');
+    this.game.load.image('playButton', 'resources/menu/playButton.png');
+    this.game.load.image('rulesButton', 'resources/menu/rulesButton.png');
+    this.game.load.image('backgroundImage', 'resources/menu/backgroundImage.png');
   },
 
   create: function () {
@@ -33,7 +33,7 @@ var PreloaderScene = {
 };
 
 var MenuScene={
-  preload:function(){
+  preload: function(){
      // TODO: load here the assets for the game
      this.game.load.image('logo', 'images/phaser.png');
      this.game.load.tilemap('level_01', 'resources/maps/level_01.Json', null, Phaser.Tilemap.TILED_JSON);
@@ -73,9 +73,9 @@ var MenuScene={
      this.game.load.image('combat', 'resources/sprites/Combat_Indicator.png');
   },
   create:function(){
-    this.background = this.game.add.sprite(0, 0, 'background2.png');
-    this.playButton = this.game.add.button(500, 100, 'playButton.png', this.PlayStart, this, 2, 1, 0);
-    this.ruleButton = this.game.add.button(500, 100, 'ruleButton.png', this.HowToPlayStart, this, 2, 1, 0);
+    this.background = this.game.add.sprite(0, 0, 'backgroundImage');
+    this.playButton = this.game.add.button(200, 200, 'playButton', this.PlayStart, this, 3, 1, 0);
+    this.ruleButton = this.game.add.button(200, 400, 'rulesButton', this.HowToPlayStart, this, 1, 1, 0);
   },
   PlayStart:function(){
     this.game.state.start('play');
@@ -87,8 +87,8 @@ var MenuScene={
 
 var HowToPlayScene={
   create:function(){
-    this.HowToPlayImage = this.game.add.sprite(0, 0, 'rules.png');
-    this.backButton = this.game.add.button(500, 100, 'backButton.png', this.back, this, 2, 1, 0);
+    this.HowToPlayImage = this.game.add.sprite(0, 0, 'rules');
+    this.backButton = this.game.add.button(500, 100, 'backButton', this.back, this, 2, 1, 0);
     backButton.scale.setTo(0.20, 0.20);
   },
   back:function(){
@@ -99,7 +99,7 @@ var HowToPlayScene={
 var EndOfGame={
   create:function(){
     this.game.add.sprite(0, 0, 'endGame.png');
-    this.menuButton = this.game.add.button(500, 100, 'endGameButton.png', this.backMenu, this, 2, 1, 0);
+    this.menuButton = this.game.add.button(500, 100, 'endGameButton', this.backMenu, this, 2, 1, 0);
   },
   backMenu:function(){
     this.game.state.start('MainMenu');
