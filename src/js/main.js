@@ -25,6 +25,11 @@ var PreloaderScene = {
     this.game.load.image('playButton', 'resources/menu/playButton.png');
     this.game.load.image('rulesButton', 'resources/menu/rulesButton.png');
     this.game.load.image('backgroundImage', 'resources/menu/backgroundImage.png');
+    this.game.load.image('aboutUs', 'resources/menu/aboutUs.png');
+    this.game.load.image('aboutUsButton', 'resources/menu/aboutUsButton.png');
+    this.game.load.image('backButton', 'resources/menu/backButton.png');
+    this.game.load.image('rules', 'resources/menu/rules.png');
+    this.game.load.image('endGame', 'resources/menu/endGame.png');
   },
 
   create: function () {
@@ -73,33 +78,48 @@ var MenuScene={
      this.game.load.image('combat', 'resources/sprites/Combat_Indicator.png');
   },
   create:function(){
-    this.background = this.game.add.sprite(0, 0, 'backgroundImage');
-    this.playButton = this.game.add.button(200, 200, 'playButton', this.PlayStart, this, 3, 1, 0);
-    this.ruleButton = this.game.add.button(200, 400, 'rulesButton', this.HowToPlayStart, this, 1, 1, 0);
+    this.background = this.game.add.image(0, 0, 'backgroundImage');
+    this.playButton = this.game.add.button(50, 475, 'playButton', this.PlayStart, this, 1, 1, 0);
+    this.ruleButton = this.game.add.button(250, 475, 'rulesButton', this.HowToPlayStart, this, 1, 1, 0);
+    this.aboutUsButton = this.game.add.button(450, 450, 'aboutUsButton', this.AboutUsStart, this, 1, 1, 0);
   },
   PlayStart:function(){
     this.game.state.start('play');
   },
   HowToPlayStart:function(){
     this.game.state.start('How to Play');
+  },
+  AboutUsStart:function(){
+    this.game.state.start('About Us');
   }
 };
 
-var HowToPlayScene={
+var AboutUsScene={
   create:function(){
-    this.HowToPlayImage = this.game.add.sprite(0, 0, 'rules');
-    this.backButton = this.game.add.button(500, 100, 'backButton', this.back, this, 2, 1, 0);
-    backButton.scale.setTo(0.20, 0.20);
+    this.aboutUsImage = this.game.add.image(0, 0, 'aboutUs');
+    this.backButton = this.game.add.button(100, 500, 'backButton', this.back, this, 2, 1, 0);
   },
   back:function(){
     this.game.state.start('MainMenu');
   }
 }
 
+var HowToPlayScene={
+  create:function(){
+    this.HowToPlayImage = this.game.add.image(0, 0, 'rules');
+    this.backButton = this.game.add.button(500, 515, 'backButton', this.back, this, 2, 1, 0);
+  },
+  back:function(){
+    this.game.state.start('MainMenu');
+  }
+}
+
+
+//Falta implementar al terminar el juego
 var EndOfGame={
   create:function(){
-    this.game.add.sprite(0, 0, 'endGame.png');
-    this.menuButton = this.game.add.button(500, 100, 'endGameButton', this.backMenu, this, 2, 1, 0);
+    this.game.add.image(0, 0, 'endGame');
+    this.menuButton = this.game.add.button(500, 100, 'backButton', this.backMenu, this, 2, 1, 0);
   },
   backMenu:function(){
     this.game.state.start('MainMenu');
@@ -115,6 +135,7 @@ window.onload = function () {
   game.state.add('play', PlayScene);
   game.state.add('How to Play', HowToPlayScene);
   game.state.add('EndGame', EndOfGame);
+  game.state.add('About Us', AboutUsScene)
 
   game.state.start('boot');
 };
