@@ -16,6 +16,9 @@ var hud = function(game, map, stats){
     this.selectedPrice = 0;
     this.selectedStrenght = 0
     this.selectedForAction = new Phaser.Point();
+
+//Sounds
+this.MenuClick = game.add.audio('MenuClick');
 //Interface
 //Indicators
 this.indicators = new Array(4);
@@ -414,6 +417,8 @@ hud.prototype.AllStructuresOff = function(){ //MAKES NOT VISIBLE ALL THE STRUCTU
 }
 
 hud.prototype.listenerTurn = function(){    //NEXT TURN LOGIC
+    this.MenuClick.play();
+    this.selectedReset();
     this.follower.visible = false;              //Follower Visible off 
     this.currentPlayer = !this.currentPlayer;   //Swap players
     this.map.UpdateMap(this.currentPlayer);     //Updates the map
@@ -559,6 +564,7 @@ hud.prototype.listenerAction = function(selected){  //Process the actions of a s
 }
 
 hud.prototype.listenerStructure = function(){   //OPENS THE STRUCTURES INVENTORY
+    this.MenuClick.play();
     this.selectedReset();
     this.follower.visible = false;              //Follower Visible off 
     this.inventoryBackground.anchor.setTo(1,1);
@@ -594,6 +600,7 @@ hud.prototype.listenerOut = function(){ //Closes the unit stats display
 }
 
 hud.prototype.listenerUnit = function(){    //OPENS THE UNITS INVENTORY
+    this.MenuClick.play();
     this.selectedReset();
     this.follower.visible = false;              //Follower Visible off 
     this.inventoryBackground.anchor.setTo(0,1);

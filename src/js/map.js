@@ -171,7 +171,7 @@ map.prototype.PlaceUnit = function(clickPoint, type, currentPlayer){
 
 map.prototype.freeThenPlace = function(clickPoint, type, currentPlayer){
     if(this.terrain == 3 || this.terrain == 1) //Es hierba
-        if(this.entity == -1 || this.entity == 5){ //Nada ocupado o árbol
+        if(this.entity == -1){ //Nada ocupado
             if (currentPlayer) 
             this.map.putTile(365,clickPoint.x,clickPoint.y,this.GroundLayer);
         

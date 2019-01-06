@@ -12,7 +12,6 @@ var BootScene = {
     this.game.state.start('preloader');
   }
 };
-
 var PreloaderScene = {
   preload: function () {
     this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
@@ -33,12 +32,16 @@ var PreloaderScene = {
     this.game.load.image('rules4', 'resources/menu/imageText/rules4.png');
     this.game.load.image('endGame', 'resources/menu/imageText/endGame.png');
     this.game.load.image('nextButton', 'resources/menu/buttons/nextButton.png')
+
+    //Audio
+    this.game.load.audio('mainTheme', 'resources/audio/ImperiVm_ogg.ogg');
   },
 
   create: function () {
     this.game.state.start('MainMenu');
   }
 };
+
 
 var MenuScene={
   preload: function(){
@@ -79,6 +82,9 @@ var MenuScene={
      this.game.load.image('movement', 'resources/sprites/Movement_Indicator.png');
      this.game.load.image('nope', 'resources/sprites/Nope_Indicator.png');
      this.game.load.image('combat', 'resources/sprites/Combat_Indicator.png');
+
+     //Sounds
+     this.game.load.audio('MenuClick', 'resources/audio/MenuClick.ogg');
   },
   create:function(){
     this.background = this.game.add.image(0, 0, 'backgroundImage');
