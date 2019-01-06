@@ -29,6 +29,8 @@ var PreloaderScene = {
     this.game.load.image('backButton', 'resources/menu/backButton.png');
     this.game.load.image('rules', 'resources/menu/rules.png');
     this.game.load.image('endGame', 'resources/menu/endGame.png');
+    this.game.load.image('backButton', 'resources/menu/backButton.png');
+    this.game.load.image('pausedMenu', 'resources/menu/pausedMenu.png');
   },
 
   create: function () {
@@ -81,6 +83,7 @@ var MenuScene={
     this.playButton = this.game.add.button(50, 475, 'playButton', this.PlayStart, this, 1, 1, 0);
     this.ruleButton = this.game.add.button(250, 475, 'rulesButton', this.HowToPlayStart, this, 1, 1, 0);
     this.aboutUsButton = this.game.add.button(450, 450, 'aboutUsButton', this.AboutUsStart, this, 1, 1, 0);
+    this.pausedMenuButton = this.game.add.button(50, 50, 'backButton', this.pausedMenuStart, this, 1, 1, 0);
   },
   PlayStart:function(){
     this.game.state.start('play');
@@ -90,39 +93,55 @@ var MenuScene={
   },
   AboutUsStart:function(){
     this.game.state.start('About Us');
+  },
+  pausedMenuStart:function(){
+    if (this.game.input.Keyboard.isDown(Phaser.Keyboard.ESC))
+      this.game.state.start('Paused Game');
   }
 };
 
 var AboutUsScene={
   create:function(){
     this.aboutUsImage = this.game.add.image(0, 0, 'aboutUs');
-    this.backButton = this.game.add.button(100, 500, 'backButton', this.back, this, 2, 1, 0);
+    this.backButton = this.game.add.button(100, 500, 'backButton', this.back, this, 1, 1, 0);
   },
   back:function(){
     this.game.state.start('MainMenu');
   }
-}
+};
+
+//Falta implementar bien esta clase
+var pausedMenuScene={
+  create:function(){
+    this.pausedMenuImage = this.game.add.image(500, 500, 'pausedMenu');
+    this.pausedMenuImage.anchor.setTo(0.5, 0.5);
+    this.backButton = this.game.add.button(100, 500, 'backButton', this.back, this, 1, 1, 0);
+    },
+  back:function(){
+    this.game.state.start('MainMenu');
+  }
+};
 
 var HowToPlayScene={
   create:function(){
     this.HowToPlayImage = this.game.add.image(0, 0, 'rules');
-    this.backButton = this.game.add.button(500, 515, 'backButton', this.back, this, 2, 1, 0);
+    this.backButton = this.game.add.button(500, 515, 'backButton', this.back, this, 1, 1, 0);
   },
   back:function(){
     this.game.state.start('MainMenu');
   }
-}
+};
 
 //Falta implementar al terminar el juego
 var EndOfGame={
   create:function(){
     this.game.add.image(0, 0, 'endGame');
-    this.menuButton = this.game.add.button(500, 100, 'backButton', this.backMenu, this, 2, 1, 0);
+    this.menuButton = this.game.add.button(500, 100, 'backButton', this.backMenu, this, 1, 1, 0);
   },
   backMenu:function(){
     this.game.state.start('MainMenu');
   }
-}
+};
 
 window.onload = function () {
   var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
@@ -132,7 +151,8 @@ window.onload = function () {
   game.state.add('play', PlayScene);
   game.state.add('How to Play', HowToPlayScene);
   game.state.add('EndGame', EndOfGame);
-  game.state.add('About Us', AboutUsScene)
+  game.state.add('About Us', AboutUsScene);
+  game.state.add('paused Game', pausedMenuScene)
 
   game.state.start('boot');
 };

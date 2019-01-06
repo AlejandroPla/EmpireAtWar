@@ -14,6 +14,7 @@ var hud = function(game, map, stats){
     this.selected = false;
     this.selectedIndex = 0;
     this.selectedPrice = 0;
+    this.selectedStrenght = 0
     this.selectedForAction = new Phaser.Point();
 //Interface
 //Indicators
@@ -547,7 +548,13 @@ hud.prototype.listenerAction = function(selected){  //Process the actions of a s
             this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
             this.IndicatorsOff();
         }
-        
+    }
+    if(selected.key == 'combat'){
+        // falta condicion del nivel de ataque
+        if(!this.map.isMoved(this.selectedForAction){
+            this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
+            this.IndicatorsOff();
+        }
     }
 }
 
@@ -628,6 +635,7 @@ hud.prototype.select = function(clicked){   //Selects an unit/structure to buy
     this.selectedIndex = clicked.index;
     this.selected = true;
     this.selectedPrice = clicked.price;
+    this.selectedStrenght = clicked.strength;
     this.listenerClick();
 }
 
