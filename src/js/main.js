@@ -21,16 +21,18 @@ var PreloaderScene = {
 
     this.game.load.image('logo', 'images/phaser.png');  
 
-    this.game.load.image('playButton', 'resources/menu/playButton.png');
-    this.game.load.image('rulesButton', 'resources/menu/rulesButton.png');
+    this.game.load.image('playButton', 'resources/menu/buttons/playButton.png');
+    this.game.load.image('rulesButton', 'resources/menu/buttons/rulesButton.png');
     this.game.load.image('backgroundImage', 'resources/menu/backgroundImage.png');
-    this.game.load.image('aboutUs', 'resources/menu/aboutUs.png');
-    this.game.load.image('aboutUsButton', 'resources/menu/aboutUsButton.png');
-    this.game.load.image('backButton', 'resources/menu/backButton.png');
-    this.game.load.image('rules', 'resources/menu/rules.png');
-    this.game.load.image('endGame', 'resources/menu/endGame.png');
-    this.game.load.image('backButton', 'resources/menu/backButton.png');
-    this.game.load.image('pausedMenu', 'resources/menu/pausedMenu.png');
+    this.game.load.image('aboutUs', 'resources/menu/imageText/aboutUs.png');
+    this.game.load.image('aboutUsButton', 'resources/menu/buttons/aboutUsButton.png');
+    this.game.load.image('backButton', 'resources/menu/buttons/backButton.png');
+    this.game.load.image('rules1', 'resources/menu/imageText/rules1.png');
+    this.game.load.image('rules2', 'resources/menu/imageText/rules2.png');
+    this.game.load.image('rules3', 'resources/menu/imageText/rules3.png');
+    this.game.load.image('rules4', 'resources/menu/imageText/rules4.png');
+    this.game.load.image('endGame', 'resources/menu/imageText/endGame.png');
+    this.game.load.image('nextButton', 'resources/menu/buttons/nextButton.png')
   },
 
   create: function () {
@@ -83,20 +85,15 @@ var MenuScene={
     this.playButton = this.game.add.button(50, 475, 'playButton', this.PlayStart, this, 1, 1, 0);
     this.ruleButton = this.game.add.button(250, 475, 'rulesButton', this.HowToPlayStart, this, 1, 1, 0);
     this.aboutUsButton = this.game.add.button(450, 450, 'aboutUsButton', this.AboutUsStart, this, 1, 1, 0);
-    this.pausedMenuButton = this.game.add.button(50, 50, 'backButton', this.pausedMenuStart, this, 1, 1, 0);
   },
   PlayStart:function(){
     this.game.state.start('play');
   },
   HowToPlayStart:function(){
-    this.game.state.start('How to Play');
+    this.game.state.start('HowToPlay');
   },
   AboutUsStart:function(){
-    this.game.state.start('About Us');
-  },
-  pausedMenuStart:function(){
-    if (this.game.input.Keyboard.isDown(Phaser.Keyboard.ESC))
-      this.game.state.start('Paused Game');
+    this.game.state.start('AboutUs');
   }
 };
 
@@ -110,21 +107,39 @@ var AboutUsScene={
   }
 };
 
-//Falta implementar bien esta clase
-var pausedMenuScene={
+var HowToPlayScene={
   create:function(){
-    this.pausedMenuImage = this.game.add.image(500, 500, 'pausedMenu');
-    this.pausedMenuImage.anchor.setTo(0.5, 0.5);
-    this.backButton = this.game.add.button(100, 500, 'backButton', this.back, this, 1, 1, 0);
-    },
-  back:function(){
-    this.game.state.start('MainMenu');
+    this.HowToPlayImage = this.game.add.image(0, 0, 'rules1');
+    this.nextButton = this.game.add.button(500, 515, 'nextButton', this.next, this, 1, 1, 0);
+  },
+  next:function(){
+    this.game.state.start('HowToPlay2');
   }
 };
 
-var HowToPlayScene={
+var HowToPlayScene2={
   create:function(){
-    this.HowToPlayImage = this.game.add.image(0, 0, 'rules');
+    this.HowToPlayImage2 = this.game.add.image(0, 0, 'rules2');
+    this.nextButton = this.game.add.button(500, 515, 'nextButton', this.next, this, 1, 1, 0);
+  },
+  next:function(){
+    this.game.state.start('HowToPlay3');
+  }
+};
+
+var HowToPlayScene3={
+  create:function(){
+    this.HowToPlayImage3 = this.game.add.image(0, 0, 'rules3');
+    this.nextButton = this.game.add.button(500, 515, 'nextButton', this.next, this, 1, 1, 0);
+  },
+  next:function(){
+    this.game.state.start('HowToPlay4');
+  }
+};
+
+var HowToPlayScene4={
+  create:function(){
+    this.HowToPlayImage4 = this.game.add.image(0, 0, 'rules4');
     this.backButton = this.game.add.button(500, 515, 'backButton', this.back, this, 1, 1, 0);
   },
   back:function(){
@@ -149,10 +164,11 @@ window.onload = function () {
   game.state.add('preloader', PreloaderScene);
   game.state.add('MainMenu', MenuScene);
   game.state.add('play', PlayScene);
-  game.state.add('How to Play', HowToPlayScene);
+  game.state.add('HowToPlay', HowToPlayScene);
+  game.state.add('HowToPlay2', HowToPlayScene2);
+  game.state.add('HowToPlay3', HowToPlayScene3);
+  game.state.add('HowToPlay4', HowToPlayScene4);
   game.state.add('EndGame', EndOfGame);
-  game.state.add('About Us', AboutUsScene);
-  game.state.add('paused Game', pausedMenuScene)
-
+  game.state.add('AboutUs', AboutUsScene);
   game.state.start('boot');
 };

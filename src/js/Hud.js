@@ -551,7 +551,7 @@ hud.prototype.listenerAction = function(selected){  //Process the actions of a s
     }
     if(selected.key == 'combat'){
         // falta condicion del nivel de ataque
-        if(!this.map.isMoved(this.selectedForAction){
+        if(!this.map.isMoved(this.selectedForAction)){
             this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
             this.IndicatorsOff();
         }

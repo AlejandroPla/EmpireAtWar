@@ -15,6 +15,7 @@ var hud = function(game, map, stats){
     this.selected = false;
     this.selectedIndex = 0;
     this.selectedPrice = 0;
+    this.selectedStrenght = 0
     this.selectedForAction = new Phaser.Point();
 //Interface
 //Indicators
@@ -548,7 +549,13 @@ hud.prototype.listenerAction = function(selected){  //Process the actions of a s
             this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
             this.IndicatorsOff();
         }
-        
+    }
+    if(selected.key == 'combat'){
+        // falta condicion del nivel de ataque
+        if(!this.map.isMoved(this.selectedForAction)){
+            this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
+            this.IndicatorsOff();
+        }
     }
 }
 
@@ -629,6 +636,7 @@ hud.prototype.select = function(clicked){   //Selects an unit/structure to buy
     this.selectedIndex = clicked.index;
     this.selected = true;
     this.selectedPrice = clicked.price;
+    this.selectedStrenght = clicked.strength;
     this.listenerClick();
 }
 
@@ -657,14 +665,18 @@ var PreloaderScene = {
 
     this.game.load.image('logo', 'images/phaser.png');  
 
-    this.game.load.image('playButton', 'resources/menu/playButton.png');
-    this.game.load.image('rulesButton', 'resources/menu/rulesButton.png');
+    this.game.load.image('playButton', 'resources/menu/buttons/playButton.png');
+    this.game.load.image('rulesButton', 'resources/menu/buttons/rulesButton.png');
     this.game.load.image('backgroundImage', 'resources/menu/backgroundImage.png');
-    this.game.load.image('aboutUs', 'resources/menu/aboutUs.png');
-    this.game.load.image('aboutUsButton', 'resources/menu/aboutUsButton.png');
-    this.game.load.image('backButton', 'resources/menu/backButton.png');
-    this.game.load.image('rules', 'resources/menu/rules.png');
-    this.game.load.image('endGame', 'resources/menu/endGame.png');
+    this.game.load.image('aboutUs', 'resources/menu/imageText/aboutUs.png');
+    this.game.load.image('aboutUsButton', 'resources/menu/buttons/aboutUsButton.png');
+    this.game.load.image('backButton', 'resources/menu/buttons/backButton.png');
+    this.game.load.image('rules1', 'resources/menu/imageText/rules1.png');
+    this.game.load.image('rules2', 'resources/menu/imageText/rules2.png');
+    this.game.load.image('rules3', 'resources/menu/imageText/rules3.png');
+    this.game.load.image('rules4', 'resources/menu/imageText/rules4.png');
+    this.game.load.image('endGame', 'resources/menu/imageText/endGame.png');
+    this.game.load.image('nextButton', 'resources/menu/buttons/nextButton.png')
   },
 
   create: function () {
@@ -722,43 +734,73 @@ var MenuScene={
     this.game.state.start('play');
   },
   HowToPlayStart:function(){
-    this.game.state.start('How to Play');
+    this.game.state.start('HowToPlay');
   },
   AboutUsStart:function(){
-    this.game.state.start('About Us');
+    this.game.state.start('AboutUs');
   }
 };
 
 var AboutUsScene={
   create:function(){
     this.aboutUsImage = this.game.add.image(0, 0, 'aboutUs');
-    this.backButton = this.game.add.button(100, 500, 'backButton', this.back, this, 2, 1, 0);
+    this.backButton = this.game.add.button(100, 500, 'backButton', this.back, this, 1, 1, 0);
   },
   back:function(){
     this.game.state.start('MainMenu');
   }
-}
+};
 
 var HowToPlayScene={
   create:function(){
-    this.HowToPlayImage = this.game.add.image(0, 0, 'rules');
-    this.backButton = this.game.add.button(500, 515, 'backButton', this.back, this, 2, 1, 0);
+    this.HowToPlayImage = this.game.add.image(0, 0, 'rules1');
+    this.nextButton = this.game.add.button(500, 515, 'nextButton', this.next, this, 1, 1, 0);
+  },
+  next:function(){
+    this.game.state.start('HowToPlay2');
+  }
+};
+
+var HowToPlayScene2={
+  create:function(){
+    this.HowToPlayImage2 = this.game.add.image(0, 0, 'rules2');
+    this.nextButton = this.game.add.button(500, 515, 'nextButton', this.next, this, 1, 1, 0);
+  },
+  next:function(){
+    this.game.state.start('HowToPlay3');
+  }
+};
+
+var HowToPlayScene3={
+  create:function(){
+    this.HowToPlayImage3 = this.game.add.image(0, 0, 'rules3');
+    this.nextButton = this.game.add.button(500, 515, 'nextButton', this.next, this, 1, 1, 0);
+  },
+  next:function(){
+    this.game.state.start('HowToPlay4');
+  }
+};
+
+var HowToPlayScene4={
+  create:function(){
+    this.HowToPlayImage4 = this.game.add.image(0, 0, 'rules4');
+    this.backButton = this.game.add.button(500, 515, 'backButton', this.back, this, 1, 1, 0);
   },
   back:function(){
     this.game.state.start('MainMenu');
   }
-}
+};
 
 //Falta implementar al terminar el juego
 var EndOfGame={
   create:function(){
     this.game.add.image(0, 0, 'endGame');
-    this.menuButton = this.game.add.button(500, 100, 'backButton', this.backMenu, this, 2, 1, 0);
+    this.menuButton = this.game.add.button(500, 100, 'backButton', this.backMenu, this, 1, 1, 0);
   },
   backMenu:function(){
     this.game.state.start('MainMenu');
   }
-}
+};
 
 window.onload = function () {
   var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
@@ -766,10 +808,12 @@ window.onload = function () {
   game.state.add('preloader', PreloaderScene);
   game.state.add('MainMenu', MenuScene);
   game.state.add('play', PlayScene);
-  game.state.add('How to Play', HowToPlayScene);
+  game.state.add('HowToPlay', HowToPlayScene);
+  game.state.add('HowToPlay2', HowToPlayScene2);
+  game.state.add('HowToPlay3', HowToPlayScene3);
+  game.state.add('HowToPlay4', HowToPlayScene4);
   game.state.add('EndGame', EndOfGame);
-  game.state.add('About Us', AboutUsScene)
-
+  game.state.add('AboutUs', AboutUsScene);
   game.state.start('boot');
 };
 },{"./play_scene.js":4}],3:[function(require,module,exports){
