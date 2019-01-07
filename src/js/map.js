@@ -159,12 +159,12 @@ map.prototype.PlaceUnit = function(clickPoint, type, currentPlayer){
         }
     }
     else{
-        if(this.nearAlliedTerritory(clickPoint, currentPlayer)) //If near to allied territory
-        {
+        //if(this.nearAlliedTerritory(clickPoint, currentPlayer)) //If near to allied territory
+        //{
             this.placed = this.freeThenPlace(clickPoint, type, currentPlayer);
             if(this.placed)
                 this.unitsArray[clickPoint.y][clickPoint.x].moved = true;
-        }
+        //}
     }
     return this.placed;    
 }
@@ -215,13 +215,59 @@ map.prototype.moveUnit = function(clickPoint, destination, currentPlayer){
     this.unitsArray[clickPoint.y + destination.y][clickPoint.x + destination.x].moved = true;
 }
 
+map.prototype.NotDefended = function (selectedPoint ,destinationPoint, currentPlayer){
+    var defenderStrength = 0;
+    console.log("currentPlayer: " + currentPlayer);
+    console.log("Posicion original: " + selectedPoint);
+    console.log("Posicion destino: " + destinationPoint);
+    defenderStrength = this.Tower(destinationPoint.x, destinationPoint.y - 1, currentPlayer)
+    if(defenderStrength != -1)
+        if(this.GetStrength(selectedPoint) < defenderStrength)
+            return false;
+    defenderStrength = this.Tower(destinationPoint.x + 1, destinationPoint.y, currentPlayer)
+    if(defenderStrength != -1)
+        if(this.GetStrength(selectedPoint) < defenderStrength)
+            return false;
+    defenderStrength = this.Tower(destinationPoint.x, destinationPoint.y + 1, currentPlayer)
+    console.log("defenderStrength: " + defenderStrength);
+    if(defenderStrength != -1)
+        if(this.GetStrength(selectedPoint) < defenderStrength)
+            return false;
+    defenderStrength = this.Tower(destinationPoint.x - 1, destinationPoint.y, currentPlayer)
+    if(defenderStrength != -1)
+        if(this.GetStrength(selectedPoint) < defenderStrength)
+            return false;
+    
+    return true;
+}
+
+map.prototype.Tower = function (x,y, currentPlayer){
+    console.log("x: " + x + " y: " + y);
+    if(currentPlayer){
+        console.log("Index: " + this.map.getTile(x, y, this.ForegroundLayer, true).index);   
+        if(this.map.getTile(x, y, this.ForegroundLayer, true).index == this.stats.towerIndexYellow)
+            return this.stats.towerStrength;
+        else if(this.map.getTile(x, y, this.ForegroundLayer, true).index == this.stats.fortressIndexYellow)
+            return this.stats.fortressStrength;
+        else
+            return -1;
+    }
+    else{
+        if(this.map.getTile(x, y, this.ForegroundLayer, true).index == this.stats.towerIndexRed)
+            return this.stats.towerStrength;
+        else if(this.map.getTile(x, y, this.ForegroundLayer, true).index == this.stats.fortressIndexRed)
+            return this.stats.fortressStrength;
+        else
+            return -1;
+    }
+}
+
 map.prototype.FourPos = function (pos, currentPlayer){ //Return an array with the entities on the four direction around a given position
     var fourPos = [0,0,0,0];    //Top, right , down, left
         fourPos [0] = this.WhatIsIt(pos.x, pos.y - 1,true, currentPlayer);
         fourPos [1] = this.WhatIsIt(pos.x + 1, pos.y,true, currentPlayer);
         fourPos [2] = this.WhatIsIt(pos.x, pos.y + 1,true, currentPlayer);
         fourPos [3] = this.WhatIsIt(pos.x - 1, pos.y,true, currentPlayer);
-        console.log(fourPos);
     return fourPos;
 }
 
@@ -267,9 +313,16 @@ map.prototype.WhatIsIt = function (x,y,enemy,currentPlayer){
         }   
     }
 }
+
+map.prototype.GetStrength = function(position){   
+    return this.unitsArray[position.y][position.x].strenght;
+}
+
 map.prototype.TileIndexGround = function(point){
     return this.map.getTile(point.x, point.y, this.GroundLayer, true).index;
 }
+
+
 map.prototype.TileCenterPos = function(point){
     var pointCenter = new Phaser.Point();
     var tile =  this.map.getTile(point.x, point.y, this.BackgroundLayer);

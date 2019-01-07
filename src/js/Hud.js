@@ -7,8 +7,8 @@ var hud = function(game, map, stats){
     this.map = map;
     this.stats = stats;
     this.currentPlayer = false;
-    this.moneyR = 50;
-    this.moneyY = 60;
+    this.moneyR = 28;
+    this.moneyY = 30;
 
 //Selection data
     this.selected = false;
@@ -550,15 +550,19 @@ hud.prototype.selectedReset = function(){   //Resets the unit/structure selectio
 }
 
 hud.prototype.listenerAction = function(selected){  //Process the actions of a selected unit
+    
+    var destination = new Phaser.Point(this.selectedForAction.x + this.indKey[this.indicators.indexOf(selected)].x, this.selectedForAction.y + this.indKey[this.indicators.indexOf(selected)].y);      
+
     if(selected.key == 'movement'){
+        if(this.map.NotDefended(this.selectedForAction, destination, this.currentPlayer))
         if(!this.map.isMoved(this.selectedForAction)){
             this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
             this.IndicatorsOff();
         }
     }
     if(selected.key == 'combat'){
-        // falta condicion del nivel de ataque
-        if(!this.map.isMoved(this.selectedForAction)){
+        if(this.map.GetStrength(this.selectedForAction) >= this.map.GetStrength(destination))
+        if(!this.map.isMoved(this.selectedForAction)){         
             this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
             this.IndicatorsOff();
         }

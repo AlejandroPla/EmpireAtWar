@@ -60,14 +60,14 @@ this.fontSize               = 25;
     
     this.towerLife = 10;  //TOWER
     this.towerPrice = 10;
-    this.towerStrength = 10;
+    this.towerStrength = 15;
     this.towerIndexRed = 24;
     this.towerIndexYellow = 27;
     this.towerName = "Tower";
 
     this.fortressLife = 15;  //FORTRESS
     this.fortressPrice = 15;
-    this.fortressStrength = 15;
+    this.fortressStrength = 25;
     this.fortressIndexRed = 31;
     this.fortressIndexYellow = 34;
     this.fortressName = "Fortress";
