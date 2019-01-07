@@ -6,6 +6,8 @@ var stats = function(){
 
 //Memory
 this.unitsInGame = [255,262,121,128,122,129,123,130];
+this.redUnitsInGame = [255, 121, 122, 123];
+this.yellowUnitsInGame = [262, 128, 129, 130];
 this.structuresInGame = [];
 
 //GAMEPLAY
@@ -52,7 +54,7 @@ this.fontSize               = 25;
     this.farmPrice = 5;
     this.farmStrength = 5;
     this.farmsIncome = 10;
-    this.farmIndexRed = 17;  //NOTA: cambiar el color de la granja de verde a rojo
+    this.farmIndexRed = 17;
     this.farmIndexYellow = 43;
     this.farmName = "Farm";
     
@@ -80,14 +82,35 @@ this.fontSize               = 25;
 
 stats.prototype.IsUnit = function(x){       //Returns if the index given is one of the units in-game
     var i = 0;
-    while(i < this.unitsInGame.length && x != this.unitsInGame[i])
-        i++;
+   
+        while(i < this.unitsInGame.length && x != this.unitsInGame[i])
+            i++;
+        if(i == this.unitsInGame.length)
+            return false;
+        else
+            return true;
+    
+}
 
-    if(i == this.unitsInGame.length)
-        return false;
-    else
-        return true;
+stats.prototype.IsEnemyUnit = function(x, currentPlayer){
+    var i = 0;
+   if(currentPlayer){
+        while(i < this.yellowUnitsInGame.length && x != this.yellowUnitsInGame[i])
+            i++;
+        if(i == this.yellowUnitsInGame.length)
+            return false;
+        else
+            return true;
+   }
 
+   else{
+        while(i < this.redUnitsInGame.length && x != this.redUnitsInGame[i])
+            i++;
+        if(i == this.redUnitsInGame.length)
+            return false;
+        else
+            return true;
+   }   
 }
 
 module.exports = stats;

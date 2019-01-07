@@ -479,9 +479,9 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
     }
 }
 hud.prototype.indicate = function(clickPoint){  //Creates the actions indicators of a selected unit
-    if (this.map.WhatIsIt(this.clickPoint.x, this.clickPoint.y) == 3) {
+    if (this.map.WhatIsIt(this.clickPoint.x, this.clickPoint.y, false) == 3) {
         var point = new Phaser.Point();
-        var fourPos = this.map.FourPos(this.clickPoint);           
+        var fourPos = this.map.FourPos(this.clickPoint, this.currentPlayer);           
         point =  this.map.TileCenterPos(this.clickPoint);
         var result = this.map.TileCenterPos(this.clickPoint);
         result.setTo(point.x + 32 *  0, point.y + 32 * -1 );
@@ -528,6 +528,7 @@ hud.prototype.updateMoney = function (turnEnd){    //Updates the money display a
             this.moneyR += Math.trunc(this.map.AmountOfTiles(365) / 2);
             this.moneyR += 2;
             this.moneyR += this.map.rFarms * this.stats.farmsIncome;
+            this.moneyY -= this.map.UnitsManteinance(false);
         }
         this.moneyAmount.text = this.moneyR;
     }
@@ -536,6 +537,7 @@ hud.prototype.updateMoney = function (turnEnd){    //Updates the money display a
             this.moneyY += Math.trunc(this.map.AmountOfTiles(366) / 2);
             this.moneyY += 2;
             this.moneyY += this.map.yFarms * this.stats.farmsIncome;
+            this.moneyR -= this.map.UnitsManteinance(true);
         }
         this.moneyAmount.text = this.moneyY;
     }

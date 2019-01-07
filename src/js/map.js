@@ -180,7 +180,6 @@ map.prototype.freeThenPlace = function(clickPoint, type, currentPlayer){
     
             this.createUnit(clickPoint.x,clickPoint.y,type);
             this.map.putTile(type, clickPoint.x, clickPoint.y, this.ForegroundLayer);
-            console.log(this.unitsArray[clickPoint.y][clickPoint.x].name + " placed at " + clickPoint.x + "/" + clickPoint.y);  //Console info
             return true;
         }
         return false;
@@ -216,32 +215,56 @@ map.prototype.moveUnit = function(clickPoint, destination, currentPlayer){
     this.unitsArray[clickPoint.y + destination.y][clickPoint.x + destination.x].moved = true;
 }
 
-map.prototype.FourPos = function (pos){ //Return an array with the entities on the four direction around a given position
+map.prototype.FourPos = function (pos, currentPlayer){ //Return an array with the entities on the four direction around a given position
     var fourPos = [0,0,0,0];    //Top, right , down, left
-
-        fourPos [0] = this.WhatIsIt(pos.x, pos.y - 1);
-        fourPos [1] = this.WhatIsIt(pos.x + 1, pos.y);
-        fourPos [2] = this.WhatIsIt(pos.x, pos.y + 1);
-        fourPos [3] = this.WhatIsIt(pos.x - 1, pos.y);
+        fourPos [0] = this.WhatIsIt(pos.x, pos.y - 1,true, currentPlayer);
+        fourPos [1] = this.WhatIsIt(pos.x + 1, pos.y,true, currentPlayer);
+        fourPos [2] = this.WhatIsIt(pos.x, pos.y + 1,true, currentPlayer);
+        fourPos [3] = this.WhatIsIt(pos.x - 1, pos.y,true, currentPlayer);
+        console.log(fourPos);
     return fourPos;
 }
 
-map.prototype.WhatIsIt = function (x,y){
+map.prototype.UnitsManteinance = function(currentPlayer){
+    var totalManteinance = 0;
+
+        for (let index1 = 0; index1 < this.map.height; index1++)
+        for (let index2 = 0; index2 < this.map.width; index2++) 
+            if(this.unitsArray[index1][index2] != -1)
+                if(this.unitsArray[index1][index2].player == currentPlayer)
+                    totalManteinance += this.unitsArray[index1][index2].maintenance;
+                    console.log("Total manteinance(" + currentPlayer + "): -" + totalManteinance);
+    return totalManteinance;
+}
+
+map.prototype.WhatIsIt = function (x,y,enemy,currentPlayer){
     var backElem = this.map.getTile(x, y, this.BackgroundLayer, true).index;
     if(backElem != 3 && backElem != 1)  //Beach or water   (Out of game zone)
         return 0;
 
     else{                               //Inside game zone
         var foreElem = this.map.getTile(x, y, this.ForegroundLayer, true).index;
-
-        if (foreElem == 5) //Tree
+        if(enemy){
+            if (foreElem == 5) //Tree
             return 2;
         else if (foreElem == -1)                //Vacío
             return 1;
-        else if(this.stats.IsUnit(foreElem))    //Unit
+        else if(this.stats.IsEnemyUnit(foreElem, currentPlayer))
+                return 3;
+        else
+            return 0;
+        }
+
+        else{
+            if (foreElem == 5) //Tree
+            return 2;
+        else if (foreElem == -1)  //Vacío
+            return 1;
+        else if(this.stats.IsUnit(foreElem))
             return 3;
         else
             return 0;
+        }   
     }
 }
 map.prototype.TileIndexGround = function(point){

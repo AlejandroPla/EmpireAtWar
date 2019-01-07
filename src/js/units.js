@@ -40,11 +40,7 @@ unit.prototype.Peasant = function(player){  //PEASANT
     this.strenght = this.stats.peasantStrength;
     this.price = this.stats.peasantPrice;
     this.maintenance = this.stats.peasantMaintenance;
-
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
+    this.player = player;
 }
 
 unit.prototype.Lancer = function(player){   //LANCER
@@ -53,11 +49,8 @@ unit.prototype.Lancer = function(player){   //LANCER
     this.strenght = this.stats.lancerStrength;
     this.price = this.stats.lancerPrice;
     this.maintenance = this.stats.lancerMaintenance;
+    this.player = player;
 
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
 }
 
 unit.prototype.Swordman = function(player){ //SWORDMAN
@@ -66,11 +59,8 @@ unit.prototype.Swordman = function(player){ //SWORDMAN
     this.strenght = this.stats.swordmanStrength;
     this.price = this.stats.swordmanPrice;
     this.maintenance = this.stats.swordmanMaintenance;
+    this.player = player;
 
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
 }
 
 unit.prototype.Horseman = function(player){ //HORSEMAN
@@ -79,11 +69,8 @@ unit.prototype.Horseman = function(player){ //HORSEMAN
     this.strenght = this.stats.horsemanStrength;
     this.price = this.stats.horsemanPrice;
     this.maintenance = this.stats.horsemanMaintenance;
+    this.player = player;
 
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
 }
 
 module.exports = unit;
