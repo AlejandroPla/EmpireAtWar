@@ -423,6 +423,7 @@ hud.prototype.listenerTurn = function(){    //NEXT TURN LOGIC
     this.follower.visible = false;              //Follower Visible off 
     this.currentPlayer = !this.currentPlayer;   //Swap players
     this.map.UpdateMap(this.currentPlayer);     //Updates the map
+    this.map.turn ++;
     this.currentTurnText.text = this.map.turn;  //Updates the current turn text on the interface
     this.listenerClick();                       //Calls for the aproppiate click reaction
     this.updateMoney(true);
@@ -496,7 +497,7 @@ hud.prototype.indicate = function(clickPoint){  //Creates the actions indicators
         this.indicating = true;
    }
 }
-hud.prototype.createIndicator = function(fourPos, index, pos){
+hud.prototype.createIndicator = function(fourPos, index, pos){//Creates the designed indicator and stores it in the 4 directions array
     switch (fourPos[index]) {
         case 0: //Not moveable to position
         this.indicators[index] = this.game.add.image(pos.x, pos.y, 'nope');
@@ -526,26 +527,26 @@ hud.prototype.createIndicator = function(fourPos, index, pos){
 hud.prototype.updateMoney = function (turnEnd){    //Updates the money display and amount
     if(this.currentPlayer){
         if(turnEnd){
-            this.moneyR += Math.trunc(this.map.AmountOfTiles(365) / 2);
-            this.moneyR += 2;
-            this.moneyR += this.map.rFarms * this.stats.farmsIncome;
-            this.moneyY -= this.map.UnitsManteinance(false);
+            this.moneyR += Math.trunc(this.map.AmountOfTiles(365) / 2); //Money earned by tiles possesion
+            this.moneyR += 2;                                           //Money earned by main base
+            this.moneyR += this.map.rFarms * this.stats.farmsIncome;    //Money earned by farms
+            this.moneyY -= this.map.UnitsManteinance(false);            //Money spent in units manteinance
         }
         this.moneyAmount.text = this.moneyR;
     }
     else{
         if(turnEnd){
-            this.moneyY += Math.trunc(this.map.AmountOfTiles(366) / 2);
-            this.moneyY += 2;
-            this.moneyY += this.map.yFarms * this.stats.farmsIncome;
-            this.moneyR -= this.map.UnitsManteinance(true);
+            this.moneyY += Math.trunc(this.map.AmountOfTiles(366) / 2); //Money earned by tiles possesion
+            this.moneyY += 2;                                           //Money earned by main base
+            this.moneyY += this.map.yFarms * this.stats.farmsIncome;    //Money earned by farms
+            this.moneyR -= this.map.UnitsManteinance(true);             //Money spent in units manteinance
         }
         this.moneyAmount.text = this.moneyY;
     }   
     this.NoMoney();
 }
 
-hud.prototype.NoMoney = function(){
+hud.prototype.NoMoney = function(){ //Checks if someone spent all his money and if so it destoys his army
     if(this.moneyAmount.text < 0)
         this.map.DestroyArmy(this.currentPlayer);
 }
@@ -560,14 +561,14 @@ hud.prototype.listenerAction = function(selected){  //Process the actions of a s
     
     var destination = new Phaser.Point(this.selectedForAction.x + this.indKey[this.indicators.indexOf(selected)].x, this.selectedForAction.y + this.indKey[this.indicators.indexOf(selected)].y);      
 
-    if(selected.key == 'movement'){
+    if(selected.key == 'movement'){ //Movement logic applied to the selected unit
         if(this.map.NotDefended(this.selectedForAction, destination, this.currentPlayer))
         if(!this.map.isMoved(this.selectedForAction)){
             this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
             this.IndicatorsOff();
         }
     }
-    if(selected.key == 'combat'){
+    if(selected.key == 'combat'){   //Combat logic applied to the selected unit
         if(this.map.GetStrength(this.selectedForAction) >= this.map.GetStrength(destination))
         if(!this.map.isMoved(this.selectedForAction)){         
             this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
@@ -628,7 +629,7 @@ hud.prototype.listenerUnit = function(){    //OPENS THE UNITS INVENTORY
 hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH UNIT WAS SELECTED AND VERIFIES IF THERE IS ENOUGH MONEY TO BUY IT (BUY)
     
     if(this.currentPlayer)
-        if(this.moneyR >= clicked.price){
+        if(this.moneyR >= clicked.price){   //If the player has enough money yo buy the selected unit it indicates its selection
             this.follower.loadTexture(clicked.texture);
             this.follower.visible = true;
             this.select(clicked);
@@ -636,7 +637,7 @@ hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH 
         else
             ;
     else
-        if(this.moneyY >= clicked.price){
+        if(this.moneyY >= clicked.price){   //IDEM
             this.follower.loadTexture(clicked.texture);
             this.follower.visible = true;
             this.select(clicked);
@@ -855,7 +856,6 @@ window.onload = function () {
 },{"./play_scene.js":4}],3:[function(require,module,exports){
 'use strict';
 var unit = require("./units.js");
-var structure = require("./structures.js");
 
 var map = function(game, stats){
     this.game = game;
@@ -1204,7 +1204,7 @@ map.prototype.TileCenterPos = function(point){
 }
 
 module.exports = map;
-},{"./structures.js":6,"./units.js":7}],4:[function(require,module,exports){
+},{"./units.js":6}],4:[function(require,module,exports){
 'use strict';
 
 var map = require("./map.js");
@@ -1368,86 +1368,6 @@ stats.prototype.IsEnemyStructure = function(x,currentPlayer){
 
 module.exports = stats;
 },{}],6:[function(require,module,exports){
-'use strict';
-
-//"units" CREATES THE UNITS ENTITIES OF THE GAME BY USING THE STATS FROM "stats"
-
-var stats = require("./stats.js");
-
-//Player logic color representation
-//RED = true - YELLOW = false
-
-var structure = function(type){ 
-
-    this.stats = new stats();
-
-    if(type == this.stats.farmIndexRed)                                     
-        this.Farm(true);
-    else if(type == this.stats.farmIndexYellow)
-        this.Farm(false);
-    else if(type == this.stats.towerIndexRed)
-        this.Tower(true);
-    else if(type == this.stats.towerIndexYellow)
-        this.Tower(false);
-    else if(type == this.stats.fortressIndexRed)
-        this.Fortress(true);
-    else if(type == this.stats.fortressIndexYellow)
-        this.Fortress(false);
-    else if(type == this.stats.baseIndexRed)
-        this.Base(true);
-    else if(type == this.stats.baseIndexYellow)
-        this.Base(false);
-}
-
-structure.prototype.Farm = function(player){  //FARM
-    this.name = this.stats.farmName;
-    this.life = this.stats.farmLife;
-    this.income = this.stats.farmIncome;
-    this.price = this.stats.farmPrice;
-
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
-}
-
-structure.prototype.Tower = function(player){   //TOWER
-    this.name = this.stats.towerName;
-    this.life = this.stats.towerLife;
-    this.defence = this.stats.towerDefence;
-    this.price = this.stats.towerPrice;
-
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
-}
-
-structure.prototype.Fortress = function(player){ //FORTRESS
-    this.name = this.stats.fortressName;
-    this.life = this.stats.fortressLife;
-    this.defence = this.stats.fortressDefence;
-    this.price = this.stats.fortressPrice;
-
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
-}
-
-structure.prototype.Base = function(player){ //BASE
-    this.name = this.stats.baseName;
-    this.life = this.stats.baseLife;
-    this.income = this.stats.baseIncome;
-
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
-}
-
-module.exports = structure;
-},{"./stats.js":5}],7:[function(require,module,exports){
 'use strict';
 
 //"units" CREATES THE UNITS ENTITIES OF THE GAME BY USING THE STATS FROM "stats"
