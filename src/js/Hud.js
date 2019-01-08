@@ -422,6 +422,7 @@ hud.prototype.listenerTurn = function(){    //NEXT TURN LOGIC
     this.follower.visible = false;              //Follower Visible off 
     this.currentPlayer = !this.currentPlayer;   //Swap players
     this.map.UpdateMap(this.currentPlayer);     //Updates the map
+    this.map.turn ++;
     this.currentTurnText.text = this.map.turn;  //Updates the current turn text on the interface
     this.listenerClick();                       //Calls for the aproppiate click reaction
     this.updateMoney(true);
