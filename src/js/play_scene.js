@@ -13,7 +13,7 @@ var stats = require("./stats.js");
 
   update: function(){
       this.hud.UpdateFollower();
-  }
+  },
 };
 
 module.exports = PlayScene;

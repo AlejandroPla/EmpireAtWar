@@ -31,7 +31,9 @@ var PreloaderScene = {
     this.game.load.image('rules3', 'resources/menu/imageText/rules3.png');
     this.game.load.image('rules4', 'resources/menu/imageText/rules4.png');
     this.game.load.image('endGame', 'resources/menu/imageText/endGame.png');
-    this.game.load.image('nextButton', 'resources/menu/buttons/nextButton.png')
+    this.game.load.image('paused', 'resources/menu/imageText/paused.png');
+    this.game.load.image('nextButton', 'resources/menu/buttons/nextButton.png');
+    this.game.load.image('menuButton', 'resources/menu/buttons/menuButton.png');
 
     //Audio
     this.game.load.audio('mainTheme', 'resources/audio/ImperiVm_ogg.ogg');
@@ -153,6 +155,25 @@ var HowToPlayScene4={
   }
 };
 
+var pausedScene={
+  create:function(){
+    this.pausedImage = this.game.add.image(0, 0, 'paused');
+    this.menuButton = this.gamme.add.button(500, 500, 'menuButton', this.return, this, 1, 1,)
+    this.backButton = this.game.add.button(500, 530, 'backButton', this.back, this, 1, 1, 0);
+  },
+  back:function(){
+    this.game.state.start('play');
+  },
+  return:function(){
+    this.game.start.start('MainMenu');
+  },
+  keyPress:function(char){
+    if (this.game.input.keyboard.isDown(Phaser.Keayboard.SpaceBar)){
+      this.game.start('PausedScene');
+    }
+  }
+}
+
 //Falta implementar al terminar el juego
 var EndOfGame={
   create:function(){
@@ -176,5 +197,7 @@ window.onload = function () {
   game.state.add('HowToPlay4', HowToPlayScene4);
   game.state.add('EndGame', EndOfGame);
   game.state.add('AboutUs', AboutUsScene);
+  game.state.add('PausedMenu', pausedScene);
+
   game.state.start('boot');
 };
