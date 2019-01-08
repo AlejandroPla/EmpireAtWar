@@ -12,6 +12,9 @@ var BootScene = {
     this.game.state.start('preloader');
   }
 };
+
+var music;
+
 var PreloaderScene = {
   preload: function () {
     this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
@@ -38,10 +41,10 @@ var PreloaderScene = {
   },
 
   create: function () {
+    music = this.game.add.audio('mainTheme', 0.5, true);
     this.game.state.start('MainMenu');
   }
 };
-
 
 var MenuScene={
   preload: function(){
@@ -85,13 +88,21 @@ var MenuScene={
 
      //Sounds
      this.game.load.audio('MenuClick', 'resources/audio/MenuClick.ogg');
+     this.game.load.audio('MainTheme', 'resources/audio/ImperiVm_ogg.ogg')
+
+     //GameOver
+     this.game.load.image('gameOver', 'resources/menu/GameOver.png');
+  
   },
+
   create:function(){
     this.background = this.game.add.image(0, 0, 'backgroundImage');
     this.playButton = this.game.add.button(50, 475, 'playButton', this.PlayStart, this, 1, 1, 0);
     this.ruleButton = this.game.add.button(250, 475, 'rulesButton', this.HowToPlayStart, this, 1, 1, 0);
-    this.aboutUsButton = this.game.add.button(450, 450, 'aboutUsButton', this.AboutUsStart, this, 1, 1, 0);
+    this.aboutUsButton = this.game.add.button(450, 450, 'aboutUsButton', this.AboutUsStart, this, 1, 1, 0); 
+      music.play();
   },
+  
   PlayStart:function(){
     this.game.state.start('play');
   },
@@ -153,13 +164,15 @@ var HowToPlayScene4={
   }
 };
 
-//Falta implementar al terminar el juego
 var EndOfGame={
   create:function(){
-    this.game.add.image(0, 0, 'endGame');
-    this.menuButton = this.game.add.button(500, 100, 'backButton', this.backMenu, this, 1, 1, 0);
+    this.backgroundImage = this.game.add.image(-10, -15, 'endGame');
+    this.menuButton = this.game.add.button(550, 50, 'backButton', this.backMenu, this, 1, 1, 0);
+    this.gameOverText = this.game.add.image(200,250, 'gameOver');
+    this.gameOverText.scale.setTo(1.3,1.3);
   },
   backMenu:function(){
+    music.stop();
     this.game.state.start('MainMenu');
   }
 };

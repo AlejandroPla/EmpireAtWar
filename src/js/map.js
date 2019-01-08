@@ -42,14 +42,10 @@ map.prototype.createUnitsArray = function(){
 
     this.unitsArray[7][5] = new unit (-20);
     this.unitsArray[11][22] = new unit (-10);
-
-    console.log(this.unitsArray[7][5]);
-    console.log(this.unitsArray[11][22]);
 };
 
 map.prototype.createUnit = function(x,y,unitType){
     this.unitsArray[y][x] = new unit (unitType);
-    console.log(this.unitsArray[y][x]);
 };
 
 map.prototype.AmountOfTiles = function (index){
@@ -67,6 +63,27 @@ map.prototype.UpdateMap = function(currentPlayer) {
     this.UpdateTrees();
     this.resetUnits();
 };
+
+map.prototype.GameOver = function(){
+    console.log(this.map.getTile(5,7,this.ForegroundLayer,true).index + " / " + this.map.getTile(22,11,this.ForegroundLayer,true).index);
+    if  (this.map.getTile(5,7,this.ForegroundLayer,true).index != 48 || this.map.getTile(22,11,this.ForegroundLayer,true).index != 45) //Red wins || Yellow wins
+        this.game.state.start('EndGame');
+}
+
+map.prototype.DestroyArmy = function(player){
+    for (let index1 = 0; index1 < this.map.height; index1++)
+        for (let index2 = 0; index2 < this.map.width; index2++){
+            if(this.unitsArray[index1][index2] != -1){
+                if(this.unitsArray[index1][index2].player == player)
+                if(this.stats.IsUnit(this.map.getTile(index2, index1, this.ForegroundLayer, true).index)){
+                    this.unitsArray[index1][index2] = -1;
+                    this.map.removeTile(index2,index1,this.ForegroundLayer);
+                }        
+            }          
+        }
+}
+
+            
 
 map.prototype.UpdateTrees = function(){
 
@@ -135,7 +152,6 @@ map.prototype.nearAlliedTerritory = function(point, currentPlayer) {    //Check 
 }
 
 map.prototype.PlaceUnit = function(clickPoint, type, currentPlayer){
-    console.log(clickPoint);
     this.placed = false;
     this.teamTile = this.map.getTile(clickPoint.x, clickPoint.y, this.GroundLayer,true).index;      //Coloured tile under entity
     this.entity = this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index;     //Entity selected
@@ -281,7 +297,6 @@ map.prototype.UnitsManteinance = function(currentPlayer){
             if(this.unitsArray[index1][index2] != -1)
                 if(this.unitsArray[index1][index2].player == currentPlayer)
                     totalManteinance += this.unitsArray[index1][index2].maintenance;
-                    console.log("Total manteinance(" + currentPlayer + "): -" + totalManteinance);
     return totalManteinance;
 }
 

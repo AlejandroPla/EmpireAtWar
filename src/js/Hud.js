@@ -540,7 +540,13 @@ hud.prototype.updateMoney = function (turnEnd){    //Updates the money display a
             this.moneyR -= this.map.UnitsManteinance(true);
         }
         this.moneyAmount.text = this.moneyY;
-    }
+    }   
+    this.NoMoney();
+}
+
+hud.prototype.NoMoney = function(){
+    if(this.moneyAmount.text < 0)
+        this.map.DestroyArmy(this.currentPlayer);
 }
 
 hud.prototype.selectedReset = function(){   //Resets the unit/structure selection to NOT selected
@@ -561,11 +567,11 @@ hud.prototype.listenerAction = function(selected){  //Process the actions of a s
         }
     }
     if(selected.key == 'combat'){
-        console.log(this.map.GetStrength(destination));
         if(this.map.GetStrength(this.selectedForAction) >= this.map.GetStrength(destination))
         if(!this.map.isMoved(this.selectedForAction)){         
             this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
             this.IndicatorsOff();
+            this.map.GameOver();
         }
     }
 }
@@ -627,8 +633,7 @@ hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH 
             this.select(clicked);
         }
         else
-            console.log("Not enough money to buy..");
-
+            ;
     else
         if(this.moneyY >= clicked.price){
             this.follower.loadTexture(clicked.texture);
@@ -636,7 +641,7 @@ hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH 
             this.select(clicked);
         }
         else
-            console.log("Not enough money to buy..");
+        ;
 }
 
 hud.prototype.UpdateFollower = function(){  //Updates the position of the cursor follower
