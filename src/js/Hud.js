@@ -561,6 +561,7 @@ hud.prototype.listenerAction = function(selected){  //Process the actions of a s
         }
     }
     if(selected.key == 'combat'){
+        console.log(this.map.GetStrength(destination));
         if(this.map.GetStrength(this.selectedForAction) >= this.map.GetStrength(destination))
         if(!this.map.isMoved(this.selectedForAction)){         
             this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);

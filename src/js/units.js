@@ -28,6 +28,22 @@ var unit = function(type){
         this.Horseman(true);
     else if(type == this.stats.horsemanIndexYellow)
         this.Horseman(false);
+    else if(type == this.stats.farmIndexRed)
+        this.Farm(true);
+    else if(type == this.stats.farmIndexYellow)
+        this.Farm(false);
+    else if(type == this.stats.towerIndexRed)
+        this.Tower(true);
+    else if(type == this.stats.towerIndexYellow)
+        this.Tower(false);
+    else if(type == this.stats.fortressIndexRed)
+        this.Fortress(true);
+    else if(type == this.stats.fortressIndexYellow)
+        this.Fortress(false);
+    else if(type == -10)
+        this.Base(true);
+    else if(type == - 20)
+        this.Base(false);
 }
 
 unit.prototype.HasMoney = function(money){
@@ -71,6 +87,43 @@ unit.prototype.Horseman = function(player){ //HORSEMAN
     this.maintenance = this.stats.horsemanMaintenance;
     this.player = player;
 
+}
+
+unit.prototype.Farm = function(player){ //FARM
+    this.name = this.stats.farmName;
+    this.life = this.stats.farmLife;
+    this.strenght = this.stats.farmStrength;
+    this.price = this.stats.farmPrice;
+    this.maintenance = 0;
+    this.player = player;
+}
+
+unit.prototype.Tower = function(player){ //TOWER
+    this.name = this.stats.towerName;
+    this.life = this.stats.towerLife;
+    this.strenght = this.stats.towerStrength;
+    this.price = this.stats.towerPrice;
+    this.maintenance = 0;
+    this.player = player;
+
+}
+
+unit.prototype.Fortress = function(player){ //FORTRESS
+    this.name = this.stats.fortressName;
+    this.life = this.stats.fortressLife;
+    this.strenght = this.stats.fortressStrength;
+    this.price = this.stats.fortressPrice;
+    this.maintenance = 0;
+    this.player = player;
+
+}
+
+unit.prototype.Base = function(player){
+    this.name = this.stats.baseName;
+    this.life = this.stats.baseLife;
+    this.strenght = 0;
+    this.maintenance = 0;
+    this.player = player;
 }
 
 module.exports = unit;

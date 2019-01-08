@@ -39,10 +39,17 @@ map.prototype.createUnitsArray = function(){
     for (let index1 = 0; index1 < this.map.height; index1++)
         for (let index2 = 0; index2 < this.map.width; index2++) 
             this.unitsArray[index1][index2] = -1;
+
+    this.unitsArray[7][5] = new unit (-20);
+    this.unitsArray[11][22] = new unit (-10);
+
+    console.log(this.unitsArray[7][5]);
+    console.log(this.unitsArray[11][22]);
 };
 
 map.prototype.createUnit = function(x,y,unitType){
     this.unitsArray[y][x] = new unit (unitType);
+    console.log(this.unitsArray[y][x]);
 };
 
 map.prototype.AmountOfTiles = function (index){
@@ -128,7 +135,7 @@ map.prototype.nearAlliedTerritory = function(point, currentPlayer) {    //Check 
 }
 
 map.prototype.PlaceUnit = function(clickPoint, type, currentPlayer){
-
+    console.log(clickPoint);
     this.placed = false;
     this.teamTile = this.map.getTile(clickPoint.x, clickPoint.y, this.GroundLayer,true).index;      //Coloured tile under entity
     this.entity = this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index;     //Entity selected
@@ -159,7 +166,7 @@ map.prototype.PlaceUnit = function(clickPoint, type, currentPlayer){
         }
     }
     else{
-        //if(this.nearAlliedTerritory(clickPoint, currentPlayer)) //If near to allied territory
+        //(this.nearAlliedTerritory(clickPoint, currentPlayer)) //If near to allied territory
         //{
             this.placed = this.freeThenPlace(clickPoint, type, currentPlayer);
             if(this.placed)
@@ -217,9 +224,7 @@ map.prototype.moveUnit = function(clickPoint, destination, currentPlayer){
 
 map.prototype.NotDefended = function (selectedPoint ,destinationPoint, currentPlayer){
     var defenderStrength = 0;
-    console.log("currentPlayer: " + currentPlayer);
-    console.log("Posicion original: " + selectedPoint);
-    console.log("Posicion destino: " + destinationPoint);
+
     defenderStrength = this.Tower(destinationPoint.x, destinationPoint.y - 1, currentPlayer)
     if(defenderStrength != -1)
         if(this.GetStrength(selectedPoint) < defenderStrength)
@@ -229,7 +234,6 @@ map.prototype.NotDefended = function (selectedPoint ,destinationPoint, currentPl
         if(this.GetStrength(selectedPoint) < defenderStrength)
             return false;
     defenderStrength = this.Tower(destinationPoint.x, destinationPoint.y + 1, currentPlayer)
-    console.log("defenderStrength: " + defenderStrength);
     if(defenderStrength != -1)
         if(this.GetStrength(selectedPoint) < defenderStrength)
             return false;
@@ -242,9 +246,7 @@ map.prototype.NotDefended = function (selectedPoint ,destinationPoint, currentPl
 }
 
 map.prototype.Tower = function (x,y, currentPlayer){
-    console.log("x: " + x + " y: " + y);
     if(currentPlayer){
-        console.log("Index: " + this.map.getTile(x, y, this.ForegroundLayer, true).index);   
         if(this.map.getTile(x, y, this.ForegroundLayer, true).index == this.stats.towerIndexYellow)
             return this.stats.towerStrength;
         else if(this.map.getTile(x, y, this.ForegroundLayer, true).index == this.stats.fortressIndexYellow)
@@ -295,7 +297,7 @@ map.prototype.WhatIsIt = function (x,y,enemy,currentPlayer){
             return 2;
         else if (foreElem == -1)                //Vacío
             return 1;
-        else if(this.stats.IsEnemyUnit(foreElem, currentPlayer))
+        else if(this.stats.IsEnemyUnit(foreElem, currentPlayer) || this.stats.IsEnemyStructure(foreElem, currentPlayer))
                 return 3;
         else
             return 0;

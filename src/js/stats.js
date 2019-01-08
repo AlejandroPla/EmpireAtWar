@@ -8,7 +8,8 @@ var stats = function(){
 this.unitsInGame = [255,262,121,128,122,129,123,130];
 this.redUnitsInGame = [255, 121, 122, 123];
 this.yellowUnitsInGame = [262, 128, 129, 130];
-this.structuresInGame = [];
+this.redStructuresInGame = [24, 31, 45, 17];
+this.yellowStructuresInGame = [27, 34, 48, 43];
 
 //GAMEPLAY
 this.treeGrowRatio          = 0.15; // [0, 1] Probabilidad de que aparezca un nuevo árbol
@@ -60,7 +61,7 @@ this.fontSize               = 25;
     
     this.towerLife = 10;  //TOWER
     this.towerPrice = 10;
-    this.towerStrength = 15;
+    this.towerStrength = 20;
     this.towerIndexRed = 24;
     this.towerIndexYellow = 27;
     this.towerName = "Tower";
@@ -73,7 +74,6 @@ this.fontSize               = 25;
     this.fortressName = "Fortress";
 
     this.baseLife = 20;  //BASE
-    this.baseIncome = 10;
     this.baseIndexRed = 45;
     this.baseIndexYellow = 48;
     this.baseName = "Base";
@@ -107,6 +107,27 @@ stats.prototype.IsEnemyUnit = function(x, currentPlayer){
         while(i < this.redUnitsInGame.length && x != this.redUnitsInGame[i])
             i++;
         if(i == this.redUnitsInGame.length)
+            return false;
+        else
+            return true;
+   }   
+}
+
+stats.prototype.IsEnemyStructure = function(x,currentPlayer){
+    var i = 0;
+   if(currentPlayer){
+        while(i < this.yellowStructuresInGame.length && x != this.yellowStructuresInGame[i])
+            i++;
+        if(i == this.yellowStructuresInGame.length)
+            return false;
+        else
+            return true;
+   }
+
+   else{
+        while(i < this.redStructuresInGame.length && x != this.redStructuresInGame[i])
+            i++;
+        if(i == this.redStructuresInGame.length)
             return false;
         else
             return true;
