@@ -17,34 +17,31 @@ var PreloaderScene = {
     this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
     this.loadingBar.anchor.setTo(0, 0.5);
     this.load.setPreloadSprite(this.loadingBar);
-
-    this.game.load.image('logo', 'images/phaser.png');  
-
+    this.game.load.image('logo', 'images/phaser.png');
+    //load buttons
     this.game.load.image('playButton', 'resources/menu/buttons/playButton.png');
     this.game.load.image('rulesButton', 'resources/menu/buttons/rulesButton.png');
-    this.game.load.image('backgroundImage', 'resources/menu/backgroundImage.png');
-    this.game.load.image('aboutUs', 'resources/menu/imageText/aboutUs.png');
     this.game.load.image('aboutUsButton', 'resources/menu/buttons/aboutUsButton.png');
     this.game.load.image('backButton', 'resources/menu/buttons/backButton.png');
+    this.game.load.image('nextButton', 'resources/menu/buttons/nextButton.png');
+    this.game.load.image('menuButton', 'resources/menu/buttons/menuButton.png');
+    this.game.load.image('pausedButton', 'resources/menu/buttons/pausedButton.png');
+    //load images
+    this.game.load.image('backgroundImage', 'resources/menu/backgroundImage.png');
+    this.game.load.image('aboutUs', 'resources/menu/imageText/aboutUs.png');    
     this.game.load.image('rules1', 'resources/menu/imageText/rules1.png');
     this.game.load.image('rules2', 'resources/menu/imageText/rules2.png');
     this.game.load.image('rules3', 'resources/menu/imageText/rules3.png');
     this.game.load.image('rules4', 'resources/menu/imageText/rules4.png');
     this.game.load.image('endGame', 'resources/menu/imageText/endGame.png');
     this.game.load.image('paused', 'resources/menu/imageText/paused.png');
-    this.game.load.image('nextButton', 'resources/menu/buttons/nextButton.png');
-    this.game.load.image('menuButton', 'resources/menu/buttons/menuButton.png');
-
     //Audio
     this.game.load.audio('mainTheme', 'resources/audio/ImperiVm_ogg.ogg');
   },
-
   create: function () {
     this.game.state.start('MainMenu');
   }
 };
-
-
 var MenuScene={
   preload: function(){
      // TODO: load here the assets for the game
@@ -92,7 +89,7 @@ var MenuScene={
     this.background = this.game.add.image(0, 0, 'backgroundImage');
     this.playButton = this.game.add.button(50, 475, 'playButton', this.PlayStart, this, 1, 1, 0);
     this.ruleButton = this.game.add.button(250, 475, 'rulesButton', this.HowToPlayStart, this, 1, 1, 0);
-    this.aboutUsButton = this.game.add.button(450, 450, 'aboutUsButton', this.AboutUsStart, this, 1, 1, 0);
+    this.aboutUsButton = this.game.add.button(450, 475, 'aboutUsButton', this.AboutUsStart, this, 1, 1, 0);
   },
   PlayStart:function(){
     this.game.state.start('play');
@@ -149,31 +146,33 @@ var HowToPlayScene4={
   create:function(){
     this.HowToPlayImage4 = this.game.add.image(0, 0, 'rules4');
     this.backButton = this.game.add.button(500, 515, 'backButton', this.back, this, 1, 1, 0);
+    this.playButton = this.game.add.button(300, 515, 'playButton', this.return, this, 1, 1, 0);
   },
   back:function(){
     this.game.state.start('MainMenu');
+  },
+  return:function(){
+    this.game.state.start('play');
   }
 };
 
 var pausedScene={
   create:function(){
     this.pausedImage = this.game.add.image(0, 0, 'paused');
-    this.menuButton = this.gamme.add.button(500, 500, 'menuButton', this.return, this, 1, 1,)
-    this.backButton = this.game.add.button(500, 530, 'backButton', this.back, this, 1, 1, 0);
+    this.menuButton = this.game.add.button(100, 300, 'menuButton', this.return, this, 1, 1, 0);
+    this.backButton = this.game.add.button(100, 400, 'backButton', this.back, this, 1, 1, 0);
+    this.ruleButton = this.game.add.button(100, 500, 'rulesButton', this.HowToPlayStart, this, 1, 1, 0);
   },
   back:function(){
     this.game.state.start('play');
   },
   return:function(){
-    this.game.start.start('MainMenu');
+    this.game.state.start('MainMenu');
   },
-  keyPress:function(char){
-    if (this.game.input.keyboard.isDown(Phaser.Keayboard.SpaceBar)){
-      this.game.start('PausedScene');
-    }
+  HowToPlayStart:function(){
+    this.game.state.start('HowToPlay');
   }
-}
-
+};
 //Falta implementar al terminar el juego
 var EndOfGame={
   create:function(){
