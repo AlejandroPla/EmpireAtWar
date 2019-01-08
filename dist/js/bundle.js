@@ -691,16 +691,13 @@ var PreloaderScene = {
     this.game.load.image('backButton', 'resources/menu/buttons/backButton.png');
     this.game.load.image('nextButton', 'resources/menu/buttons/nextButton.png');
     this.game.load.image('menuButton', 'resources/menu/buttons/menuButton.png');
-    this.game.load.image('pausedButton', 'resources/menu/buttons/pausedButton.png');
     //load images
     this.game.load.image('backgroundImage', 'resources/menu/backgroundImage.png');
     this.game.load.image('aboutUs', 'resources/menu/imageText/aboutUs.png');    
     this.game.load.image('rules1', 'resources/menu/imageText/rules1.png');
     this.game.load.image('rules2', 'resources/menu/imageText/rules2.png');
     this.game.load.image('rules3', 'resources/menu/imageText/rules3.png');
-    this.game.load.image('rules4', 'resources/menu/imageText/rules4.png');
     this.game.load.image('endGame', 'resources/menu/imageText/endGame.png');
-    this.game.load.image('paused', 'resources/menu/imageText/paused.png');
     //Audio
     this.game.load.audio('mainTheme', 'resources/audio/ImperiVm_ogg.ogg');
   },
@@ -763,7 +760,10 @@ var MenuScene={
     this.background = this.game.add.image(0, 0, 'backgroundImage');
     this.playButton = this.game.add.button(50, 475, 'playButton', this.PlayStart, this, 1, 1, 0);
     this.ruleButton = this.game.add.button(250, 475, 'rulesButton', this.HowToPlayStart, this, 1, 1, 0);
-    this.aboutUsButton = this.game.add.button(450, 475, 'aboutUsButton', this.AboutUsStart, this, 1, 1, 0); 
+    this.aboutUsButton = this.game.add.button(450, 475, 'aboutUsButton', this.AboutUsStart, this, 1, 1, 0);
+    this.playButton.scale.setTo(1, 1);
+    this.ruleButton.scale.setTo(1, 1);
+    this.aboutUsButton.scale.setTo(1, 1);
       music.play();
   },
   
@@ -816,7 +816,7 @@ var HowToPlayScene2={
 var HowToPlayScene3={
   create:function(){
     this.HowToPlayImage3 = this.game.add.image(0, 0, 'rules3');
-    this.backButton = this.game.add.button(590, 530, 'backButton', this.back, this, 1, 1, 0);
+    this.backButton = this.game.add.button(675, 510, 'backButton', this.back, this, 1, 1, 0);
     this.backButton.scale.setTo(0.8, 0.8);
     this.HowToPlayImage3.scale.setTo(0.7, 0.95);
   },
