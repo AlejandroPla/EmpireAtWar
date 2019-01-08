@@ -8,8 +8,8 @@ var hud = function(game, map, stats){
     this.map = map;
     this.stats = stats;
     this.currentPlayer = false;
-    this.moneyR = 50;
-    this.moneyY = 60;
+    this.moneyR = 28;
+    this.moneyY = 30;
 
 //Selection data
     this.selected = false;
@@ -17,6 +17,9 @@ var hud = function(game, map, stats){
     this.selectedPrice = 0;
     this.selectedStrenght = 0
     this.selectedForAction = new Phaser.Point();
+
+//Sounds
+this.MenuClick = game.add.audio('MenuClick');
 //Interface
 //Indicators
 this.indicators = new Array(4);
@@ -415,6 +418,8 @@ hud.prototype.AllStructuresOff = function(){ //MAKES NOT VISIBLE ALL THE STRUCTU
 }
 
 hud.prototype.listenerTurn = function(){    //NEXT TURN LOGIC
+    this.MenuClick.play();
+    this.selectedReset();
     this.follower.visible = false;              //Follower Visible off 
     this.currentPlayer = !this.currentPlayer;   //Swap players
     this.map.UpdateMap(this.currentPlayer);     //Updates the map
@@ -475,9 +480,9 @@ hud.prototype.listenerClick = function(){   //APROPPIATE CLICK LOGIC
     }
 }
 hud.prototype.indicate = function(clickPoint){  //Creates the actions indicators of a selected unit
-    if (this.map.WhatIsIt(this.clickPoint.x, this.clickPoint.y) == 3) {
+    if (this.map.WhatIsIt(this.clickPoint.x, this.clickPoint.y, false) == 3) {
         var point = new Phaser.Point();
-        var fourPos = this.map.FourPos(this.clickPoint);           
+        var fourPos = this.map.FourPos(this.clickPoint, this.currentPlayer);           
         point =  this.map.TileCenterPos(this.clickPoint);
         var result = this.map.TileCenterPos(this.clickPoint);
         result.setTo(point.x + 32 *  0, point.y + 32 * -1 );
@@ -524,6 +529,7 @@ hud.prototype.updateMoney = function (turnEnd){    //Updates the money display a
             this.moneyR += Math.trunc(this.map.AmountOfTiles(365) / 2);
             this.moneyR += 2;
             this.moneyR += this.map.rFarms * this.stats.farmsIncome;
+            this.moneyY -= this.map.UnitsManteinance(false);
         }
         this.moneyAmount.text = this.moneyR;
     }
@@ -532,9 +538,16 @@ hud.prototype.updateMoney = function (turnEnd){    //Updates the money display a
             this.moneyY += Math.trunc(this.map.AmountOfTiles(366) / 2);
             this.moneyY += 2;
             this.moneyY += this.map.yFarms * this.stats.farmsIncome;
+            this.moneyR -= this.map.UnitsManteinance(true);
         }
         this.moneyAmount.text = this.moneyY;
-    }
+    }   
+    this.NoMoney();
+}
+
+hud.prototype.NoMoney = function(){
+    if(this.moneyAmount.text < 0)
+        this.map.DestroyArmy(this.currentPlayer);
 }
 
 hud.prototype.selectedReset = function(){   //Resets the unit/structure selection to NOT selected
@@ -544,22 +557,28 @@ hud.prototype.selectedReset = function(){   //Resets the unit/structure selectio
 }
 
 hud.prototype.listenerAction = function(selected){  //Process the actions of a selected unit
+    
+    var destination = new Phaser.Point(this.selectedForAction.x + this.indKey[this.indicators.indexOf(selected)].x, this.selectedForAction.y + this.indKey[this.indicators.indexOf(selected)].y);      
+
     if(selected.key == 'movement'){
+        if(this.map.NotDefended(this.selectedForAction, destination, this.currentPlayer))
         if(!this.map.isMoved(this.selectedForAction)){
             this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
             this.IndicatorsOff();
         }
     }
     if(selected.key == 'combat'){
-        // falta condicion del nivel de ataque
-        if(!this.map.isMoved(this.selectedForAction)){
+        if(this.map.GetStrength(this.selectedForAction) >= this.map.GetStrength(destination))
+        if(!this.map.isMoved(this.selectedForAction)){         
             this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
             this.IndicatorsOff();
+            this.map.GameOver();
         }
     }
 }
 
 hud.prototype.listenerStructure = function(){   //OPENS THE STRUCTURES INVENTORY
+    this.MenuClick.play();
     this.selectedReset();
     this.follower.visible = false;              //Follower Visible off 
     this.inventoryBackground.anchor.setTo(1,1);
@@ -595,6 +614,7 @@ hud.prototype.listenerOut = function(){ //Closes the unit stats display
 }
 
 hud.prototype.listenerUnit = function(){    //OPENS THE UNITS INVENTORY
+    this.MenuClick.play();
     this.selectedReset();
     this.follower.visible = false;              //Follower Visible off 
     this.inventoryBackground.anchor.setTo(0,1);
@@ -614,8 +634,7 @@ hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH 
             this.select(clicked);
         }
         else
-            console.log("Not enough money to buy..");
-
+            ;
     else
         if(this.moneyY >= clicked.price){
             this.follower.loadTexture(clicked.texture);
@@ -623,7 +642,7 @@ hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH 
             this.select(clicked);
         }
         else
-            console.log("Not enough money to buy..");
+        ;
 }
 
 hud.prototype.UpdateFollower = function(){  //Updates the position of the cursor follower
@@ -657,29 +676,36 @@ var BootScene = {
   }
 };
 
+var music;
+
 var PreloaderScene = {
   preload: function () {
     this.loadingBar = this.game.add.sprite(0, 240, 'preloader_bar');
     this.loadingBar.anchor.setTo(0, 0.5);
     this.load.setPreloadSprite(this.loadingBar);
-
-    this.game.load.image('logo', 'images/phaser.png');  
-
+    this.game.load.image('logo', 'images/phaser.png');
+    //load buttons
     this.game.load.image('playButton', 'resources/menu/buttons/playButton.png');
     this.game.load.image('rulesButton', 'resources/menu/buttons/rulesButton.png');
-    this.game.load.image('backgroundImage', 'resources/menu/backgroundImage.png');
-    this.game.load.image('aboutUs', 'resources/menu/imageText/aboutUs.png');
     this.game.load.image('aboutUsButton', 'resources/menu/buttons/aboutUsButton.png');
     this.game.load.image('backButton', 'resources/menu/buttons/backButton.png');
+    this.game.load.image('nextButton', 'resources/menu/buttons/nextButton.png');
+    this.game.load.image('menuButton', 'resources/menu/buttons/menuButton.png');
+    this.game.load.image('pausedButton', 'resources/menu/buttons/pausedButton.png');
+    //load images
+    this.game.load.image('backgroundImage', 'resources/menu/backgroundImage.png');
+    this.game.load.image('aboutUs', 'resources/menu/imageText/aboutUs.png');    
     this.game.load.image('rules1', 'resources/menu/imageText/rules1.png');
     this.game.load.image('rules2', 'resources/menu/imageText/rules2.png');
     this.game.load.image('rules3', 'resources/menu/imageText/rules3.png');
     this.game.load.image('rules4', 'resources/menu/imageText/rules4.png');
     this.game.load.image('endGame', 'resources/menu/imageText/endGame.png');
-    this.game.load.image('nextButton', 'resources/menu/buttons/nextButton.png')
+    this.game.load.image('paused', 'resources/menu/imageText/paused.png');
+    //Audio
+    this.game.load.audio('mainTheme', 'resources/audio/ImperiVm_ogg.ogg');
   },
-
   create: function () {
+    music = this.game.add.audio('mainTheme', 0.5, true);
     this.game.state.start('MainMenu');
   }
 };
@@ -723,13 +749,24 @@ var MenuScene={
      this.game.load.image('movement', 'resources/sprites/Movement_Indicator.png');
      this.game.load.image('nope', 'resources/sprites/Nope_Indicator.png');
      this.game.load.image('combat', 'resources/sprites/Combat_Indicator.png');
+
+     //Sounds
+     this.game.load.audio('MenuClick', 'resources/audio/MenuClick.ogg');
+     this.game.load.audio('MainTheme', 'resources/audio/ImperiVm_ogg.ogg')
+
+     //GameOver
+     this.game.load.image('gameOver', 'resources/menu/GameOver.png');
+  
   },
+
   create:function(){
     this.background = this.game.add.image(0, 0, 'backgroundImage');
     this.playButton = this.game.add.button(50, 475, 'playButton', this.PlayStart, this, 1, 1, 0);
     this.ruleButton = this.game.add.button(250, 475, 'rulesButton', this.HowToPlayStart, this, 1, 1, 0);
-    this.aboutUsButton = this.game.add.button(450, 450, 'aboutUsButton', this.AboutUsStart, this, 1, 1, 0);
+    this.aboutUsButton = this.game.add.button(450, 475, 'aboutUsButton', this.AboutUsStart, this, 1, 1, 0); 
+      music.play();
   },
+  
   PlayStart:function(){
     this.game.state.start('play');
   },
@@ -744,7 +781,8 @@ var MenuScene={
 var AboutUsScene={
   create:function(){
     this.aboutUsImage = this.game.add.image(0, 0, 'aboutUs');
-    this.backButton = this.game.add.button(100, 500, 'backButton', this.back, this, 1, 1, 0);
+    this.backButton = this.game.add.button(500, 500, 'backButton', this.back, this, 1, 1, 0);
+    this.backButton.scale.setTo(0.8, 0.8);
   },
   back:function(){
     this.game.state.start('MainMenu');
@@ -754,7 +792,9 @@ var AboutUsScene={
 var HowToPlayScene={
   create:function(){
     this.HowToPlayImage = this.game.add.image(0, 0, 'rules1');
-    this.nextButton = this.game.add.button(500, 515, 'nextButton', this.next, this, 1, 1, 0);
+    this.nextButton = this.game.add.button(590, 530, 'nextButton', this.next, this, 1, 1, 0);
+    this.nextButton.scale.setTo(0.8, 0.8);
+    this.HowToPlayImage.scale.setTo(0.66, 0.9);
   },
   next:function(){
     this.game.state.start('HowToPlay2');
@@ -764,7 +804,9 @@ var HowToPlayScene={
 var HowToPlayScene2={
   create:function(){
     this.HowToPlayImage2 = this.game.add.image(0, 0, 'rules2');
-    this.nextButton = this.game.add.button(500, 515, 'nextButton', this.next, this, 1, 1, 0);
+    this.nextButton = this.game.add.button(590, 530, 'nextButton', this.next, this, 1, 1, 0);
+    this.nextButton.scale.setTo(0.8, 0.8);
+    this.HowToPlayImage2.scale.setTo(0.68, 0.95);
   },
   next:function(){
     this.game.state.start('HowToPlay3');
@@ -774,30 +816,24 @@ var HowToPlayScene2={
 var HowToPlayScene3={
   create:function(){
     this.HowToPlayImage3 = this.game.add.image(0, 0, 'rules3');
-    this.nextButton = this.game.add.button(500, 515, 'nextButton', this.next, this, 1, 1, 0);
-  },
-  next:function(){
-    this.game.state.start('HowToPlay4');
-  }
-};
-
-var HowToPlayScene4={
-  create:function(){
-    this.HowToPlayImage4 = this.game.add.image(0, 0, 'rules4');
-    this.backButton = this.game.add.button(500, 515, 'backButton', this.back, this, 1, 1, 0);
+    this.backButton = this.game.add.button(590, 530, 'backButton', this.back, this, 1, 1, 0);
+    this.backButton.scale.setTo(0.8, 0.8);
+    this.HowToPlayImage3.scale.setTo(0.7, 0.95);
   },
   back:function(){
     this.game.state.start('MainMenu');
   }
 };
 
-//Falta implementar al terminar el juego
 var EndOfGame={
   create:function(){
-    this.game.add.image(0, 0, 'endGame');
-    this.menuButton = this.game.add.button(500, 100, 'backButton', this.backMenu, this, 1, 1, 0);
+    this.backgroundImage = this.game.add.image(-10, -15, 'endGame');
+    this.menuButton = this.game.add.button(550, 50, 'backButton', this.backMenu, this, 1, 1, 0);
+    this.gameOverText = this.game.add.image(200,250, 'gameOver');
+    this.gameOverText.scale.setTo(1.3,1.3);
   },
   backMenu:function(){
+    music.stop();
     this.game.state.start('MainMenu');
   }
 };
@@ -811,9 +847,9 @@ window.onload = function () {
   game.state.add('HowToPlay', HowToPlayScene);
   game.state.add('HowToPlay2', HowToPlayScene2);
   game.state.add('HowToPlay3', HowToPlayScene3);
-  game.state.add('HowToPlay4', HowToPlayScene4);
   game.state.add('EndGame', EndOfGame);
   game.state.add('AboutUs', AboutUsScene);
+
   game.state.start('boot');
 };
 },{"./play_scene.js":4}],3:[function(require,module,exports){
@@ -858,6 +894,9 @@ map.prototype.createUnitsArray = function(){
     for (let index1 = 0; index1 < this.map.height; index1++)
         for (let index2 = 0; index2 < this.map.width; index2++) 
             this.unitsArray[index1][index2] = -1;
+
+    this.unitsArray[7][5] = new unit (-20);
+    this.unitsArray[11][22] = new unit (-10);
 };
 
 map.prototype.createUnit = function(x,y,unitType){
@@ -879,6 +918,27 @@ map.prototype.UpdateMap = function(currentPlayer) {
     this.UpdateTrees();
     this.resetUnits();
 };
+
+map.prototype.GameOver = function(){
+    console.log(this.map.getTile(5,7,this.ForegroundLayer,true).index + " / " + this.map.getTile(22,11,this.ForegroundLayer,true).index);
+    if  (this.map.getTile(5,7,this.ForegroundLayer,true).index != 48 || this.map.getTile(22,11,this.ForegroundLayer,true).index != 45) //Red wins || Yellow wins
+        this.game.state.start('EndGame');
+}
+
+map.prototype.DestroyArmy = function(player){
+    for (let index1 = 0; index1 < this.map.height; index1++)
+        for (let index2 = 0; index2 < this.map.width; index2++){
+            if(this.unitsArray[index1][index2] != -1){
+                if(this.unitsArray[index1][index2].player == player)
+                if(this.stats.IsUnit(this.map.getTile(index2, index1, this.ForegroundLayer, true).index)){
+                    this.unitsArray[index1][index2] = -1;
+                    this.map.removeTile(index2,index1,this.ForegroundLayer);
+                }        
+            }          
+        }
+}
+
+            
 
 map.prototype.UpdateTrees = function(){
 
@@ -947,7 +1007,6 @@ map.prototype.nearAlliedTerritory = function(point, currentPlayer) {    //Check 
 }
 
 map.prototype.PlaceUnit = function(clickPoint, type, currentPlayer){
-
     this.placed = false;
     this.teamTile = this.map.getTile(clickPoint.x, clickPoint.y, this.GroundLayer,true).index;      //Coloured tile under entity
     this.entity = this.map.getTile(clickPoint.x, clickPoint.y,this.ForegroundLayer,true).index;     //Entity selected
@@ -978,19 +1037,19 @@ map.prototype.PlaceUnit = function(clickPoint, type, currentPlayer){
         }
     }
     else{
-        if(this.nearAlliedTerritory(clickPoint, currentPlayer)) //If near to allied territory
-        {
+        //(this.nearAlliedTerritory(clickPoint, currentPlayer)) //If near to allied territory
+        //{
             this.placed = this.freeThenPlace(clickPoint, type, currentPlayer);
             if(this.placed)
                 this.unitsArray[clickPoint.y][clickPoint.x].moved = true;
-        }
+        //}
     }
     return this.placed;    
 }
 
 map.prototype.freeThenPlace = function(clickPoint, type, currentPlayer){
     if(this.terrain == 3 || this.terrain == 1) //Es hierba
-        if(this.entity == -1 || this.entity == 5){ //Nada ocupado o árbol
+        if(this.entity == -1){ //Nada ocupado
             if (currentPlayer) 
             this.map.putTile(365,clickPoint.x,clickPoint.y,this.GroundLayer);
         
@@ -999,7 +1058,6 @@ map.prototype.freeThenPlace = function(clickPoint, type, currentPlayer){
     
             this.createUnit(clickPoint.x,clickPoint.y,type);
             this.map.putTile(type, clickPoint.x, clickPoint.y, this.ForegroundLayer);
-            console.log(this.unitsArray[clickPoint.y][clickPoint.x].name + " placed at " + clickPoint.x + "/" + clickPoint.y);  //Console info
             return true;
         }
         return false;
@@ -1035,37 +1093,108 @@ map.prototype.moveUnit = function(clickPoint, destination, currentPlayer){
     this.unitsArray[clickPoint.y + destination.y][clickPoint.x + destination.x].moved = true;
 }
 
-map.prototype.FourPos = function (pos){ //Return an array with the entities on the four direction around a given position
-    var fourPos = [0,0,0,0];    //Top, right , down, left
+map.prototype.NotDefended = function (selectedPoint ,destinationPoint, currentPlayer){
+    var defenderStrength = 0;
 
-        fourPos [0] = this.WhatIsIt(pos.x, pos.y - 1);
-        fourPos [1] = this.WhatIsIt(pos.x + 1, pos.y);
-        fourPos [2] = this.WhatIsIt(pos.x, pos.y + 1);
-        fourPos [3] = this.WhatIsIt(pos.x - 1, pos.y);
+    defenderStrength = this.Tower(destinationPoint.x, destinationPoint.y - 1, currentPlayer)
+    if(defenderStrength != -1)
+        if(this.GetStrength(selectedPoint) < defenderStrength)
+            return false;
+    defenderStrength = this.Tower(destinationPoint.x + 1, destinationPoint.y, currentPlayer)
+    if(defenderStrength != -1)
+        if(this.GetStrength(selectedPoint) < defenderStrength)
+            return false;
+    defenderStrength = this.Tower(destinationPoint.x, destinationPoint.y + 1, currentPlayer)
+    if(defenderStrength != -1)
+        if(this.GetStrength(selectedPoint) < defenderStrength)
+            return false;
+    defenderStrength = this.Tower(destinationPoint.x - 1, destinationPoint.y, currentPlayer)
+    if(defenderStrength != -1)
+        if(this.GetStrength(selectedPoint) < defenderStrength)
+            return false;
+    
+    return true;
+}
+
+map.prototype.Tower = function (x,y, currentPlayer){
+    if(currentPlayer){
+        if(this.map.getTile(x, y, this.ForegroundLayer, true).index == this.stats.towerIndexYellow)
+            return this.stats.towerStrength;
+        else if(this.map.getTile(x, y, this.ForegroundLayer, true).index == this.stats.fortressIndexYellow)
+            return this.stats.fortressStrength;
+        else
+            return -1;
+    }
+    else{
+        if(this.map.getTile(x, y, this.ForegroundLayer, true).index == this.stats.towerIndexRed)
+            return this.stats.towerStrength;
+        else if(this.map.getTile(x, y, this.ForegroundLayer, true).index == this.stats.fortressIndexRed)
+            return this.stats.fortressStrength;
+        else
+            return -1;
+    }
+}
+
+map.prototype.FourPos = function (pos, currentPlayer){ //Return an array with the entities on the four direction around a given position
+    var fourPos = [0,0,0,0];    //Top, right , down, left
+        fourPos [0] = this.WhatIsIt(pos.x, pos.y - 1,true, currentPlayer);
+        fourPos [1] = this.WhatIsIt(pos.x + 1, pos.y,true, currentPlayer);
+        fourPos [2] = this.WhatIsIt(pos.x, pos.y + 1,true, currentPlayer);
+        fourPos [3] = this.WhatIsIt(pos.x - 1, pos.y,true, currentPlayer);
     return fourPos;
 }
 
-map.prototype.WhatIsIt = function (x,y){
+map.prototype.UnitsManteinance = function(currentPlayer){
+    var totalManteinance = 0;
+
+        for (let index1 = 0; index1 < this.map.height; index1++)
+        for (let index2 = 0; index2 < this.map.width; index2++) 
+            if(this.unitsArray[index1][index2] != -1)
+                if(this.unitsArray[index1][index2].player == currentPlayer)
+                    totalManteinance += this.unitsArray[index1][index2].maintenance;
+    return totalManteinance;
+}
+
+map.prototype.WhatIsIt = function (x,y,enemy,currentPlayer){
     var backElem = this.map.getTile(x, y, this.BackgroundLayer, true).index;
     if(backElem != 3 && backElem != 1)  //Beach or water   (Out of game zone)
         return 0;
 
     else{                               //Inside game zone
         var foreElem = this.map.getTile(x, y, this.ForegroundLayer, true).index;
-
-        if (foreElem == 5) //Tree
+        if(enemy){
+            if (foreElem == 5) //Tree
             return 2;
         else if (foreElem == -1)                //Vacío
             return 1;
-        else if(this.stats.IsUnit(foreElem))    //Unit
+        else if(this.stats.IsEnemyUnit(foreElem, currentPlayer) || this.stats.IsEnemyStructure(foreElem, currentPlayer))
+                return 3;
+        else
+            return 0;
+        }
+
+        else{
+            if (foreElem == 5) //Tree
+            return 2;
+        else if (foreElem == -1)  //Vacío
+            return 1;
+        else if(this.stats.IsUnit(foreElem))
             return 3;
         else
             return 0;
+        }   
     }
 }
+
+map.prototype.GetStrength = function(position){   
+    return this.unitsArray[position.y][position.x].strenght;
+}
+
 map.prototype.TileIndexGround = function(point){
     return this.map.getTile(point.x, point.y, this.GroundLayer, true).index;
 }
+
+
 map.prototype.TileCenterPos = function(point){
     var pointCenter = new Phaser.Point();
     var tile =  this.map.getTile(point.x, point.y, this.BackgroundLayer);
@@ -1087,10 +1216,14 @@ var stats = require("./stats.js");
     this.stats = new stats();
     this.map = new map(this.game, this.stats);
     this.hud = new hud(this.game, this.map, this.stats);
+    this.returnToMenu = this.game.add.button(250, 5, 'menuButton', this.return, this, 1, 1, 0);
+    this.returnToMenu.scale.setTo(0.8, 0.8);
   },
-
   update: function(){
       this.hud.UpdateFollower();
+  },
+  return:function(){
+    this.game.state.start('MainMenu');
   }
 };
 
@@ -1105,7 +1238,10 @@ var stats = function(){
 
 //Memory
 this.unitsInGame = [255,262,121,128,122,129,123,130];
-this.structuresInGame = [];
+this.redUnitsInGame = [255, 121, 122, 123];
+this.yellowUnitsInGame = [262, 128, 129, 130];
+this.redStructuresInGame = [24, 31, 45, 17];
+this.yellowStructuresInGame = [27, 34, 48, 43];
 
 //GAMEPLAY
 this.treeGrowRatio          = 0.15; // [0, 1] Probabilidad de que aparezca un nuevo árbol
@@ -1150,27 +1286,26 @@ this.fontSize               = 25;
     this.farmLife = 5;  //FARM
     this.farmPrice = 5;
     this.farmStrength = 5;
-    this.farmsIncome = 10;
-    this.farmIndexRed = 17;  //NOTA: cambiar el color de la granja de verde a rojo
+    this.farmsIncome = 8;
+    this.farmIndexRed = 17;
     this.farmIndexYellow = 43;
     this.farmName = "Farm";
     
     this.towerLife = 10;  //TOWER
     this.towerPrice = 10;
-    this.towerStrength = 10;
+    this.towerStrength = 20;
     this.towerIndexRed = 24;
     this.towerIndexYellow = 27;
     this.towerName = "Tower";
 
     this.fortressLife = 15;  //FORTRESS
     this.fortressPrice = 15;
-    this.fortressStrength = 15;
+    this.fortressStrength = 25;
     this.fortressIndexRed = 31;
     this.fortressIndexYellow = 34;
     this.fortressName = "Fortress";
 
     this.baseLife = 20;  //BASE
-    this.baseIncome = 10;
     this.baseIndexRed = 45;
     this.baseIndexYellow = 48;
     this.baseName = "Base";
@@ -1179,14 +1314,56 @@ this.fontSize               = 25;
 
 stats.prototype.IsUnit = function(x){       //Returns if the index given is one of the units in-game
     var i = 0;
-    while(i < this.unitsInGame.length && x != this.unitsInGame[i])
-        i++;
+   
+        while(i < this.unitsInGame.length && x != this.unitsInGame[i])
+            i++;
+        if(i == this.unitsInGame.length)
+            return false;
+        else
+            return true;
+    
+}
 
-    if(i == this.unitsInGame.length)
-        return false;
-    else
-        return true;
+stats.prototype.IsEnemyUnit = function(x, currentPlayer){
+    var i = 0;
+   if(currentPlayer){
+        while(i < this.yellowUnitsInGame.length && x != this.yellowUnitsInGame[i])
+            i++;
+        if(i == this.yellowUnitsInGame.length)
+            return false;
+        else
+            return true;
+   }
 
+   else{
+        while(i < this.redUnitsInGame.length && x != this.redUnitsInGame[i])
+            i++;
+        if(i == this.redUnitsInGame.length)
+            return false;
+        else
+            return true;
+   }   
+}
+
+stats.prototype.IsEnemyStructure = function(x,currentPlayer){
+    var i = 0;
+   if(currentPlayer){
+        while(i < this.yellowStructuresInGame.length && x != this.yellowStructuresInGame[i])
+            i++;
+        if(i == this.yellowStructuresInGame.length)
+            return false;
+        else
+            return true;
+   }
+
+   else{
+        while(i < this.redStructuresInGame.length && x != this.redStructuresInGame[i])
+            i++;
+        if(i == this.redStructuresInGame.length)
+            return false;
+        else
+            return true;
+   }   
 }
 
 module.exports = stats;
@@ -1301,6 +1478,22 @@ var unit = function(type){
         this.Horseman(true);
     else if(type == this.stats.horsemanIndexYellow)
         this.Horseman(false);
+    else if(type == this.stats.farmIndexRed)
+        this.Farm(true);
+    else if(type == this.stats.farmIndexYellow)
+        this.Farm(false);
+    else if(type == this.stats.towerIndexRed)
+        this.Tower(true);
+    else if(type == this.stats.towerIndexYellow)
+        this.Tower(false);
+    else if(type == this.stats.fortressIndexRed)
+        this.Fortress(true);
+    else if(type == this.stats.fortressIndexYellow)
+        this.Fortress(false);
+    else if(type == -10)
+        this.Base(true);
+    else if(type == - 20)
+        this.Base(false);
 }
 
 unit.prototype.HasMoney = function(money){
@@ -1313,11 +1506,7 @@ unit.prototype.Peasant = function(player){  //PEASANT
     this.strenght = this.stats.peasantStrength;
     this.price = this.stats.peasantPrice;
     this.maintenance = this.stats.peasantMaintenance;
-
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
+    this.player = player;
 }
 
 unit.prototype.Lancer = function(player){   //LANCER
@@ -1326,11 +1515,8 @@ unit.prototype.Lancer = function(player){   //LANCER
     this.strenght = this.stats.lancerStrength;
     this.price = this.stats.lancerPrice;
     this.maintenance = this.stats.lancerMaintenance;
+    this.player = player;
 
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
 }
 
 unit.prototype.Swordman = function(player){ //SWORDMAN
@@ -1339,11 +1525,8 @@ unit.prototype.Swordman = function(player){ //SWORDMAN
     this.strenght = this.stats.swordmanStrength;
     this.price = this.stats.swordmanPrice;
     this.maintenance = this.stats.swordmanMaintenance;
+    this.player = player;
 
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
 }
 
 unit.prototype.Horseman = function(player){ //HORSEMAN
@@ -1352,11 +1535,45 @@ unit.prototype.Horseman = function(player){ //HORSEMAN
     this.strenght = this.stats.horsemanStrength;
     this.price = this.stats.horsemanPrice;
     this.maintenance = this.stats.horsemanMaintenance;
+    this.player = player;
 
-    if (player == "RED")
-        this.player = true;
-    else
-        this.player = false;
+}
+
+unit.prototype.Farm = function(player){ //FARM
+    this.name = this.stats.farmName;
+    this.life = this.stats.farmLife;
+    this.strenght = this.stats.farmStrength;
+    this.price = this.stats.farmPrice;
+    this.maintenance = 0;
+    this.player = player;
+}
+
+unit.prototype.Tower = function(player){ //TOWER
+    this.name = this.stats.towerName;
+    this.life = this.stats.towerLife;
+    this.strenght = this.stats.towerStrength;
+    this.price = this.stats.towerPrice;
+    this.maintenance = 0;
+    this.player = player;
+
+}
+
+unit.prototype.Fortress = function(player){ //FORTRESS
+    this.name = this.stats.fortressName;
+    this.life = this.stats.fortressLife;
+    this.strenght = this.stats.fortressStrength;
+    this.price = this.stats.fortressPrice;
+    this.maintenance = 0;
+    this.player = player;
+
+}
+
+unit.prototype.Base = function(player){
+    this.name = this.stats.baseName;
+    this.life = this.stats.baseLife;
+    this.strenght = 0;
+    this.maintenance = 0;
+    this.player = player;
 }
 
 module.exports = unit;

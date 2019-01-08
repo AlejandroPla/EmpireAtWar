@@ -100,7 +100,7 @@ var MenuScene={
     this.background = this.game.add.image(0, 0, 'backgroundImage');
     this.playButton = this.game.add.button(50, 475, 'playButton', this.PlayStart, this, 1, 1, 0);
     this.ruleButton = this.game.add.button(250, 475, 'rulesButton', this.HowToPlayStart, this, 1, 1, 0);
-    this.aboutUsButton = this.game.add.button(450, 450, 'aboutUsButton', this.AboutUsStart, this, 1, 1, 0); 
+    this.aboutUsButton = this.game.add.button(450, 475, 'aboutUsButton', this.AboutUsStart, this, 1, 1, 0); 
       music.play();
   },
   
@@ -118,7 +118,8 @@ var MenuScene={
 var AboutUsScene={
   create:function(){
     this.aboutUsImage = this.game.add.image(0, 0, 'aboutUs');
-    this.backButton = this.game.add.button(100, 500, 'backButton', this.back, this, 1, 1, 0);
+    this.backButton = this.game.add.button(500, 500, 'backButton', this.back, this, 1, 1, 0);
+    this.backButton.scale.setTo(0.8, 0.8);
   },
   back:function(){
     this.game.state.start('MainMenu');
@@ -128,7 +129,9 @@ var AboutUsScene={
 var HowToPlayScene={
   create:function(){
     this.HowToPlayImage = this.game.add.image(0, 0, 'rules1');
-    this.nextButton = this.game.add.button(500, 515, 'nextButton', this.next, this, 1, 1, 0);
+    this.nextButton = this.game.add.button(590, 530, 'nextButton', this.next, this, 1, 1, 0);
+    this.nextButton.scale.setTo(0.8, 0.8);
+    this.HowToPlayImage.scale.setTo(0.66, 0.9);
   },
   next:function(){
     this.game.state.start('HowToPlay2');
@@ -138,7 +141,9 @@ var HowToPlayScene={
 var HowToPlayScene2={
   create:function(){
     this.HowToPlayImage2 = this.game.add.image(0, 0, 'rules2');
-    this.nextButton = this.game.add.button(500, 515, 'nextButton', this.next, this, 1, 1, 0);
+    this.nextButton = this.game.add.button(590, 530, 'nextButton', this.next, this, 1, 1, 0);
+    this.nextButton.scale.setTo(0.8, 0.8);
+    this.HowToPlayImage2.scale.setTo(0.68, 0.95);
   },
   next:function(){
     this.game.state.start('HowToPlay3');
@@ -148,45 +153,15 @@ var HowToPlayScene2={
 var HowToPlayScene3={
   create:function(){
     this.HowToPlayImage3 = this.game.add.image(0, 0, 'rules3');
-    this.nextButton = this.game.add.button(500, 515, 'nextButton', this.next, this, 1, 1, 0);
-  },
-  next:function(){
-    this.game.state.start('HowToPlay4');
-  }
-};
-
-var HowToPlayScene4={
-  create:function(){
-    this.HowToPlayImage4 = this.game.add.image(0, 0, 'rules4');
-    this.backButton = this.game.add.button(500, 515, 'backButton', this.back, this, 1, 1, 0);
-    this.playButton = this.game.add.button(300, 515, 'playButton', this.return, this, 1, 1, 0);
+    this.backButton = this.game.add.button(590, 530, 'backButton', this.back, this, 1, 1, 0);
+    this.backButton.scale.setTo(0.8, 0.8);
+    this.HowToPlayImage3.scale.setTo(0.7, 0.95);
   },
   back:function(){
     this.game.state.start('MainMenu');
-  },
-  return:function(){
-    this.game.state.start('play');
   }
 };
 
-var pausedScene={
-  create:function(){
-    this.pausedImage = this.game.add.image(0, 0, 'paused');
-    this.menuButton = this.game.add.button(100, 300, 'menuButton', this.return, this, 1, 1, 0);
-    this.backButton = this.game.add.button(100, 400, 'backButton', this.back, this, 1, 1, 0);
-    this.ruleButton = this.game.add.button(100, 500, 'rulesButton', this.HowToPlayStart, this, 1, 1, 0);
-  },
-  back:function(){
-    this.game.state.start('play');
-  },
-  return:function(){
-    this.game.state.start('MainMenu');
-  },
-  HowToPlayStart:function(){
-    this.game.state.start('HowToPlay');
-  }
-};
-//Falta implementar al terminar el juego
 var EndOfGame={
   create:function(){
     this.backgroundImage = this.game.add.image(-10, -15, 'endGame');
@@ -209,10 +184,8 @@ window.onload = function () {
   game.state.add('HowToPlay', HowToPlayScene);
   game.state.add('HowToPlay2', HowToPlayScene2);
   game.state.add('HowToPlay3', HowToPlayScene3);
-  game.state.add('HowToPlay4', HowToPlayScene4);
   game.state.add('EndGame', EndOfGame);
   game.state.add('AboutUs', AboutUsScene);
-  game.state.add('PausedMenu', pausedScene);
 
   game.state.start('boot');
 };
