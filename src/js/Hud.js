@@ -495,7 +495,7 @@ hud.prototype.indicate = function(clickPoint){  //Creates the actions indicators
         this.indicating = true;
    }
 }
-hud.prototype.createIndicator = function(fourPos, index, pos){
+hud.prototype.createIndicator = function(fourPos, index, pos){//Creates the designed indicator and stores it in the 4 directions array
     switch (fourPos[index]) {
         case 0: //Not moveable to position
         this.indicators[index] = this.game.add.image(pos.x, pos.y, 'nope');
@@ -525,26 +525,26 @@ hud.prototype.createIndicator = function(fourPos, index, pos){
 hud.prototype.updateMoney = function (turnEnd){    //Updates the money display and amount
     if(this.currentPlayer){
         if(turnEnd){
-            this.moneyR += Math.trunc(this.map.AmountOfTiles(365) / 2);
-            this.moneyR += 2;
-            this.moneyR += this.map.rFarms * this.stats.farmsIncome;
-            this.moneyY -= this.map.UnitsManteinance(false);
+            this.moneyR += Math.trunc(this.map.AmountOfTiles(365) / 2); //Money earned by tiles possesion
+            this.moneyR += 2;                                           //Money earned by main base
+            this.moneyR += this.map.rFarms * this.stats.farmsIncome;    //Money earned by farms
+            this.moneyY -= this.map.UnitsManteinance(false);            //Money spent in units manteinance
         }
         this.moneyAmount.text = this.moneyR;
     }
     else{
         if(turnEnd){
-            this.moneyY += Math.trunc(this.map.AmountOfTiles(366) / 2);
-            this.moneyY += 2;
-            this.moneyY += this.map.yFarms * this.stats.farmsIncome;
-            this.moneyR -= this.map.UnitsManteinance(true);
+            this.moneyY += Math.trunc(this.map.AmountOfTiles(366) / 2); //Money earned by tiles possesion
+            this.moneyY += 2;                                           //Money earned by main base
+            this.moneyY += this.map.yFarms * this.stats.farmsIncome;    //Money earned by farms
+            this.moneyR -= this.map.UnitsManteinance(true);             //Money spent in units manteinance
         }
         this.moneyAmount.text = this.moneyY;
     }   
     this.NoMoney();
 }
 
-hud.prototype.NoMoney = function(){
+hud.prototype.NoMoney = function(){ //Checks if someone spent all his money and if so it destoys his army
     if(this.moneyAmount.text < 0)
         this.map.DestroyArmy(this.currentPlayer);
 }
@@ -559,14 +559,14 @@ hud.prototype.listenerAction = function(selected){  //Process the actions of a s
     
     var destination = new Phaser.Point(this.selectedForAction.x + this.indKey[this.indicators.indexOf(selected)].x, this.selectedForAction.y + this.indKey[this.indicators.indexOf(selected)].y);      
 
-    if(selected.key == 'movement'){
+    if(selected.key == 'movement'){ //Movement logic applied to the selected unit
         if(this.map.NotDefended(this.selectedForAction, destination, this.currentPlayer))
         if(!this.map.isMoved(this.selectedForAction)){
             this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
             this.IndicatorsOff();
         }
     }
-    if(selected.key == 'combat'){
+    if(selected.key == 'combat'){   //Combat logic applied to the selected unit
         if(this.map.GetStrength(this.selectedForAction) >= this.map.GetStrength(destination))
         if(!this.map.isMoved(this.selectedForAction)){         
             this.map.moveUnit(this.selectedForAction, this.indKey[this.indicators.indexOf(selected)], this.currentPlayer);
@@ -627,7 +627,7 @@ hud.prototype.listenerUnit = function(){    //OPENS THE UNITS INVENTORY
 hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH UNIT WAS SELECTED AND VERIFIES IF THERE IS ENOUGH MONEY TO BUY IT (BUY)
     
     if(this.currentPlayer)
-        if(this.moneyR >= clicked.price){
+        if(this.moneyR >= clicked.price){   //If the player has enough money yo buy the selected unit it indicates its selection
             this.follower.loadTexture(clicked.texture);
             this.follower.visible = true;
             this.select(clicked);
@@ -635,7 +635,7 @@ hud.prototype.listenerUnitSelection = function (clicked){   //DETERMINATES WICH 
         else
             ;
     else
-        if(this.moneyY >= clicked.price){
+        if(this.moneyY >= clicked.price){   //IDEM
             this.follower.loadTexture(clicked.texture);
             this.follower.visible = true;
             this.select(clicked);

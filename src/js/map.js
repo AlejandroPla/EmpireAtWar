@@ -1,6 +1,5 @@
 'use strict';
 var unit = require("./units.js");
-var structure = require("./structures.js");
 
 var map = function(game, stats){
     this.game = game;
